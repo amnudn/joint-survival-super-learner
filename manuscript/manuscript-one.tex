@@ -84,7 +84,7 @@
 
 
 
-\title{The state learner -- a super learner for right-censored
+\title{The Joint Survival Super Learner: A super learner for right-censored
   data}
 \author{Anders Munch \& Thomas A. Gerds}
 \date{\today}
@@ -149,56 +149,54 @@ censoring distribution does not depend on the covariates. This is a
 potential source of bias which is difficult to overcome with the
 currently available methods.
 
-In this paper we propose the state learner, a new super learner
-designed to handle the specific challenges of ensemble learning with
-right-censored data. The state learner simultaneously learns
-prediction models for the event-time and censoring distributions. The
-state learner is based on the simple idea of an artificial competing
-risk model where censoring is included as a state of its
-own. Candidate learners of the event time hazard and censoring hazard
-functions are then assessed based on how well they predict the state
-occupation probabilities of the artificial competing risk model across
-time based on baseline covariate information. Our estimation framework
-allows for competing risks, avoids restrictive assumptions on the
-censoring distribution, and is also fully flexible with respect to the
-choice of learners. The latter is in contrast to other proposals which
-restrict the library of learners to specific model classes
-\citep{polley2011-sl-cens,golmakani2020super}, see Section
+
+In this paper we propose the Joint Survival Super Learner (JSSL), a
+new super learner designed to handle the specific challenges of
+ensemble learning with right-censored data. The JSSL jointly
+learns prediction models for the event-time and censoring
+distributions. The JSSL is based on the simple idea of an
+artificial competing risk model where censoring is included as a state
+of its own. Candidate learners of the event time hazard and censoring
+hazard functions are then assessed based on how well they predict the
+state occupation probabilities of the artificial competing risk model
+across time based on baseline covariate information. Our estimation
+framework allows for competing risks, avoids restrictive assumptions
+on the censoring distribution, and is also fully flexible with respect
+to the choice of learners. The latter is in contrast to other
+proposals which restrict the library of learners to specific model
+classes \citep{polley2011-sl-cens,golmakani2020super}, see Section
 \ref{sec:choice-of-loss-function}. Like our proposal, recent work by
 \cite{han2021inverse} and \cite{westling2021inference} also
 circumvents the need to pre-specify a censoring model by iterating
-between estimation of the outcome and censoring models.
-However, this iterative
-procedure is in general not guaranteed to converge to the true
-data-generating mechanism
+between estimation of the outcome and censoring models. However, this
+iterative procedure is in general not guaranteed to converge to the
+true data-generating mechanism
 \citep[][Appendix~A.4]{munch2024thesis}.
 
-To analyse the theoretical properties of the state learner we
+To analyse the theoretical properties of JSSL we
 focus on the discrete super learner which picks the model in
 the library with best estimated performance
 \citep{van2007super}. We provide theoretical guarantees
-for the performance of the state learner and in particular
-show that the discrete state learner is consistent under
+for the performance of JSSL and in particular
+show that discrete JSSL is consistent under
 natural conditions and prove a finite-sample oracle
-inequality. We demonstrate how to construct a library for the
-state learner using common survival models, and how to obtain
+inequality. We demonstrate how to construct a library for JSSL using common survival models, and how to obtain
 risk predictions from the resulting ensemble.
 
 The rest of the paper is organized as follows.
 We introduce our notation and framework in
 Section~\ref{sec:framework}. Section~\ref{sec:super-learning}
 introduces loss-based super learning. In
-Section~\ref{sec:super-learner-simple} we define the state learner,
+Section~\ref{sec:super-learner-simple} we define JSSL,
 while Section~\ref{sec:theor-results-prop} provides theoretical
 guarantees. In Section~\ref{sec:use-cases-state} we demonstrate how
-the state learner can be used to obtain risk predictions, and we
+JSSL can be used to obtain risk predictions, and we
 briefly mention how it can be applied in the context of causal
 inference.  Section~\ref{sec:numer-exper} reports the results of
 numerical experiments, and Section~\ref{sec:real-data-appl}
 illustrates the method on prostate cancer data. We conclude with a
 discussion in Section~\ref{sec:discussion}. Proofs are collected in
-Appendix~\ref{sec:proofs}. Code and an implementation of the state
-learner are available at \url{https://github.com/amnudn/statelearner}.
+Appendix~\ref{sec:proofs}. Code and an implementation of JSSL are available at \url{https://github.com/amnudn/statelearner}.
 
 \section{Notation and framework}
 \label{sec:framework}
@@ -290,7 +288,6 @@ Thus, we can consider $\Lambda_j$ and \(\Gamma\) as operators which map from
 \section{Loss-based super learning}
 \label{sec:super-learning}
 
-\marginnote{formally super learning may work without loss function}
 Loss-based super learning requires a library of candidate models, or
 \textit{learners}, a cross-validation algorithm, and a loss function
 for evaluating prediction performance on hold-out samples. In this
@@ -369,16 +366,16 @@ and that the oracle learner is a function of the data and the unknown
 data-generating distribution.
 % However, these dependencies are suppressed in the notation.
 
-\section{The state learner}
+\section{The joint survival super learner (JSSL)}
 \label{sec:super-learner-simple}
 
-The main idea of the state learner is to jointly use learners for \(
+The main idea of JSSL is to jointly use learners for \(
 \Lambda_1 \), \( \Lambda_2 \), and \( \Gamma \), and the relations in
 equation~(\ref{eq:parametrizeP}), to learn a feature of the observed
-data distribution \( P \). The discrete state learner ranks a tuple of
+data distribution \( P \). Discrete JSSL ranks a tuple of
 learners for the tuple of the cumulative hazard functions \(
 (\Lambda_1, \Lambda_2, \Gamma) \) based on how well they jointly model
-the observed data. To formally introduce the state learner, we define
+the observed data. To formally introduce JSSL, we define
 the process 
 \begin{equation*}
   \eta(t) = \1\{\tilde{T} \leq t, \tilde D=1\} + 2\,\1\{\tilde{T} \leq t, \tilde
@@ -401,7 +398,7 @@ the function
 for all \( t \in [0,\tau] \), \( l \in \{-1,0,1,2\} \), and
 \( x \in \mathcal{X} \).
 
-The state learner is a super learner for the function-valued parameter
+The JSSL is a super learner for the function-valued parameter
 $\theta(P) = F$ which is identified through
 equation~(\ref{eq:F-def}). Under conditional independent censoring
 each tuple $(\Lambda_{1}, \Lambda_{2}, \Gamma, H)$ characterises a
@@ -434,8 +431,7 @@ equation~\eqref{eq:parametrizeP}, which in turn determines \( (F, H)
       = \int_0^t F(s-, 0, x)  \Gamma(\diff s \mid x).
   \end{split}
 \end{equation}
-Equation~\eqref{eq:transition} implies that a library for the
-state learner can by build from three libraries of learners:
+Equation~\eqref{eq:transition} implies that a library for JSSL can by build from three libraries of learners:
 \(\mathcal{A}_1\), \( \mathcal{A}_2 \), and \( \mathcal{B} \),
 where \(\mathcal{A}_1\) and \( \mathcal{A}_2\) contain
 learners for the conditional cause-specific cumulative hazard
@@ -501,7 +497,7 @@ is evaluated using the cross-validated loss,
     \right)
   },
 \end{equation*}
-and the discrete state learner is given by
+and discrete JSSL is given by
 \begin{align*}\label{eq:discrete-state-learner}
   \hat{\phi}_n
   &=  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
@@ -515,9 +511,9 @@ and the discrete state learner is given by
 \label{sec:theor-results-prop}
 
 \marginnote{depending on the journal both subsections may benefit from explanations about the usefulness of these results} 
-In this section we show that the state learner is consistent if its
+In this section we show that JSSL is consistent if its
 library contains a consistent learner, and we establish a finite
-sample inequality for the excess risk of the state learner compared to
+sample inequality for the excess risk of JSSL compared to
 the oracle.
 
 \subsection{Consistency}
@@ -532,7 +528,7 @@ ranked probability score) is a strictly proper scoring rule
 \citep{gneiting2007strictly}. This implies that if we minimise
 the average loss of the integrated Brier score, we recover the
 parameters of the data-generating distribution. Specifically,
-this implies that the oracle of a state learner is consistent
+this implies that the oracle of a JSSL is consistent
 if the library of learners contains at least one learner that
 is consistent for estimation of \( F \). Recall that the
 function \(F\) implicitly depends on the data-generating
@@ -560,7 +556,7 @@ equation~(\ref{eq:F-def}). In the following we let
 \subsection{Oracle inequality}
 \label{sec:finite-sample-oracle}
 
-To establish a finite sample oracle result for the state learner we
+To establish a finite sample oracle result for JSSL we
 assume a split of the data into equally sized folds, and for
 simplicity of presentation we take \( n \) to be such that \(
 |\data_n^{-k}| = n/K \) with \( K \) fixed. We will allow the number
@@ -630,13 +626,13 @@ states that this price is asymptotically vanishing, up to
 logarithmic terms, as long as the number of learners in the
 library grows with sample size at a polynomial rate.
 
-\section{Use cases for the state learner}
+\section{Use cases for JSSL}
 \label{sec:use-cases-state}
 \marginnote{both subsections would benefit from examples. could we merge with section 8?} 
-The state learner estimates the function \( F \) which depends on the
+The JSSL estimates the function \( F \) which depends on the
 censoring distribution and is typically not of direct interest in
 itself. In the following, we describe how an estimate of \( F \), as
-provided by the state learner, can be used to predict risks over time.
+provided by JSSL, can be used to predict risks over time.
 
 \subsection{Survival and risk predictions}
 \label{sec:surv-risk-pred}
@@ -669,7 +665,7 @@ $\Lambda_2$ using the formula
     \mid x)\right\}  \Lambda_j(\diff u \mid x),
   \quad j \in \{1,2\}.
 \end{equation}
-Hence, given the state learner's estimate of \( F \) we can
+Hence, given JSSL's estimate of \( F \) we can
 use equation~\eqref{eq:7} to obtain estimates of the
 cause-specific cumulative hazard functions $\Lambda_j$, which
 can in turn be used to obtain estimates of the event-free
@@ -677,12 +673,12 @@ survival probabilites and cause-specific risks through
 equations~\eqref{eq:surv-def} and~\eqref{eq:cs-risk-def}.
 
 In Section~\ref{sec:super-learner-simple} we suggested to
-implement the state learner by building a library using
+implement JSSL by building a library using
 learners of the cause-specific cumulative hazard functions,
 $\Lambda_j$, and the cumulative hazard function for censoring,
 $\Gamma$. With this implementation we can directly input the
 highest ranked tuple of cause-specific hazard functions
-$(\Lambda_1, \Lambda_2)$ provided by the state learner as
+$(\Lambda_1, \Lambda_2)$ provided by JSSL as
 input to equations~\eqref{eq:surv-def}
 and~\eqref{eq:cs-risk-def}.
 
@@ -708,11 +704,11 @@ high-dimensional nuisance parameters needed to be estimated
 will typically include the cause-specific cumulative hazard
 functions and the cumulative hazard function for censoring
 \citep[e.g.,][]{van2003unified,rytgaard2021estimation,rytgaard2022targeted}.
-The state learner immediately provides estimates of these
+The JSSL immediately provides estimates of these
 nuisance parameters and is hence particularly well suited for
 targeted and debiased machine learning. Though it served as
-our original motivation for developing the state learner, we
-leave the study of the state learner in the context of
+our original motivation for developing JSSL, we
+leave the study of JSSL in the context of
 targeted and debiased machine learning for a future paper.
 
 
@@ -723,9 +719,9 @@ targeted and debiased machine learning for a future paper.
 
 In this section we report results from a simulation study where we consider
 estimation of the conditional survival function. In the first part, we compare
-the state learner to two IPCW based discrete super learners that use either the
+JSSL to two IPCW based discrete super learners that use either the
 Kaplan-Meier estimator or a Cox model to estimate the censoring probability
-\citep{gonzalez2021stacked}. In the second part we compare the state learner to
+\citep{gonzalez2021stacked}. In the second part we compare JSSL to
 the super learner proposed by \cite{westling2021inference}.
 
 In both parts we use the same data-generating mechanism. We generate data
@@ -768,7 +764,7 @@ outcome to learn the cumulative hazard function of the
 censoring time, we mean that the learner is trained on
 \( \data_n^c \).
 
-We compare the state learner to two IPCW based super learners: The
+We compare JSSL to two IPCW based super learners: The
 first super learner, called IPCW(Cox), uses a Cox model with main
 effects to estimate the censoring probabilities, while the second
 super learner, called IPCW(KM), uses the Kaplan-Meier estimator to
@@ -814,8 +810,8 @@ The results are shown in Figure~\ref{fig:ipcw-fail}. We see that in
 the scenario where censoring depends on the covariates, using the
 Kaplan-Meier estimator to estimate the censoring probabilities
 provides a risk prediction model with an IPA that is lower than the
-risk prediction model provided by the state learner. The performance
-of the risk prediction model selected by the state learner is similar
+risk prediction model provided by JSSL. The performance
+of the risk prediction model selected by JSSL is similar
 to the risk prediction model selected by the IPCW(Cox) super learner
 which a priori uses a correctly specified model for the censoring
 distribution. Both these risk prediction models are close to the
@@ -832,10 +828,10 @@ performance of the oracle, except for small sample sizes.
   \label{fig:ipcw-fail}
 \end{figure}
 
-We next compare the state learner to the super learner \texttt{survSL}
+We next compare JSSL to the super learner \texttt{survSL}
 \citep{westling2021inference}. This is another super learner which
-like the state learner works without a pre-specified censoring
-model. Note that both the state learner and \texttt{survSL} provide a
+like JSSL works without a pre-specified censoring
+model. Note that both JSSL and \texttt{survSL} provide a
 prediction model for the event time outcome and also for the
 probability of being censored. Hence, we compare the performance of
 these methods with respect to both the outcome and the censoring
@@ -843,10 +839,9 @@ distribution. Again we use the IPA to quantify the predictive
 performance.
 
 The results are shown in Figures~\ref{fig:zelefski-out}
-and~\ref{fig:zelefski-cens}. We see that for most sample sizes, the state
-learner selected prediction models for both censoring and outcome which have
-similar or higher IPA compared to the prediction models selected by
-\texttt{survSL}.
+and~\ref{fig:zelefski-cens}. We see that for most sample sizes, JSSL selected prediction models for both censoring and outcome which
+have similar or higher IPA compared to the prediction models selected
+by \texttt{survSL}.
 \begin{figure}
   \centering %
   \includegraphics[width=1\linewidth]{experiment-fig-sl-survSL-out.pdf}
@@ -872,13 +867,12 @@ similar or higher IPA compared to the prediction models selected by
 \label{sec:real-data-appl}
 
 In this section we use the prostate cancer data of
-\cite{kattan2000pretreatment} to illustrate the use of the
-state learner in the presence of competing risks. We have
+\cite{kattan2000pretreatment} to illustrate the use of JSSL in the presence of competing risks. We have
 introduced the data in Section~\ref{sec:numer-exper}. The data
 consists of 1,042 patients who are followed from start of
 followup until tumor recurrence, death without tumor
 recurrence or end of followup (censored) whatever came first.
-We use the state learner to rank libraries of learners for the
+We use JSSL to rank libraries of learners for the
 cause-specific cumulative hazard functions of tumor
 recurrence, death without tumor recurrence, and censoring. The
 libraries of learners each include five learners: the
@@ -919,20 +913,19 @@ random forest is used to model the censoring distribution.
 \section{Discussion}
 \label{sec:discussion}
 
-The state learner is a new super learner that can be used with
+The JSSL is a new super learner that can be used with
 right-censored data and competing events. Compared to existing
-IPCW-based methods, the advantage of the state learner is that
+IPCW-based methods, the advantage of JSSL is that
 it does not depend on a pre-specified estimator of the
 censoring distribution, but selects one automatically based on
-a library of candidate learners. Furthermore, the state
-learner neither requires that the cause-specific cumulative
+a library of candidate learners. Furthermore, JSSL neither requires that the cause-specific cumulative
 hazard functions \( \Lambda_j \) can be written as integrals
 with respect to Lebesgue measure, nor does it assume a
 (semi)parametric formula. In the remainder of this section
 we discuss the limitations of our proposal and avenues for
 further research.
 
-A major advantage of the state learner is that the performance of each
+A major advantage of JSSL is that the performance of each
 combination of learners can be estimated without additional nuisance
 parameters. A potential drawback of our approach is that we are
 evaluating the loss of the learners on the level of the observed data
@@ -942,7 +935,7 @@ Specifically, the finite sample oracle inequality in
 Proposition~\ref{prop:oracle-prop} concerns the function \( F \), which
 is a feature of \( P \in \mathcal{P} \), while what we are typically
 interested in is \( \Lambda_j \) or \( S \), which are features of
-\( Q \in \mathcal{Q} \). We emphasise that while the state learner
+\( Q \in \mathcal{Q} \). We emphasise that while JSSL
 provides us with estimates of \( \Lambda_j \) and $\Gamma$ based on
 libraries \( \mathcal{A}_j \) and \( \mathcal{B} \), the performance
 of these learners is not assessed directly for their respective target
@@ -963,7 +956,7 @@ evaluate the performance of each learner we need to perform
 \( |\mathcal{A}_1||\mathcal{A}_2||\mathcal{B}| \) many operations to calculate the
 integrated Brier score in each hold-out sample, one for each combination of the
 fitted models, but these operations are often negligible compared to fitting the
-models. Hence the state learner is essentially not more computationally demanding
+models. Hence JSSL is essentially not more computationally demanding
 than any procedure that uses super learning to learn $\Lambda_1$, $\Lambda_2$,
 and $\Gamma$ separately. While our proposal is based on constructing the library
 \( \mathcal{F} \) from libraries for learning \( \Lambda_1 \), $\Lambda_2$, and
