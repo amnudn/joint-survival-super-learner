@@ -292,26 +292,23 @@ Loss-based super learning requires a library of candidate models, or
 \textit{learners}, a cross-validation algorithm, and a loss function
 for evaluating prediction performance on hold-out samples. In this
 section we provide an abstract definition of loss-based super
-learning.  As input to a super learner we need a data set \(
-\data_n=\{O_i\}_{i=1}^n \) of i.i.d.\ observations from \( P \in
-\mathcal{P} \) and a collection of candidate models or learners
-$\mathcal{A}$. Let \(\Theta\) be a suitable parameter space such as
-\([0,1]\) for risk predictions, or the space of cadlag functions on
-\([0,\tau]\) for predictions of survival functions.  Each learner \(a
-\in \mathcal{A}\) is a map \( a \colon \mathcal{O}^n \rightarrow
-\Theta \) which takes a data set as input and returns an estimate
-$a(\data_n)$ of $\theta$.  \marginnote{we do not use Pf throughout but
-also use integral and E notation!? would be good to reduce the amount
-of abstract notation and settle for one way} In what follows, we use
-the short-hand notation \(P[f] = \int f(o) P(\diff o) \).  Let
-\(L\colon \Theta \times \mathcal{O}^n \rightarrow \R_+\) be a loss
-function and denote the expected loss by \(P[L(a(\data_n), \blank)]\)
-where the expectation is taken across all possible data sets of size
-\(n\).
+learning. As input to a super learner we need a data set
+\( \data_n=\{O_i\}_{i=1}^n \) of i.i.d.\ observations from
+\( P \in \mathcal{P} \) and a collection of candidate models or
+learners $\mathcal{A}$. Let \(\Theta\) be a suitable parameter space,
+which will in our case be a class of functions representing different
+models. Each learner
+\(a \in \mathcal{A}\) is a map
+\( a \colon \mathcal{O}^n \rightarrow \Theta \) which takes a data set
+as input and returns an estimate $a(\data_n)$ of $\theta$. Let
+\(L\colon \Theta \times \mathcal{O} \rightarrow \R_+\) be a loss
+function, representing the performance of the model
+$\theta \in \Theta$ at the observation \( O \in \mathcal{O} \), where
+lower values mean better performance.
 
-
-The expected loss of a learner is estimated by splitting the data set
-$\data_n$ into $K$ disjoint approximately equally sized subsets
+The expected
+loss of a learner is estimated by splitting the data set $\data_n$
+into $K$ disjoint approximately equally sized subsets
 \(\data_n^1, \data_n^2, \dots, \data_n^K \) and then calculating the
 cross-validated loss
 \begin{equation*}
