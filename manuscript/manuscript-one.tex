@@ -352,10 +352,10 @@ i.e.,
 \end{equation*}
 where we use \( \E_P \) to denote expectation under the distribution
 \( P \). Note that both the discrete super learner and the oracle
-learner depend on the library of learners and on the number of folds
-\(K\), and that the oracle learner is a function of the data and the
-unknown data-generating distribution.
-% However, these dependencies are suppressed in the notation.
+learner depend on the library of learners and on the specific
+partition of the data into the folds
+\( \data_n^1, \dots, \data_n^K \). In addition, the oracle learner is
+a function of the unknown data-generating distribution.
 
 \section{The joint survival super learner (JSSL)}
 \label{sec:super-learner-simple}
@@ -621,14 +621,16 @@ dependence on the sample size. In the following we let the space \(
   \right\}^{1/2}.
 \end{equation}
 
+\fxnote*{todo?}{[Should maybe define the oracle here]}
+
 \begin{proposition}
   \label{prop:oracle-prop}
   For all \(P\in\mathcal{P}\), \( n \in \N \), \( k \in \{1, \dots, K\} \),
   and $\delta>0$,
   \begin{align*}
-    \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
+    \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
     & \leq (1 + 2\delta)
-      \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
+      \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
     \\
     & \quad
       + (1+ \delta) 16   K \tau
@@ -642,6 +644,9 @@ dependence on the sample size. In the following we let the space \(
   See Appendix~\ref{sec:oracle-inequalities}.
 \end{proof}
 
+Note that the expectation in Proposition~\ref{prop:oracle-prop} is
+taken with 
+
 Proposition~\ref{prop:oracle-prop} has the following
 asymptotic consequences.
 
@@ -650,14 +655,14 @@ asymptotic consequences.
   Assume that \( |\mathcal{F}_n| = \bigO(n^q)\), for some \( q \in \N \) and
   that there exists a sequence \( \phi_n \in \mathcal{F}_n \), \( n \in \N \),
   such that
-  \( \E_{P}{\left[ \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
+  \( \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[  \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
   \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \).
   \begin{enumerate}[label=(\alph*)]
   \item If $\alpha=1$ then
-    \( \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
       \right]} = \bigO(\log(n)n^{-1}) \).
   \item If $\alpha<1$ then
-    \( \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
     \bigO(n^{-\alpha}) \).
   \end{enumerate}
 \end{corollary}
@@ -790,10 +795,10 @@ performance of the oracle, except for small sample sizes.
   \label{fig:ipcw-fail}
 \end{figure}
 
-We next compare JSSL to the super learner \texttt{survSL}
+We next compare JSSL to the super learner survSL
 \citep{westling2021inference}. This is another super learner which
 like JSSL works without a pre-specified censoring
-model. Note that both JSSL and \texttt{survSL} provide a
+model. Note that both JSSL and survSL provide a
 prediction model for the event time outcome and also for the
 probability of being censored. Hence, we compare the performance of
 these methods with respect to both the outcome and the censoring
@@ -803,7 +808,7 @@ performance.
 The results are shown in Figures~\ref{fig:zelefski-out}
 and~\ref{fig:zelefski-cens}. We see that for most sample sizes, JSSL selected prediction models for both censoring and outcome which
 have similar or higher IPA compared to the prediction models selected
-by \texttt{survSL}.
+by survSL.
 \begin{figure}
   \centering %
   \includegraphics[width=1\linewidth]{experiment-fig-sl-survSL-out.pdf}
