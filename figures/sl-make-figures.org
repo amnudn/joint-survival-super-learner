@@ -41,7 +41,7 @@ plot(crHist,stateLabels = stateLabels,arrowLabels = FALSE,
 
 
 #+BEGIN_SRC sh :exports none
-  cp figure-multi-state-process.pdf ../tex/journal-version/
+  cp figure-multi-state-process.pdf ../manuscript/
 #+END_SRC
 
 * Numerical experiments
@@ -65,7 +65,7 @@ Marginal event and censoring probabilities:
   summ_zel_sim2_1 <- zel_sim2_1[, .(IPA = mean(IPA, na.rm = TRUE), se = sd(IPA, na.rm = TRUE)/sqrt(.N)), .(n_obs, sim_set, type, SL, time, type)]
   summ_zel_sim2_1[,SL:=factor(SL,
                               levels=c("ipcw_cox","ipcw_km","oracle","statelearner","survSL"),
-                              labels=c("IPCW(Cox)","IPCW(KM)","Oracle","State learner", "survSL"))]
+                              labels=c("IPCW(Cox)","IPCW(KM)","Oracle","JSSL", "survSL"))]
   summ_zel_sim2_1[,sim_set:=factor(sim_set,levels=c("indep_cens","original"),labels=c("Independent censoring","Dependent censoring"))]
   summ_zel_sim2_1[,sim_set2:=factor(sim_set,levels=c("Independent censoring","Dependent censoring"),labels=c("Independent censoring (38.7% censored)","Dependent censoring (61.9% censored)"))]
 #+END_SRC
@@ -116,8 +116,10 @@ Marginal event and censoring probabilities:
 [[file:experiment-fig-sl-ipcw.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp experiment-fig-sl-ipcw.pdf ../tex/journal-version/
+  cp experiment-fig-sl-ipcw.pdf ../manuscript/
 #+END_SRC
+
+#+RESULTS:
 
 ** State learner versus survSL
 
@@ -130,8 +132,10 @@ Marginal event and censoring probabilities:
 [[file:experiment-fig-sl-survSL-out.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp experiment-fig-sl-survSL-out.pdf ../tex/journal-version/
+  cp experiment-fig-sl-survSL-out.pdf ../manuscript/
 #+END_SRC
+
+#+RESULTS:
 
 #+BEGIN_SRC R :results graphics file :exports both :file experiment-fig-sl-survSL-cens.pdf :width 6 :height 6
   ipa_plot(data = summ_zel_sim2_1[time == 36 & type == "cens" & !grepl("IPCW", SL)],
@@ -142,8 +146,10 @@ Marginal event and censoring probabilities:
 [[file:experiment-fig-sl-survSL-cens.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp experiment-fig-sl-survSL-cens.pdf ../tex/journal-version/
+  cp experiment-fig-sl-survSL-cens.pdf ../manuscript/
 #+END_SRC
+
+#+RESULTS:
 
 * Data application with competing event
 ** State learner
@@ -172,7 +178,7 @@ Marginal event and censoring probabilities:
 [[file:real-data-state-learner.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp real-data-state-learner.pdf ../tex/journal-version/
+  cp real-data-state-learner.pdf ../manuscript/
 #+END_SRC
 
 #+RESULTS:
@@ -198,7 +204,7 @@ Table
 #+END_SRC
 
 #+BEGIN_SRC sh :exports none
-  cp real-data-tab.tex ../tex/journal-version/
+  cp real-data-tab.tex ../manuscript/
 #+END_SRC
 
 ** Target parameter
@@ -224,6 +230,6 @@ Table
 [[file:real-data-target.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp real-data-target.pdf ../tex/journal-version/
+  cp real-data-target.pdf ../manuscript/
 #+END_SRC
 
