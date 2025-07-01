@@ -182,7 +182,7 @@ natural conditions and prove a finite-sample oracle
 inequality. We demonstrate how to construct a library for JSSL using common survival models, and how to obtain
 risk predictions from the resulting ensemble.
 
-The rest of the paper is organized as follows.
+The rest of the paper is organised as follows.
 We introduce our notation and framework in
 Section~\ref{sec:framework}. Section~\ref{sec:super-learning}
 introduces loss-based super learning. In
@@ -291,9 +291,9 @@ section we provide an abstract definition of loss-based super
 learning. As input to a super learner we need a data set
 \( \data_n=\{O_i\}_{i=1}^n \) of i.i.d.\ observations from
 \( P \in \mathcal{P} \) and a collection of candidate models or
-learners $\mathcal{A}$. Let \(\Theta\) be a suitable parameter space,
-which will in our case be a class of functions representing different
-models. Each learner \(a \in \mathcal{A}\) is a map
+learners $\mathcal{A}$. Let \(\Theta\) be the parameter space, which
+in our case is a class of functions representing different models.
+Each learner \(a \in \mathcal{A}\) is a map
 \( a \colon \mathcal{O}^n \rightarrow \Theta \) which takes a data set
 as input and returns an estimate $a(\data_n)$ of $\theta$. Let
 \(L\colon \Theta \times \mathcal{O} \rightarrow \R_+\) be a loss
@@ -305,8 +305,8 @@ The expected loss of a learner is estimated by splitting the data set
 $\data_n$ into $K$ disjoint approximately equally sized subsets
 \(\data_n^1, \data_n^2, \dots, \data_n^K \) and then calculating the
 cross-validated loss
-\begin{equation*}
-  % \label{eq:cv-risk-est}
+\begin{equation}
+  \label{eq:cv-risk-est}
   \hat{R}_n(a; L) =
   \frac{1}{K}\sum_{k=1}^{K}
   \frac{1}{| \data_n^{k} |}\sum_{O_i \in \data_n^{k}}
@@ -319,7 +319,7 @@ cross-validated loss
   },
   \quad \text{with} \quad
   \data_n^{-k} = \data_n \setminus \data_n^{k}.
-\end{equation*}
+\end{equation}
 The subset \(\data_n^{-k}\) is referred to as the \(k\)'th training
 sample, while \(\data_n^{k}\) is referred to as the \(k\)'th test or
 hold-out sample.
@@ -327,35 +327,6 @@ The discrete super learner is defined as
 \begin{equation*}
 \hat{a}_n = \argmin_{a\in\mathcal A}\hat{R}_n(a; L).
 \end{equation*}
-The oracle learner is defined as the learner that minimises the
-expected loss under the data-generating distribution \( P \),
-i.e.,
-\begin{equation*}
-  \tilde{a}_n =
-  \argmin_{a \in \mathcal{A}}
-  \tilde{R}_n(a; L),
-  \quad \text{with} \quad 
-  \tilde{R}_n(a; L)=
-  \frac{1}{K}\sum_{k=1}^{K} 
-  \E_P{
-    \left[
-      L
-      {
-        \left(
-          a{ (\data_n^{-k})}
-          , O
-        \right)
-      } 
-      \midd  \data_n^{-k}
-    \right]}
-  ,
-\end{equation*}
-where we use \( \E_P \) to denote expectation under the distribution
-\( P \). Note that both the discrete super learner and the oracle
-learner depend on the library of learners and on the specific
-partition of the data into the folds
-\( \data_n^1, \dots, \data_n^K \). In addition, the oracle learner is
-a function of the unknown data-generating distribution.
 
 \section{The joint survival super learner (JSSL)}
 \label{sec:super-learner-simple}
@@ -557,11 +528,23 @@ equation~\eqref{eq:cs-risk-def}.
 \section{Theoretical guarantees}
 \label{sec:theor-results-prop}
 
-\marginnote{depending on the journal both subsections may benefit from explanations about the usefulness of these results} 
-In this section we show that JSSL is consistent if its
-library contains a consistent learner, and we establish a finite
-sample inequality for the excess risk of JSSL compared to
-the oracle.
+The use of cross-validation underlying JSSL is an intuitively
+reasonable procedure for fair model selection without overfitting. In
+this section, we follow the works of \cite{van2003unicv} and
+\cite{vaart2006oracle} to provide a theoretical justification for this
+practice in the form of a finite-sample oracle inequality. We begin by
+demonstrating that minimising the integrated Brier score, as defined
+in Section~\ref{sec:super-learner-simple}, is statistically
+meaningful, in that perfect minimisation recovers the parameter of the
+data-generating distribution. Together with our finite-sample oracle
+inequality below (Proposition~\ref{sec:finite-sample-oracle}), this
+implies that JSSL is consistent when it is based on a library that
+includes a consistent learner. Another consequence of our
+finite-sample oracle inequality is that, informally, JSSL converges at
+(nearly) the optimal rate achievable within the library. This
+statement is made precise in Corollary~\ref{sec:finite-sample-oracle}
+and the following discussion.
+
 
 \subsection{Consistency}
 \label{sec:consistency}
@@ -602,7 +585,7 @@ equation~(\ref{eq:F-def}). In the following we let
 \subsection{Oracle inequality}
 \label{sec:finite-sample-oracle}
 
-To establish a finite sample oracle result for JSSL we
+To establish a finite-sample oracle result for JSSL we
 assume a split of the data into equally sized folds, and for
 simplicity of presentation we take \( n \) to be such that \(
 |\data_n^{-k}| = n/K \) with \( K \) fixed. We will allow the number
@@ -622,6 +605,37 @@ dependence on the sample size. In the following we let the space \(
 \end{equation}
 
 \fxnote*{todo?}{[Should maybe define the oracle here]}
+
+We shall compare the super learner theoretically to the so-called oracle
+learner, which is defined as the learner that minimises the expected loss
+under the data-generating distribution \( P \), i.e.,
+\begin{equation*}
+  \tilde{a}_n =
+  \argmin_{a \in \mathcal{A}}
+  \tilde{R}_n(a; L),
+  \quad \text{with} \quad 
+  \tilde{R}_n(a; L)=
+  \frac{1}{K}\sum_{k=1}^{K} 
+  \E_P{
+    \left[
+      L
+      {
+        \left(
+          a{ (\data_n^{-k})}
+          , O
+        \right)
+      } 
+      \midd  \data_n^{-k}
+    \right]}
+  ,
+\end{equation*}
+where we use \( \E_P \) to denote expectation under the distribution
+\( P \). Note that both the discrete super learner and the oracle
+learner depend on the library of learners and on the specific
+partition of the data into the folds
+\( \data_n^1, \dots, \data_n^K \). In addition, the oracle learner is
+a function of the unknown data-generating distribution.
+
 
 \begin{proposition}
   \label{prop:oracle-prop}
@@ -677,6 +691,9 @@ the oracle learner in advance. Corollary~\ref{cor:asymp-cons}
 states that this price is asymptotically vanishing, up to
 logarithmic terms, as long as the number of learners in the
 library grows with sample size at a polynomial rate.
+
+[Explain in terms of types of learners: Parametric (case (a)) and ML
+(case (b))]
 
 
 
@@ -844,7 +861,7 @@ cause-specific cumulative hazard functions of tumor
 recurrence, death without tumor recurrence, and censoring. The
 libraries of learners each include five learners: the
 Nelson-Aalen estimator, three Cox regression models
-(unpenalized, Lasso, Elastic net) each including additive
+(unpenalised, Lasso, Elastic net) each including additive
 effects of the 5 covariates (c.f., Section~\ref{sec:numer-exper}),
 and a random survival forest. We use the same set of learners
 to learn the cumulative hazard function of tumor recurrence
@@ -898,7 +915,7 @@ parameters. A potential drawback of our approach is that we are
 evaluating the loss of the learners on the level of the observed data
 distribution while the target of the analysis is either the event time
 distribution, or the censoring distribution, or both.
-Specifically, the finite sample oracle inequality in
+Specifically, the finite-sample oracle inequality in
 Proposition~\ref{prop:oracle-prop} concerns the function \( F \), which
 is a feature of \( P \in \mathcal{P} \), while what we are typically
 interested in is \( \Lambda_j \) or \( S \), which are features of
