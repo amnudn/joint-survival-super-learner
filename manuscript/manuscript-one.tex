@@ -327,6 +327,9 @@ The discrete super learner is defined as
 \begin{equation*}
 \hat{a}_n = \argmin_{a\in\mathcal A}\hat{R}_n(a; L).
 \end{equation*}
+Note that the discrete super learner depends on the library of
+learners and on the specific partition of the data into the folds
+\( \data_n^1, \dots, \data_n^K \).
 
 \section{The joint survival super learner (JSSL)}
 \label{sec:super-learner-simple}
@@ -403,11 +406,14 @@ cumulative hazard function of the censoring distribution.
 Based on the Cartesian product of libraries of learners for
 \((\Lambda_1,\Lambda_2,\Gamma)\) we construct a library
 $\mathcal{F}$ of learners for \( F \):
-\begin{align*}
+\begin{equation}
+  \label{eq:jssl-lib-def}
   \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
-  &= \{ \phi_{a_1,a_2, b} : a_1 \in \mathcal{A}_1, a_2 \in \mathcal{A}_2, b \in \mathcal{B}\},
-    \intertext{where in correspondence with  the relations in equation
-    \eqref{eq:transition},}
+  = \{ \phi_{a_1,a_2, b} : a_1 \in \mathcal{A}_1, a_2 \in \mathcal{A}_2, b \in \mathcal{B}\},
+\end{equation}
+where in correspondence with the relations in equation
+\eqref{eq:transition},
+\begin{align*}
     \phi_{a_1,a_2, b}(\data_n)(t,0,x)
   &= \exp{\{-a_1(\data_n)(s \mid x)-a_2(\data_n)(s \mid x) - b(\data_n)(s \mid
     x)\} },
@@ -582,19 +588,45 @@ equation~(\ref{eq:F-def}). In the following we let
   See Appendix~\ref{sec:consistency-proof}.
 \end{proof}
 
-\subsection{Oracle inequality}
+\subsection{Oracle inequalities}
 \label{sec:finite-sample-oracle}
 
-To establish a finite-sample oracle result for JSSL we
-assume a split of the data into equally sized folds, and for
-simplicity of presentation we take \( n \) to be such that \(
-|\data_n^{-k}| = n/K \) with \( K \) fixed. We will allow the number
-of learners to grow with \( n \) and write \(
-\mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1,n}, \mathcal{A}_{2,n},
-\mathcal{B}_n)\) as short-hand notation emphasing the
-dependence on the sample size. In the following we let the space \(
-\mathcal{H}_{\mathcal{P}}= \{F_P : P \in \mathcal{P}\} \) be equipped with the norm \( \| \blank
-\|_{P} \) defined by
+To evaluate the performance of JSSL we might benchmark it against the
+data-generating \( F_P \), as this has smallest expected loss by
+Proposition~\ref{sec:consistency}. A more nuanced comparison is to
+benchmark it against the best learner available given the library and
+the training data. This is the so-called oracle learner, formally
+defined as
+\begin{equation*}
+  \tilde{\phi}_n
+  =  \argmin_{\phi \in \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) }
+  \tilde{R}_{n}(\phi ; \bar{B}_{\tau}),
+  \quad \text{with} \quad 
+  \tilde{R}_n(\phi; \bar{B}_{\tau})=
+  \frac{1}{K}\sum_{k=1}^{K} 
+  \E_P{
+    \left[
+      \bar{B}_{\tau}
+      {
+        \left(
+          \phi{ (\data_n^{-k})}
+          , O
+        \right)
+      } 
+      \midd  \data_n^{-k}
+    \right]}
+  ,
+\end{equation*}
+where % \(  \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \)
+% was defined in equation~\eqref{eq:jssl-lib-def}, and 
+we use \( \E_P \) to denote expectation under the distribution \( P \)
+for a new observation \( O \) independent of \( \data_n^{-k} \). Like
+JSSL, the oracle learner depends on the library of learners and on the
+specific data partitions, but unlike JSSL, it also depends on the
+unknown data-generating distribution.
+
+In the following, we equip the space \( \mathcal{H}_{\mathcal{P}} \)
+with the norm
 \begin{equation}
   \label{eq:norm}
   \| F \|_{P} = 
@@ -603,39 +635,17 @@ dependence on the sample size. In the following we let the space \(
     \int_0^{\tau} \E_P{\left[ F(t, l, X)^2 \right]} \diff t
   \right\}^{1/2}.
 \end{equation}
-
-\fxnote*{todo?}{[Should maybe define the oracle here]}
-
-We shall compare the super learner theoretically to the so-called oracle
-learner, which is defined as the learner that minimises the expected loss
-under the data-generating distribution \( P \), i.e.,
-\begin{equation*}
-  \tilde{a}_n =
-  \argmin_{a \in \mathcal{A}}
-  \tilde{R}_n(a; L),
-  \quad \text{with} \quad 
-  \tilde{R}_n(a; L)=
-  \frac{1}{K}\sum_{k=1}^{K} 
-  \E_P{
-    \left[
-      L
-      {
-        \left(
-          a{ (\data_n^{-k})}
-          , O
-        \right)
-      } 
-      \midd  \data_n^{-k}
-    \right]}
-  ,
-\end{equation*}
-where we use \( \E_P \) to denote expectation under the distribution
-\( P \). Note that both the discrete super learner and the oracle
-learner depend on the library of learners and on the specific
-partition of the data into the folds
-\( \data_n^1, \dots, \data_n^K \). In addition, the oracle learner is
-a function of the unknown data-generating distribution.
-
+This norm is equal to the excess risk
+\( \E_P{[\bar{B}_\tau(F, O)]} - \E_P{[\bar{B}_\tau(F_P, O)]} \) by
+Lemma~\ref{lemma:norm} in the Appendix, and is thus a natural
+performance measure. For simplicity of presentation we take \( n \)
+and the data partitions to be such that \( |\data_n^{-k}| = n/K \)
+with \( K \) fixed. We will allow the number of learners to grow with
+\( n \) and write
+\( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1,n}, \mathcal{A}_{2,n},
+\mathcal{B}_n)\) as short-hand notation emphasing the dependence on
+the sample size.  We now state a finite-sample inequality that bounds
+the performance of JSSL relative to that of the oracle learner.
 
 \begin{proposition}
   \label{prop:oracle-prop}
@@ -658,11 +668,16 @@ a function of the unknown data-generating distribution.
   See Appendix~\ref{sec:oracle-inequalities}.
 \end{proof}
 
-Note that the expectation in Proposition~\ref{prop:oracle-prop} is
-taken with 
-
-Proposition~\ref{prop:oracle-prop} has the following
-asymptotic consequences.
+The expectations in Proposition~\ref{prop:oracle-prop} reflect a mild
+abuse of notation, in that they are formally taken with respect to the
+product measure \( P^{n} \) for the whole data set \( \data_n \). This
+means that we are quantifying the average performance of JSSL across
+average training data. As for many finite-sample oracle inequalities,
+this result is of little direct practical utility because the right
+hand-side depends on data-dependent, unknown quantities. However, it
+does quantify how the number of folds, the time horizon, and the
+number of learners in the library can be expected to influence the
+performance. The result has the following asymptotic consequences.
 
 \begin{corollary}
   \label{cor:asymp-cons}
@@ -674,11 +689,13 @@ asymptotic consequences.
   \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \) and
   \( C_P \geq 0 \).
   \begin{enumerate}[label=(\alph*)]
-  \item If $\alpha=1$ then
-    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
-      \right]} = \bigO(\log(n)n^{-1}) \).
-  \item If $\alpha<1$ then
-    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
+  \item\label{item:1} If $\alpha=1$ then
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+        \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
+    \bigO(\log(n)^{1+\epsilon}n^{-1}) \), $\forall\epsilon>0$.
+  \item\label{item:2} If $\alpha<1$ then
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+        \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
     \bigO(n^{-\alpha}) \).
   \end{enumerate}
 \end{corollary}
@@ -686,17 +703,35 @@ asymptotic consequences.
   See Appendix~\ref{sec:oracle-inequalities}.
 \end{proof}
 
-Proposition~\ref{prop:oracle-prop} provides a bound on the
-average price we pay for using cross-validation to select a
-learner from a library of candidates as compared to knowing
-the oracle learner in advance. Corollary~\ref{cor:asymp-cons}
-states that this price is asymptotically vanishing, up to
-logarithmic terms, as long as the number of learners in the
-library grows with sample size at a polynomial rate.
+While Proposition~\ref{prop:oracle-prop} provided a precise
+finite-sample bound on the average price we pay for using
+cross-validation, Corollary~\ref{cor:asymp-cons} states that this
+price is asymptotically vanishing, up to poly-logarithmic terms, as
+long as the number of learners in the library grows with sample size
+at a polynomial rate. The situation \( C_P=0 \) corresponds to a
+setting where the library includes a consistent learner.
+Cases~\ref{item:1} and~\ref{item:2} correspond to situations where the
+oracle learner achieves, respectively, a parametric or non-parametric
+asymptotic rate of convergence.
 
-[Explain in terms of types of learners: Parametric (case (a)) and ML
-(case (b))]
-
+To illustrate the contend of Corollary~\ref{cor:asymp-cons}, consider
+first a situation where we use a library with an increasing number of
+semi-parametric Cox models with different interaction terms, as well
+as several Poisson regression models based on different
+discretisations of the time scale. Each of these models will
+independently achieve a parametric rate of convergence, and hence
+item~\ref{item:1} of Corollary~\ref{cor:asymp-cons} states that JSSL
+based on this library will achieve a near-parametric rate of
+convergence. The constant \( C_P \) can be taken equal to the distance
+to the least false model in the library, and so JSSL will approximate
+the least false model in the library at a near-parametric rate.
+Another situation appears if we add more flexible models to the
+library, such as Cox LASSO or random survival forests. These models
+typically converge at non-parametric rates, with the fastest rate
+depending on the unknown data-generating distribution.
+Item~\ref{item:2} of Corollary~\ref{cor:asymp-cons} shows that JSSL
+achieves the same convergence rate as the best-performing algorithm in
+the library, without any knowledge of the data-generating distribution.
 
 
 \section{Numerical experiments}
@@ -1040,14 +1075,13 @@ The authors declare that they have no conflict of interest.
 \section{Proofs}
 \label{sec:proofs}
 
-This section contains proofs of the results stated in the
-paper. Section~\ref{sec:consistency-proof} contains a proof of
-the consistency result from Section~\ref{sec:consistency}, and
-Section~\ref{sec:oracle-inequalities} contains proofs of the
-oracle inequalities from
-Section~\ref{sec:finite-sample-oracle}.
+This section contains proofs of the results stated in the paper.
+Section~\ref{sec:consistency-proof} contains a proof of
+Proposition~\ref{sec:consistency}, and
+Section~\ref{sec:oracle-inequalities} contains proofs of the oracle
+inequalities from Section~\ref{sec:finite-sample-oracle}.
 
-\subsection{Consistency}
+\subsection{Strictly properness}
 \label{sec:consistency-proof}
 
 Define
@@ -1238,7 +1272,9 @@ and then the final result follows from Lemma~\ref{lemma:norm}.
       \right]}  
   \end{equation*}
   for all \( n \in \N \). The results then follows from
-  Proposition~\ref{prop:oracle-prop}.
+  Proposition~\ref{prop:oracle-prop} by letting $\delta$ grow to zero
+  with \( n \), for instance as $\delta_n = \log(n)^{-\epsilon}$ for
+  some $\epsilon>0$.
 \end{proof}
 
 
