@@ -83,7 +83,7 @@
 
 
 
-\title{The Joint Survival Super Learner: A super learner for right-censored
+\title{The joint survival super learner: A super learner for right-censored
   data}
 \author{Anders Munch \& Thomas A. Gerds}
 \date{\today}
@@ -108,9 +108,11 @@ that jointly evaluates candidate learners for both the event time
 distribution and the censoring distribution. Our method imposes no
 restrictions on the algorithms included in the library, accommodates
 competing risks, and does not rely on a single pre-specified estimator
-of the censoring distribution. We establish an oracle inequality for
-our method, assess its performance through simulation studies, and
-demonstrate its practical utility using prostate cancer data.
+of the censoring distribution. We establish theoretical guarantees for
+our proposed method, including a finite-sample oracle inequality. In a
+simulation study, our super learner was able to better account for
+different censoring mechanisms than existing methods. We demonstrate
+the practical utility of our method using prostate cancer data.
 \end{abstract}
 
 \textit{\textbf{Keywords:} Competing risks, cross-validation,
@@ -149,45 +151,46 @@ potential source of bias which is difficult to overcome with the
 currently available methods.
 
 
-In this paper we propose the Joint Survival Super Learner (JSSL), a
-new super learner designed to handle the specific challenges of
-ensemble learning with right-censored data. JSSL jointly learns
-prediction models for the event-time and censoring distributions. JSSL
-is based on the simple idea of an artificial competing risk model
-where censoring is included as a state of its own. Candidate learners
-of the event time hazard and censoring hazard functions are then
-assessed based on how well they predict the state occupation
-probabilities of the artificial competing risk model across time based
-on baseline covariate information. Our estimation framework allows for
-competing risks, avoids restrictive assumptions on the censoring
-distribution, and is also fully flexible with respect to the choice of
-learners. The latter is in contrast to other proposals which restrict
-the library of learners to specific model classes
-\citep{polley2011-sl-cens,golmakani2020super}, see
-Section~\ref{sec:super-learning}. 
+In this paper we propose the joint survival super learner, a new super
+learner designed to handle the specific challenges of ensemble
+learning with right-censored data. The joint survival super learner
+jointly learns prediction models for the event-time and censoring
+distributions. The joint survival super learner is based on the simple
+idea of an artificial competing risk model where censoring is included
+as a state of its own. Candidate learners of the event time hazard and
+censoring hazard functions are then assessed based on how well they
+predict the state occupation probabilities of the artificial competing
+risk model across time based on baseline covariate information. Our
+estimation framework allows for competing risks, avoids restrictive
+assumptions on the censoring distribution, and is also fully flexible
+with respect to the choice of learners. The latter is in contrast to
+other proposals which restrict the library of learners to specific
+model classes \citep{polley2011-sl-cens,golmakani2020super}, see
+Section~\ref{sec:super-learning}.
 
-To analyse the theoretical properties of JSSL we
+To analyse the theoretical properties of the joint survival super learner we
 focus on the discrete super learner which picks the model in
 the library with best estimated performance
 \citep{van2007super}. We provide theoretical guarantees
-for the performance of JSSL and in particular
-show that discrete JSSL is consistent under
+for the performance of the joint survival super learner and in particular
+show that the discrete joint survival super learner is consistent under
 natural conditions and prove a finite-sample oracle
-inequality. We demonstrate how to construct a library for JSSL using common survival models, and how to obtain
+inequality. We demonstrate how to construct a library for the joint survival super learner using common survival models, and how to obtain
 risk predictions from the resulting ensemble.
 
 The rest of the paper is organised as follows. We introduce our
 notation and framework in Section~\ref{sec:framework}.
 Section~\ref{sec:super-learning} introduces loss-based super learning
 and presents existing super learners for right-censored data. In
-Section~\ref{sec:super-learner-simple} we define JSSL, while
-Section~\ref{sec:theor-results-prop} provides theoretical guarantees.
-Section~\ref{sec:numer-exper} reports the results of numerical
-experiments, and Section~\ref{sec:real-data-appl} illustrates the
-method on prostate cancer data. We conclude with a discussion in
-Section~\ref{sec:discussion}. Proofs are collected in
-Appendix~\ref{sec:proofs}. Code and an implementation of JSSL are
-available at \url{https://github.com/amnudn/statelearner}.
+Section~\ref{sec:super-learner-simple} we define the joint survival
+super learner, while Section~\ref{sec:theor-results-prop} provides
+theoretical guarantees. Section~\ref{sec:numer-exper} reports the
+results of numerical experiments, and Section~\ref{sec:real-data-appl}
+illustrates the method on prostate cancer data. We conclude with a
+discussion in Section~\ref{sec:discussion}. Proofs are collected in
+Appendix~\ref{sec:proofs}. Code and an implementation of the joint
+survival super learner are available at
+\url{https://github.com/amnudn/joint-survival-super-learner}.
 
 \section{Notation and framework}
 \label{sec:framework}
@@ -370,16 +373,16 @@ true data-generating mechanism
 \citep[][Appendix~A.4]{munch2024thesis}.
 
 
-\section{The joint survival super learner (JSSL)}
+\section{The joint survival super learner}
 \label{sec:super-learner-simple}
 
-The main idea of JSSL is to jointly use learners for \(
+The main idea of the joint survival super learner is to jointly use learners for \(
 \Lambda_1 \), \( \Lambda_2 \), and \( \Gamma \), and the relations in
 equation~(\ref{eq:parametrizeP}), to learn a feature of the observed
-data distribution \( P \). Discrete JSSL ranks a tuple of
+data distribution \( P \). The discrete joint survival super learner ranks a tuple of
 learners for the tuple of the cumulative hazard functions \(
 (\Lambda_1, \Lambda_2, \Gamma) \) based on how well they jointly model
-the observed data. To formally introduce JSSL, we define
+the observed data. To formally introduce the joint survival super learner, we define
 the process 
 \begin{equation*}
   \eta(t) = \1\{\tilde{T} \leq t, \tilde D=1\} + 2\,\1\{\tilde{T} \leq t, \tilde
@@ -402,14 +405,15 @@ the function
 for all \( t \in [0,\tau] \), \( l \in \{-1,0,1,2\} \), and
 \( x \in \mathcal{X} \).
 
-JSSL is a super learner for the function-valued parameter
-$\theta(P) = F$ which is identified through
+The joint survival super learner is a super learner for the
+function-valued parameter $\theta(P) = F$ which is identified through
 equation~(\ref{eq:F-def}). Under conditional independent censoring
 each tuple $(\Lambda_{1}, \Lambda_{2}, \Gamma, H)$ characterises a
 distribution \(P\in\mathcal P\), c.f.\
-equation~\eqref{eq:parametrizeP}, which in turn determines \( (F, H)
-\). Hence, a learner for \( F \) can be constructed from learners for
-\( \Lambda_1 \), \( \Lambda_2 \), and $\Gamma$ as follows:
+equation~\eqref{eq:parametrizeP}, which in turn determines
+\( (F, H) \). Hence, a learner for \( F \) can be constructed from
+learners for \( \Lambda_1 \), \( \Lambda_2 \), and $\Gamma$ as
+follows:
 \begin{equation}\label{eq:transition}
   \begin{split}
     F(t, 0, x)
@@ -435,7 +439,7 @@ equation~\eqref{eq:parametrizeP}, which in turn determines \( (F, H)
       = \int_0^t F(s-, 0, x)  \Gamma(\diff s \mid x).
   \end{split}
 \end{equation}
-Equation~\eqref{eq:transition} implies that a library for JSSL can by build from three libraries of learners:
+Equation~\eqref{eq:transition} implies that a library for the joint survival super learner can by build from three libraries of learners:
 \(\mathcal{A}_1\), \( \mathcal{A}_2 \), and \( \mathcal{B} \),
 where \(\mathcal{A}_1\) and \( \mathcal{A}_2\) contain
 learners for the conditional cause-specific cumulative hazard
@@ -504,7 +508,7 @@ evaluated using the cross-validated loss,
     \right)
   },
 \end{equation*}
-and discrete JSSL is given by
+and the discrete joint survival super learner is given by
 \begin{align*}\label{eq:discrete-state-learner}
   \hat{\phi}_n
   &=  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
@@ -514,10 +518,10 @@ and discrete JSSL is given by
 
 
 
-\subsection{Obtaining risk predictions from JSSL}
+\subsection{Obtaining risk predictions}
 \label{sec:use-cases-state}
 
-JSSL estimates the function \( F \) which depends on the censoring
+The joint survival super learner estimates the function \( F \) which depends on the censoring
 distribution and is therefore typically not of direct interest in
 itself. For instance, in the prostate cancer example we consider in
 Sections~\ref{sec:numer-exper} and~\ref{sec:real-data-appl}, the
@@ -529,7 +533,7 @@ $1$), have died without tumor recurrence before leaving the study
 the study without tumor recurrence (state $0$). The reference to still
 being part of the study is irrelevant from a new patient's
 perspective. We here demonstrate how clinically relevant risk
-predictions can instead be obtained from JSSL.
+predictions can instead be obtained from the joint survival super learner.
 
 We recall that we work under the assumption of conditional independent
 censoring and positivity, as introduced in
@@ -552,7 +556,7 @@ and $\Lambda_2$ using the formula
     \mid x)\right\}  \Lambda_j(\diff u \mid x),
   \quad j \in \{1,2\}.
 \end{equation}
-Hence, given JSSL's estimate of \( F \) we can use
+Hence, given the joint survival super learner's estimate of \( F \) we can use
 equation~\eqref{eq:7} to obtain estimates of the cause-specific
 cumulative hazard functions $\Lambda_j$, which can in turn be used to
 obtain estimates of the cause-specific risks through
@@ -562,18 +566,18 @@ a patient with a certain set of baseline characteristics will, before
 time point \( t \), have had tumor recurrence, have died without tumor
 recurrence, or be alive without tumor recurrence.
 
-We note that we have suggested to implement JSSL by building a library
+We note that we have suggested to implement the joint survival super learner by building a library
 using learners of the cause-specific cumulative hazard functions,
 $\Lambda_j$, and the cumulative hazard function for censoring,
 $\Gamma$. With this implementation we can directly input the highest
 ranked tuple of cause-specific hazard functions
-$(\Lambda_1, \Lambda_2)$ provided by JSSL as input to
+$(\Lambda_1, \Lambda_2)$ provided by the joint survival super learner as input to
 equation~\eqref{eq:cs-risk-def}.
 
 \section{Theoretical guarantees}
 \label{sec:theor-results-prop}
 
-The use of cross-validation underlying JSSL is an intuitively
+The use of cross-validation underlying the joint survival super learner is an intuitively
 reasonable procedure for fair model selection without overfitting. In
 this section, we follow the works of \cite{van2003unicv} and
 \cite{vaart2006oracle} to provide a theoretical justification for this
@@ -583,9 +587,9 @@ in Section~\ref{sec:super-learner-simple}, is statistically
 meaningful, in that perfect minimisation recovers the parameter of the
 data-generating distribution. Together with our finite-sample oracle
 inequality (Proposition~\ref{sec:finite-sample-oracle} below), this
-implies that JSSL is consistent when it is based on a library that
+implies that the joint survival super learner is consistent when it is based on a library that
 includes a consistent learner. Another consequence of our
-finite-sample oracle inequality is that JSSL converges at (nearly) the
+finite-sample oracle inequality is that the joint survival super learner converges at (nearly) the
 optimal rate achievable within the library. This statement is made
 precise in Corollary~\ref{sec:finite-sample-oracle} and the following
 discussion.
@@ -630,7 +634,7 @@ equation~(\ref{eq:F-def}). In the following we let
 \subsection{Oracle inequalities}
 \label{sec:finite-sample-oracle}
 
-To evaluate the performance of JSSL we might benchmark it against the
+To evaluate the performance of the joint survival super learner we might benchmark it against the
 data-generating \( F_P \), as this has smallest expected loss by
 Proposition~\ref{sec:consistency}. A more nuanced comparison is to
 benchmark it against the best learner available given the library and
@@ -660,8 +664,8 @@ where % \(  \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \)
 % was defined in equation~\eqref{eq:jssl-lib-def}, and 
 we use \( \E_P \) to denote expectation under the distribution \( P \)
 for a new observation \( O \) independent of \( \data_n^{-k} \). Like
-JSSL, the oracle learner depends on the library of learners and on the
-specific data partitions, but unlike JSSL, it also depends on the
+the joint survival super learner, the oracle learner depends on the library of learners and on the
+specific data partitions, but unlike the joint survival super learner, it also depends on the
 unknown data-generating distribution.
 
 In the following, we equip the space \( \mathcal{H}_{\mathcal{P}} \)
@@ -684,7 +688,7 @@ with \( K \) fixed. We will allow the number of learners to grow with
 \( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1,n}, \mathcal{A}_{2,n},
 \mathcal{B}_n)\) as short-hand notation emphasing the dependence on
 the sample size.  We now state a finite-sample inequality that bounds
-the performance of JSSL relative to that of the oracle learner.
+the performance of the joint survival super learner relative to that of the oracle learner.
 
 \begin{proposition}
   \label{prop:oracle-prop}
@@ -710,7 +714,7 @@ the performance of JSSL relative to that of the oracle learner.
 The expectations in Proposition~\ref{prop:oracle-prop} reflect a mild
 abuse of notation, in that they are formally taken with respect to the
 product measure \( P^{n} \) for the whole data set \( \data_n \). This
-means that we are quantifying the average performance of JSSL across
+means that we are quantifying the average performance of the joint survival super learner across
 average training data. As for many finite-sample oracle inequalities,
 this result is of little direct practical utility because the right
 hand-side depends on data-dependent, unknown quantities. However, it
@@ -753,24 +757,25 @@ Cases~\ref{item:1} and~\ref{item:2} correspond to situations where the
 oracle learner achieves, respectively, a parametric or non-parametric
 asymptotic rate of convergence.
 
-To illustrate the contend of Corollary~\ref{cor:asymp-cons}, consider
+To illustrate the content of Corollary~\ref{cor:asymp-cons}, consider
 first a situation where we use a library with an increasing number of
 semi-parametric Cox models with different interaction terms, as well
 as several Poisson regression models based on different
 discretisations of the time scale. Each of these models will
 independently achieve a parametric rate of convergence, and hence
-item~\ref{item:1} of Corollary~\ref{cor:asymp-cons} states that JSSL
-based on this library will achieve a near-parametric rate of
-convergence. The constant \( C_P \) can be taken equal to the distance
-to the least false model in the library, and so JSSL will approximate
-the least false model in the library at a near-parametric rate.
-Another situation appears if we add more flexible models to the
-library, such as Cox LASSO or random survival forests. These models
-typically converge at non-parametric rates, with the fastest rate
-depending on the unknown data-generating distribution.
-Item~\ref{item:2} of Corollary~\ref{cor:asymp-cons} shows that JSSL
-achieves the same convergence rate as the best-performing algorithm in
-the library, without any knowledge of the data-generating
+item~\ref{item:1} of Corollary~\ref{cor:asymp-cons} states that the
+joint survival super learner based on this library will achieve a
+near-parametric rate of convergence. The constant \( C_P \) can be
+taken equal to the distance to the least false model in the library,
+and so the joint survival super learner will approximate the least
+false model in the library at a near-parametric rate. Another
+situation appears if we add more flexible models to the library, such
+as Cox LASSO or random survival forests. These models typically
+converge at non-parametric rates, with the fastest rate depending on
+the unknown data-generating distribution. Item~\ref{item:2} of
+Corollary~\ref{cor:asymp-cons} shows that the joint survival super
+learner achieves the same convergence rate as the best-performing
+algorithm in the library, without any knowledge of the data-generating
 distribution.
 
 
@@ -780,9 +785,9 @@ distribution.
 
 In this section we report results from a simulation study where we consider
 estimation of the conditional survival function. In the first part, we compare
-JSSL to two IPCW based discrete super learners that use either the
+the joint survival super learner to two IPCW based discrete super learners that use either the
 Kaplan-Meier estimator or a Cox model to estimate the censoring probability
-\citep{gonzalez2021stacked}. In the second part we compare JSSL to
+\citep{gonzalez2021stacked}. In the second part we compare the joint survival super learner to
 the super learner proposed by \cite{westling2021inference}.
 
 In both parts we use the same data-generating mechanism. We generate data
@@ -825,7 +830,7 @@ outcome to learn the cumulative hazard function of the
 censoring time, we mean that the learner is trained on
 \( \data_n^c \).
 
-We compare JSSL to two IPCW based super learners: The
+We compare the joint survival super learner to two IPCW based super learners: The
 first super learner, called IPCW(Cox), uses a Cox model with main
 effects to estimate the censoring probabilities, while the second
 super learner, called IPCW(KM), uses the Kaplan-Meier estimator to
@@ -871,8 +876,8 @@ The results are shown in Figure~\ref{fig:ipcw-fail}. We see that in
 the scenario where censoring depends on the covariates, using the
 Kaplan-Meier estimator to estimate the censoring probabilities
 provides a risk prediction model with an IPA that is lower than the
-risk prediction model provided by JSSL. The performance
-of the risk prediction model selected by JSSL is similar
+risk prediction model provided by the joint survival super learner. The performance
+of the risk prediction model selected by the joint survival super learner is similar
 to the risk prediction model selected by the IPCW(Cox) super learner
 which a priori uses a correctly specified model for the censoring
 distribution. Both these risk prediction models are close to the
@@ -881,18 +886,18 @@ performance of the oracle, except for small sample sizes.
 \begin{figure}
   \centering %
   \includegraphics[width=1\linewidth]{experiment-fig-sl-ipcw.pdf}
-  \caption[]{For the risk prediction models provided by each of the super
-    learners, the IPA is plotted against sample size. The results are averages across 
-    1000 simulated data sets and the error bars are used to quantify the Monte Carlo
-    uncertainty.
-  }
+  \caption[]{For the risk prediction models provided by each of the
+    super learners, the IPA is plotted against sample size. The
+    results are averages across 1000 simulated data sets and the error
+    bars are used to quantify the Monte Carlo uncertainty. JSSL
+    denotes the joint survival super learner. }
   \label{fig:ipcw-fail}
 \end{figure}
 
-We next compare JSSL to the super learner survSL
+We next compare the joint survival super learner to the super learner survSL
 \citep{westling2021inference}. This is another super learner which
-like JSSL works without a pre-specified censoring
-model. Note that both JSSL and survSL provide a
+like the joint survival super learner works without a pre-specified censoring
+model. Note that both the joint survival super learner and survSL provide a
 prediction model for the event time outcome and also for the
 probability of being censored. Hence, we compare the performance of
 these methods with respect to both the outcome and the censoring
@@ -900,7 +905,7 @@ distribution. Again we use the IPA to quantify the predictive
 performance.
 
 The results are shown in Figures~\ref{fig:zelefski-out}
-and~\ref{fig:zelefski-cens}. We see that for most sample sizes, JSSL selected prediction models for both censoring and outcome which
+and~\ref{fig:zelefski-cens}. We see that for most sample sizes, the joint survival super learner selected prediction models for both censoring and outcome which
 have similar or higher IPA compared to the prediction models selected
 by survSL.
 \begin{figure}
@@ -909,17 +914,19 @@ by survSL.
   \caption[]{For the risk prediction models of the outcome provided by each
     of the super learners, the IPA at the fixed time horizon is plotted against
     sample size. The results are averages across 1000 repetitions and the error
-    bars are used to quantify the Monte Carlo uncertainty.}
+    bars are used to quantify the Monte Carlo uncertainty. }
   \label{fig:zelefski-out}
 \end{figure}
 
 \begin{figure}
   \centering %
   \includegraphics[width=.7\linewidth]{experiment-fig-sl-survSL-cens.pdf}
-  \caption[]{For the risk prediction models of the censoring model provided by
-    each of the super learners, the IPA at the fixed time horizon is plotted
-    against sample size. The results are averages across 1000 repetitions and
-    the error bars are used to quantify the Monte Carlo uncertainty.}
+  \caption[]{For the risk prediction models of the censoring model
+    provided by each of the super learners, the IPA at the fixed time
+    horizon is plotted against sample size. The results are averages
+    across 1000 repetitions and the error bars are used to quantify
+    the Monte Carlo uncertainty. JSSL denotes the joint survival super
+    learner. JSSL denotes the joint survival super learner.}
   \label{fig:zelefski-cens}
 \end{figure}
 
@@ -928,12 +935,12 @@ by survSL.
 \label{sec:real-data-appl}
 
 In this section we use the prostate cancer data of
-\cite{kattan2000pretreatment} to illustrate the use of JSSL in the presence of competing risks. We have
+\cite{kattan2000pretreatment} to illustrate the use of the joint survival super learner in the presence of competing risks. We have
 introduced the data in Section~\ref{sec:numer-exper}. The data
 consists of 1,042 patients who are followed from start of
 followup until tumor recurrence, death without tumor
 recurrence or end of followup (censored) whatever came first.
-We use JSSL to rank libraries of learners for the
+We use the joint survival super learner to rank libraries of learners for the
 cause-specific cumulative hazard functions of tumor
 recurrence, death without tumor recurrence, and censoring. The
 libraries of learners each include five learners: the
@@ -974,19 +981,19 @@ random forest is used to model the censoring distribution.
 \section{Discussion}
 \label{sec:discussion}
 
-JSSL is a new super learner that can be used with
+The joint survival super learner is a new super learner that can be used with
 right-censored data and competing events. Compared to existing
-IPCW-based methods, the advantage of JSSL is that
+IPCW-based methods, the advantage of the joint survival super learner is that
 it does not depend on a pre-specified estimator of the
 censoring distribution, but selects one automatically based on
-a library of candidate learners. Furthermore, JSSL neither requires that the cause-specific cumulative
+a library of candidate learners. Furthermore, the joint survival super learner neither requires that the cause-specific cumulative
 hazard functions \( \Lambda_j \) can be written as integrals
 with respect to Lebesgue measure, nor does it assume a
 (semi)parametric formula. In the remainder of this section
 we discuss the limitations of our proposal and avenues for
 further research.
 
-A major advantage of JSSL is that the performance of each
+A major advantage of the joint survival super learner is that the performance of each
 combination of learners can be estimated without additional nuisance
 parameters. A potential drawback of our approach is that we are
 evaluating the loss of the learners on the level of the observed data
@@ -996,7 +1003,7 @@ Specifically, the finite-sample oracle inequality in
 Proposition~\ref{prop:oracle-prop} concerns the function \( F \), which
 is a feature of \( P \in \mathcal{P} \), while what we are typically
 interested in is \( \Lambda_j \) or \( S \), which are features of
-\( Q \in \mathcal{Q} \). We emphasise that while JSSL
+\( Q \in \mathcal{Q} \). We emphasise that while the joint survival super learner
 provides us with estimates of \( \Lambda_j \) and $\Gamma$ based on
 libraries \( \mathcal{A}_j \) and \( \mathcal{B} \), the performance
 of these learners is not assessed directly for their respective target
@@ -1017,7 +1024,7 @@ evaluate the performance of each learner we need to perform
 \( |\mathcal{A}_1||\mathcal{A}_2||\mathcal{B}| \) many operations to calculate the
 integrated Brier score in each hold-out sample, one for each combination of the
 fitted models, but these operations are often negligible compared to fitting the
-models. Hence JSSL is essentially not more computationally demanding
+models. Hence the joint survival super learner is essentially not more computationally demanding
 than any procedure that uses super learning to learn $\Lambda_1$, $\Lambda_2$,
 and $\Gamma$ separately. While our proposal is based on constructing the library
 \( \mathcal{F} \) from libraries for learning \( \Lambda_1 \), $\Lambda_2$, and
@@ -1033,18 +1040,20 @@ is more involved, but we expect that a good approximation can be achieved by
 discretisation.
 
 
-Our original motivation for developing JSSL was for use within the
-framework of targeted or debiased machine learning -- a general
-methodology that combines flexible, data-adaptive estimation with
-asymptotically valid inference for low-dimensional target parameters
+Our original motivation for developing the joint survival super
+learner was for use within the framework of targeted or debiased
+machine learning -- a general methodology that combines flexible,
+data-adaptive estimation with asymptotically valid inference for
+low-dimensional target parameters
 \citep{van2011targeted,chernozhukov2018double}. In settings with
 right-censored competing risks, the relevant nuisance parameters often
 include the cause-specific and censoring cumulative hazard functions
-\citep[e.g.,][]{van2003unified,rytgaard2022targeted}. JSSL immediately
-provides estimates of these nuisance parameters and is hence
-particularly well suited for targeted and debiased machine learning.
-We leave the study of JSSL in the context of targeted and debiased
-machine learning for a future paper.
+\citep[e.g.,][]{van2003unified,rytgaard2022targeted}. The joint
+survival super learner immediately provides estimates of these
+nuisance parameters and is hence particularly well suited for targeted
+and debiased machine learning. We leave the study of the joint
+survival super learner in the context of targeted and debiased machine
+learning for a future paper.
 
 
 \section*{Conflict of interest}
