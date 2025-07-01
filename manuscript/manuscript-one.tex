@@ -537,32 +537,32 @@ demonstrating that minimising the integrated Brier score, as defined
 in Section~\ref{sec:super-learner-simple}, is statistically
 meaningful, in that perfect minimisation recovers the parameter of the
 data-generating distribution. Together with our finite-sample oracle
-inequality below (Proposition~\ref{sec:finite-sample-oracle}), this
+inequality (Proposition~\ref{sec:finite-sample-oracle} below), this
 implies that JSSL is consistent when it is based on a library that
 includes a consistent learner. Another consequence of our
-finite-sample oracle inequality is that, informally, JSSL converges at
-(nearly) the optimal rate achievable within the library. This
-statement is made precise in Corollary~\ref{sec:finite-sample-oracle}
-and the following discussion.
+finite-sample oracle inequality is that JSSL converges at (nearly) the
+optimal rate achievable within the library. This statement is made
+precise in Corollary~\ref{sec:finite-sample-oracle} and the following
+discussion.
 
 
-\subsection{Consistency}
+\subsection{A strictly proper scoring rule}
 \label{sec:consistency}
 
-The following result can be derived from the fact
-that the integrated Brier score (also called the continuous
-ranked probability score) is a strictly proper scoring rule
-\citep{gneiting2007strictly}. This implies that if we minimise
-the average loss of the integrated Brier score, we recover the
-parameters of the data-generating distribution. Specifically,
-this implies that the oracle of a JSSL is consistent
-if the library of learners contains at least one learner that
-is consistent for estimation of \( F \). Recall that the
-function \(F\) implicitly depends on the data-generating
-probability measure \(P\in\mathcal P\) but that this was
-suppressed in the notation. We now make this dependence
-explicit by writing \(F_P\) for the function determined by a
-given \(P \in\mathcal{P}\) in accordance with equation
+A sensible loss function should attain the minimal expected value at
+the parameter corresponding to the data-generating distribution. Loss
+functions with this property are known as proper scoring rules, and as
+strictly proper scoring rules if the minimiser is unique
+\citep{gneiting2007strictly}. Absence of properness makes it unclear
+why minimising the (estimated) expected loss is interesting.
+Proposition~\ref{sec:consistency} is a formal statement of the fact
+that the integrated Brier score, as defined in our setting (c.f.,
+Section~\ref{sec:super-learner-simple}), is a strictly proper scoring
+rule. To state this result, recall that the function \(F\) implicitly
+depends on the data-generating probability measure \(P\in\mathcal P\)
+but that this was suppressed in the notation. We now make this
+dependence explicit by writing \(F_P\) for the function determined by
+a given \(P \in\mathcal{P}\) in accordance with equation
 equation~(\ref{eq:F-def}). In the following we let
 \( \mathcal{H}_{\mathcal{P}} = \{F_P : P \in \mathcal{P}\} \).
 
@@ -666,11 +666,13 @@ asymptotic consequences.
 
 \begin{corollary}
   \label{cor:asymp-cons}
-  Assume that \( |\mathcal{F}_n| = \bigO(n^q)\), for some \( q \in \N \) and
-  that there exists a sequence \( \phi_n \in \mathcal{F}_n \), \( n \in \N \),
-  such that
-  \( \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[  \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} =
-  \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \).
+  Assume that \( |\mathcal{F}_n| = \bigO(n^q)\), for some
+  \( q \in \N \) and that there exists a sequence
+  \( \phi_n \in \mathcal{F}_n \), \( n \in \N \), such that
+  \( \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+      \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
+  \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \) and
+  \( C_P \geq 0 \).
   \begin{enumerate}[label=(\alph*)]
   \item If $\alpha=1$ then
     \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
