@@ -151,26 +151,20 @@ currently available methods.
 
 In this paper we propose the Joint Survival Super Learner (JSSL), a
 new super learner designed to handle the specific challenges of
-ensemble learning with right-censored data. JSSL jointly
-learns prediction models for the event-time and censoring
-distributions. JSSL is based on the simple idea of an
-artificial competing risk model where censoring is included as a state
-of its own. Candidate learners of the event time hazard and censoring
-hazard functions are then assessed based on how well they predict the
-state occupation probabilities of the artificial competing risk model
-across time based on baseline covariate information. Our estimation
-framework allows for competing risks, avoids restrictive assumptions
-on the censoring distribution, and is also fully flexible with respect
-to the choice of learners. The latter is in contrast to other
-proposals which restrict the library of learners to specific model
-classes \citep{polley2011-sl-cens,golmakani2020super}, see Section
-\ref{sec:choice-of-loss-function}. Like our proposal, recent work by
-\cite{han2021inverse} and \cite{westling2021inference} also
-circumvents the need to pre-specify a censoring model by iterating
-between estimation of the outcome and censoring models. However, this
-iterative procedure is in general not guaranteed to converge to the
-true data-generating mechanism
-\citep[][Appendix~A.4]{munch2024thesis}.
+ensemble learning with right-censored data. JSSL jointly learns
+prediction models for the event-time and censoring distributions. JSSL
+is based on the simple idea of an artificial competing risk model
+where censoring is included as a state of its own. Candidate learners
+of the event time hazard and censoring hazard functions are then
+assessed based on how well they predict the state occupation
+probabilities of the artificial competing risk model across time based
+on baseline covariate information. Our estimation framework allows for
+competing risks, avoids restrictive assumptions on the censoring
+distribution, and is also fully flexible with respect to the choice of
+learners. The latter is in contrast to other proposals which restrict
+the library of learners to specific model classes
+\citep{polley2011-sl-cens,golmakani2020super}, see
+Section~\ref{sec:super-learning}. 
 
 To analyse the theoretical properties of JSSL we
 focus on the discrete super learner which picks the model in
@@ -182,17 +176,18 @@ natural conditions and prove a finite-sample oracle
 inequality. We demonstrate how to construct a library for JSSL using common survival models, and how to obtain
 risk predictions from the resulting ensemble.
 
-The rest of the paper is organised as follows.
-We introduce our notation and framework in
-Section~\ref{sec:framework}. Section~\ref{sec:super-learning}
-introduces loss-based super learning. In
-Section~\ref{sec:super-learner-simple} we define JSSL,
-while Section~\ref{sec:theor-results-prop} provides theoretical
-guarantees. Section~\ref{sec:numer-exper} reports the results of
-numerical experiments, and Section~\ref{sec:real-data-appl}
-illustrates the method on prostate cancer data. We conclude with a
-discussion in Section~\ref{sec:discussion}. Proofs are collected in
-Appendix~\ref{sec:proofs}. Code and an implementation of JSSL are available at \url{https://github.com/amnudn/statelearner}.
+The rest of the paper is organised as follows. We introduce our
+notation and framework in Section~\ref{sec:framework}.
+Section~\ref{sec:super-learning} introduces loss-based super learning
+and presents existing super learners for right-censored data. In
+Section~\ref{sec:super-learner-simple} we define JSSL, while
+Section~\ref{sec:theor-results-prop} provides theoretical guarantees.
+Section~\ref{sec:numer-exper} reports the results of numerical
+experiments, and Section~\ref{sec:real-data-appl} illustrates the
+method on prostate cancer data. We conclude with a discussion in
+Section~\ref{sec:discussion}. Proofs are collected in
+Appendix~\ref{sec:proofs}. Code and an implementation of JSSL are
+available at \url{https://github.com/amnudn/statelearner}.
 
 \section{Notation and framework}
 \label{sec:framework}
@@ -331,6 +326,50 @@ Note that the discrete super learner depends on the library of
 learners and on the specific partition of the data into the folds
 \( \data_n^1, \dots, \data_n^K \).
 
+When designing a super learner for right-censored data, particular
+care must be taken in the choice of loss function and in the
+estimation of the expected loss. A commonly used loss function for
+right-censored is the partial log-likelihood loss
+\citep[e.g.,][]{li2016regularized,yao2017deep,lee2018deephit,katzman2018deepsurv,gensheimer2019scalable,lee2021boosted,kvamme2021continuous}.
+This loss function is also suggested for super learning with
+right-censored data by \cite{polley2011-sl-cens}, where data is
+assumed to be observed in discrete time. However, the partial
+log-likelihood loss does not work well as a measure of performance in
+hold-out samples observed in continuous time. The reason is that the
+partial log-likelihood loss assigns an infinite value for any learner
+that predicts piece-wise constant cumulative hazard functions when
+there are event times in the test set which do not occur in the
+learning set. This problem occurs with prominent survival learners
+including the Kaplan-Meier estimator, random survival forests, and
+semi-parametric Cox regression models, and these learners cannot be
+included in the library of the super learner proposed by
+\cite{polley2011-sl-cens}. When a proportional hazards model is
+assumed, the baseline hazard function can be profiled out of the
+likelihood \citep{cox1972regression}. The cross-validated partial
+log-likelihood loss \citep{verweij1993cross} has therefore been
+suggested as a loss function for super learning by
+\cite{golmakani2020super}. This choice of loss function restricts the
+library of learners to include only Cox proportional hazards models,
+and hence excludes many learners such as, e.g., random survival
+forests, additive hazards models, and accelerated failure time models.
+
+Alternative approaches for super learning with right-censored data use
+an inverse probability of censoring weighted (IPCW) loss function
+\citep{graf1999assessment,van2003unicv,molinaro2004tree,keles2004asymptotically,hothorn2006survival,gerds2006consistent,gonzalez2021stacked},
+censoring unbiased transformations
+\citep{fan1996local,steingrimsson2019censoring}, or pseudo-values
+\citep{andersen2003generalised,mogensen2013random,sachs2019ensemble}.
+All these methods rely on an estimator of the censoring distribution,
+and their drawback is that this estimator has to be pre-specified.
+Recent work by
+\cite{han2021inverse} and \cite{westling2021inference} 
+circumvents the need to pre-specify a censoring model by iterating
+between estimation of the outcome and censoring models. However, this
+iterative procedure is in general not guaranteed to converge to the
+true data-generating mechanism
+\citep[][Appendix~A.4]{munch2024thesis}.
+
+
 \section{The joint survival super learner (JSSL)}
 \label{sec:super-learner-simple}
 
@@ -446,13 +485,13 @@ where \( B_t \) is the Brier score
       F(t,l,X) - \1{\{\eta(t)=l\}}
   \right)^2.
 \end{equation*}
-\marginnote{Say that Brier score is across all 4 states because this is not commonly done}
-Based on a split of a data set \(\data_n\) into $K$ disjoint
-approximately equally sized subsets (c.f., Section
-\ref{sec:super-learning}), each learner
-\( \phi_{a_1, a_2, b} \) in the library
-\( \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \)
-is evaluated using the cross-validated loss,
+Note that the Brier score is here the squared prediction error across
+all of the four states. Based on a split of a data set \(\data_n\)
+into $K$ disjoint approximately equally sized subsets (c.f., Section
+\ref{sec:super-learning}), each learner \( \phi_{a_1, a_2, b} \) in
+the library
+\( \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \) is
+evaluated using the cross-validated loss,
 \begin{equation*}
   \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) =
   \frac{1}{K}\sum_{k=1}^{K}
@@ -684,7 +723,7 @@ performance. The result has the following asymptotic consequences.
   Assume that \( |\mathcal{F}_n| = \bigO(n^q)\), for some
   \( q \in \N \) and that there exists a sequence
   \( \phi_n \in \mathcal{F}_n \), \( n \in \N \), such that
-  \( \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+  \(  \E_{P}{\left[ \Vert
       \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
   \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \) and
   \( C_P \geq 0 \).
@@ -993,75 +1032,19 @@ integrals in equation~(\ref{eq:transition}) reduce to sums. When $\Lambda_j$ or
 is more involved, but we expect that a good approximation can be achieved by
 discretisation.
 
-\subsection{Choice of loss function}
-\label{sec:choice-of-loss-function}
 
-Machine learning based on right-censored data
-commonly uses the partial log-likelihood as a loss function
-\citep[e.g.,][]{li2016regularized,yao2017deep,lee2018deephit,katzman2018deepsurv,gensheimer2019scalable,lee2021boosted,kvamme2021continuous}.
-This loss function is also suggested for super learning with
-right-censored data by \cite{polley2011-sl-cens}, where data is
-assumed to be observed in discrete time. However, the partial
-log-likelihood loss does not work well as a measure of performance in
-hold-out samples observed in continuous time.  The reason is that the
-partial log-likelihood loss assigns an infinite value for any learner
-that predicts piece-wise constant cumulative hazard functions when
-there are event times in the test set which do not occur in the
-learning set.  This problem occurs with prominent survival learners
-including the Kaplan-Meier estimator, random survival forests, and
-semi-parametric Cox regression models, and these learners cannot be
-included in the library of the super learner proposed by
-\cite{polley2011-sl-cens}. When a proportional hazards model is
-assumed, the baseline hazard function can be profiled out of the
-likelihood \citep{cox1972regression}. The cross-validated partial
-log-likelihood loss \citep{verweij1993cross} has therefore been
-suggested as a loss function for super learning by
-\cite{golmakani2020super}.  This choice of loss function restricts the
-library of learners to include only Cox proportional hazards models,
-and hence excludes many learners such as, e.g., random survival
-forests, additive hazards models, and accelerated failure time models.
-
-Alternative approaches for super learning with right-censored
-data use an inverse probability of censoring weighted (IPCW)
-loss function
-\citep{graf1999assessment,van2003unicv,molinaro2004tree,keles2004asymptotically,hothorn2006survival,gerds2006consistent,gonzalez2021stacked},
-censoring unbiased transformations
-\citep{fan1996local,steingrimsson2019censoring}, or
-pseudo-values
-\citep{andersen2003generalised,mogensen2013random,sachs2019ensemble}.
-All these methods rely on an estimator of the censoring
-distribution, and their drawback is that this estimator has to
-be pre-specified.
-
-\subsection{Targeted machine learning and causal inference}
-\label{sec:targeted-learning}
-
-The framework of \textit{targeted} or \textit{debiased}
-machine learning is a general methodology for combining
-data-adaptive modeling, such as machine and super learning,
-with asymptotically valid statistical inference for
-interpretable target parameters \citep{van2006targeted,
-  chernozhukov2018double}. \fxnote*{add more references?}{This
-  framework has been applied extensively for causal inference
-  based on observational data
-  \citep[e.g.,][]{van2011targeted,kennedy2016semiparametric,rytgaard2022targeted}.}
-A targeted or debiased estimator is constructed by first
-estimation high-dimensional nuisance parameters using machine
-learning, and then employing a debiasing or targeting step
-that is motivated from semi-parametric efficiency theory
-\citep{pfanzagl1985contributions,bickel1993efficient,van2003unified,tsiatis2007semiparametric,kennedy2022semiparametric}.
-In the context of right-censored competing risk data, the
-high-dimensional nuisance parameters needed to be estimated
-will typically include the cause-specific cumulative hazard
-functions and the cumulative hazard function for censoring
-\citep[e.g.,][]{van2003unified,rytgaard2021estimation,rytgaard2022targeted}.
-JSSL immediately provides estimates of these
-nuisance parameters and is hence particularly well suited for
-targeted and debiased machine learning. Though it served as
-our original motivation for developing JSSL, we
-leave the study of JSSL in the context of
-targeted and debiased machine learning for a future paper.
-
+Our original motivation for developing JSSL was for use within the
+framework of targeted or debiased machine learning -- a general
+methodology that combines flexible, data-adaptive estimation with
+asymptotically valid inference for low-dimensional target parameters
+\citep{van2011targeted,chernozhukov2018double}. In settings with
+right-censored competing risks, the relevant nuisance parameters often
+include the cause-specific and censoring cumulative hazard functions
+\citep[e.g.,][]{van2003unified,rytgaard2022targeted}. JSSL immediately
+provides estimates of these nuisance parameters and is hence
+particularly well suited for targeted and debiased machine learning.
+We leave the study of JSSL in the context of targeted and debiased
+machine learning for a future paper.
 
 
 \section*{Conflict of interest}
@@ -1144,10 +1127,10 @@ respectively, the discrete super learner and the oracle learner for the library
   \( F \in \mathcal{H}_{\mathcal{P}} \), and so using Theorem 2.3 from
   \citep{vaart2006oracle} with \( p=1 \), we have that for all \( \delta >0 \),
 \begin{align*}
-  & \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
+  & \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
   \\
   &  \quad \leq
-    (1+2\delta)\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
+    (1+2\delta)\frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
   \\
   & \qquad + (1+\delta) \frac{16 K}{n}
     \log(1 + |\mathcal{F}_n|)\sup_{F \in \mathcal{H}_{\mathcal{P}}}
@@ -1252,9 +1235,9 @@ and so using the Bernstein pairs \( (\tau, 1.5 \E_P{[\bar{B}_{\tau,P}(F, O)^2]})
 \end{equation*}
 For all $\delta>0$ we thus have
 \begin{align*}
-  \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
+  \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
   \leq
-  &(1+2\delta)\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
+  &(1+2\delta)\frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
   \\
   & \quad
     + (1+\delta)\log(1 + |\mathcal{F}_n|) \tau \frac{16 K}{n}
@@ -1268,14 +1251,20 @@ and then the final result follows from Lemma~\ref{lemma:norm}.
 \begin{proof}[Proof of Corollary~\ref{cor:asymp-cons}]
   By definition of the oracle and Lemma~\ref{lemma:norm},
   \begin{equation*}
-    \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
-      \right]} \leq \E_{P}{\left[ \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2
-      \right]}  
+    \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]} \leq
+    \frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ \Vert
+        \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]}
+    =
+    \E_{P}{\left[ \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]},
   \end{equation*}
-  for all \( n \in \N \). The results then follows from
-  Proposition~\ref{prop:oracle-prop} by letting $\delta$ grow to zero
-  with \( n \), for instance as $\delta_n = \log(n)^{-\epsilon}$ for
-  some $\epsilon>0$.
+  for all \( n \in \N \), where the last equality follows because all
+  the training sets \( \data_n^{-k} \) have the same distribution. The
+  result then follows from Proposition~\ref{prop:oracle-prop} by
+  letting $\delta$ grow to zero with \( n \), for instance as
+  $\delta_n = \log(n)^{-\epsilon}$ for some $\epsilon>0$.
 \end{proof}
 
 
