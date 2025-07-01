@@ -376,6 +376,10 @@ true data-generating mechanism
 \section{The joint survival super learner}
 \label{sec:super-learner-simple}
 
+\subsection{An artificial competing risk model}
+\label{sec:an-artif-comp}
+
+
 The main idea of the joint survival super learner is to jointly use learners for \(
 \Lambda_1 \), \( \Lambda_2 \), and \( \Gamma \), and the relations in
 equation~(\ref{eq:parametrizeP}), to learn a feature of the observed
@@ -577,26 +581,23 @@ equation~\eqref{eq:cs-risk-def}.
 \section{Theoretical guarantees}
 \label{sec:theor-results-prop}
 
-The use of cross-validation underlying the joint survival super learner is an intuitively
-reasonable procedure for fair model selection without overfitting. In
-this section, we follow the works of \cite{van2003unicv} and
-\cite{vaart2006oracle} to provide a theoretical justification for this
-practice in the form of a finite-sample oracle inequality. We begin by
-demonstrating that minimising the integrated Brier score, as defined
-in Section~\ref{sec:super-learner-simple}, is statistically
-meaningful, in that perfect minimisation recovers the parameter of the
+The use of cross-validation underlying the joint survival super
+learner is an intuitively reasonable procedure for fair model
+selection without overfitting. In this section, we follow the works of
+\cite{van2003unicv} and \cite{vaart2006oracle} to provide a
+theoretical justification for this practice in the form of a
+finite-sample oracle inequality. We begin by demonstrating that
+minimising the integrated Brier score, as defined in
+Section~\ref{sec:super-learner-simple}, is statistically meaningful,
+in that perfect minimisation recovers the parameter of the
 data-generating distribution. Together with our finite-sample oracle
-inequality (Proposition~\ref{sec:finite-sample-oracle} below), this
-implies that the joint survival super learner is consistent when it is based on a library that
-includes a consistent learner. Another consequence of our
-finite-sample oracle inequality is that the joint survival super learner converges at (nearly) the
-optimal rate achievable within the library. This statement is made
-precise in Corollary~\ref{sec:finite-sample-oracle} and the following
-discussion.
-
-
-\subsection{A strictly proper scoring rule}
-\label{sec:consistency}
+inequality (Proposition~\ref{prop:oracle-prop} below), this implies
+that the joint survival super learner is consistent when it is based
+on a library that includes a consistent learner. Another consequence
+of our finite-sample oracle inequality is that the joint survival
+super learner converges at (nearly) the optimal rate achievable within
+the library. This statement is made precise in
+Corollary~\ref{cor:asymp-cons} and the following discussion.
 
 A sensible loss function should attain the minimal expected value at
 the parameter corresponding to the data-generating distribution. Loss
@@ -604,7 +605,7 @@ functions with this property are known as proper scoring rules, and as
 strictly proper scoring rules if the minimiser is unique
 \citep{gneiting2007strictly}. Absence of properness makes it unclear
 why minimising the (estimated) expected loss is interesting.
-Proposition~\ref{sec:consistency} is a formal statement of the fact
+Proposition~\ref{prop:stric-prop} is a formal statement of the fact
 that the integrated Brier score, as defined in our setting (c.f.,
 Section~\ref{sec:super-learner-simple}), is a strictly proper scoring
 rule. To state this result, recall that the function \(F\) implicitly
@@ -631,15 +632,13 @@ equation~(\ref{eq:F-def}). In the following we let
   See Appendix~\ref{sec:consistency-proof}.
 \end{proof}
 
-\subsection{Oracle inequalities}
-\label{sec:finite-sample-oracle}
 
-To evaluate the performance of the joint survival super learner we might benchmark it against the
-data-generating \( F_P \), as this has smallest expected loss by
-Proposition~\ref{sec:consistency}. A more nuanced comparison is to
-benchmark it against the best learner available given the library and
-the training data. This is the so-called oracle learner, formally
-defined as
+To evaluate the performance of the joint survival super learner we
+might benchmark it against the data-generating \( F_P \), as this has
+smallest expected loss by Proposition~\ref{prop:stric-prop}. A more
+nuanced comparison is to benchmark it against the best learner
+available given the library and the training data. This is the
+so-called oracle learner, formally defined as
 \begin{equation*}
   \tilde{\phi}_n
   =  \argmin_{\phi \in \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) }
@@ -1056,10 +1055,6 @@ survival super learner in the context of targeted and debiased machine
 learning for a future paper.
 
 
-\section*{Conflict of interest}
-
-The authors declare that they have no conflict of interest.
-
 
 \bibliography{bib.bib}
 
@@ -1067,12 +1062,6 @@ The authors declare that they have no conflict of interest.
 
 \section{Proofs}
 \label{sec:proofs}
-
-This section contains proofs of the results stated in the paper.
-Section~\ref{sec:consistency-proof} contains a proof of
-Proposition~\ref{sec:consistency}, and
-Section~\ref{sec:oracle-inequalities} contains proofs of the oracle
-inequalities from Section~\ref{sec:finite-sample-oracle}.
 
 \subsection{Strictly properness}
 \label{sec:consistency-proof}
