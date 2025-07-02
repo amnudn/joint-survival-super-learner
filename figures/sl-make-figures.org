@@ -169,7 +169,7 @@ Marginal event and censoring probabilities:
     theme_bw() + ylab("Integrated Brier score") +
     theme(legend.position="top",
 	  axis.text.x = element_text(angle = 45, vjust = .8)) +
-    xlab("Tumor learner") +
+    xlab("Tumour learner") +
     facet_grid( ~ censor) +
     scale_colour_grey("Mortality learner", start = 0, end = 0.7)
 #+END_SRC
@@ -178,7 +178,7 @@ Marginal event and censoring probabilities:
 [[file:real-data-state-learner.pdf]]
 
 #+BEGIN_SRC sh :exports none
-  cp real-data-state-learner.pdf ../manuscript/
+  cp real-data-state-learner.pdf ../manuscript/art
 #+END_SRC
 
 #+RESULTS:
