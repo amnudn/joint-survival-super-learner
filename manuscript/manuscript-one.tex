@@ -107,28 +107,28 @@
 
 \maketitle
 
-\begin{abstract}
-  Risk prediction models are widely used to guide real-world
-  decision-making in areas such as healthcare and economics, and they
-  also play a key role in estimating nuisance parameters in
-  semiparametric inference. The super learner is a machine learning
-  framework that combines a library of prediction algorithms into a
-  meta-learner using cross-validated loss. In the context of
-  right-censored data, careful consideration must be given to both the
-  choice of loss function and the estimation of expected loss.
-  Moreover, estimators such as inverse probability of censoring
-  weighting (IPCW) require accurate modeling and estimates of the
-  censoring distribution. We propose a novel approach to super
-  learning for survival analysis that jointly evaluates candidate
-  learners for both the event-time distribution and the censoring
-  distribution. Our method imposes no restrictions on the algorithms
-  included in the library, accommodates competing risks, and does not
-  rely on a single pre-specified estimator of the censoring
-  distribution. We establish theoretical guarantees for our proposed
-  method, including a finite-sample oracle inequality. In a simulation
-  study, our super learner was able to better account for different
-  censoring mechanisms than existing methods. We demonstrate the
-  practical utility of our method using prostate cancer data.
+\begin{abstract} Risk prediction models are widely used to guide
+real-world decision-making in areas such as healthcare and economics,
+and they also play a key role in estimating nuisance parameters in
+semiparametric inference. The super learner is a machine learning
+framework that combines a library of prediction algorithms into a
+meta-learner using cross-validated loss. In the context of
+right-censored data, careful consideration must be given to both the
+choice of loss function and the estimation of expected loss.
+Moreover, estimators such as inverse probability of censoring
+weighting (IPCW) require accurate modeling and an estimator of the
+censoring distribution. We propose a novel approach to super learning
+for survival analysis that jointly evaluates candidate learners for
+both the event-time distribution and the censoring distribution. Our
+method imposes no restrictions on the algorithms included in the
+library, accommodates competing risks, and does not rely on a single
+pre-specified estimator of the censoring distribution. We establish
+theoretical guarantees, including a finite-sample oracle inequality
+and a bound on the average price for using cross-validation. Through
+empirical studies we show that our super learner is able to better
+account for different censoring mechanisms than existing methods. We
+demonstrate the practical utility of our method using prostate cancer
+data.
 \end{abstract}
 
 \begin{keywords}
@@ -139,26 +139,25 @@ competing risks; cross-validation; loss based estimation; right-censored data; s
 \label{sec:introduction}
 
 Accurately predicting risk from time-to-event data is a central
-challenge in diverse research fields, including epidemiology,
-economics, and weather forecasting, with applications in clinical
-decision making and policy interventions. For instance, in prostate
-cancer management, clinicians often need to estimate a patient’s risk
-of disease progression and mortality over time to make informed
-decisions about treatment strategies such as active surveillance
-versus immediate intervention. Reliable time-to-event risk predictions
-can help tailor care to individual patients, avoid overtreatment, and
-allocate healthcare resources more effectively. Super learning
-\citep{van2007super}, also known as ensemble learning or stacked
-regression \citep{wolpert1992stacked,breiman1996stacked}, provides a
-powerful approach to this problem by combining multiple candidate
-prediction models to reduce the risk of bias incurred by a single
-potentially mispecified model. In survival analysis, a super learner
-may combine a stack of Cox regression models with a stack of random
-survival forests \citep[][Section 8.4]{gerds2021medical}. Such a
-strategy has recently produced KDpredict
-(\url{https://kdpredict.com/}) a model which jointly predicts the
-risks of kidney failure and all-cause mortality at multiple time
-horizons based on different sets of covariates
+challenge in various research fields, such as epidemiology, economics,
+and weather forecasting, with applications in clinical decision making
+and policy interventions. For instance, in prostate cancer management,
+clinicians often need to estimate a patient’s risk of disease
+progression and mortality over time to make informed decisions about
+treatment strategies such as active surveillance versus immediate
+intervention. Reliable risk prediction models can help tailor care to
+individual patients, avoid overtreatment, and allocate healthcare
+resources more effectively. Super learning \citep{van2007super}, also
+known as ensemble learning or stacked regression
+\citep{wolpert1992stacked,breiman1996stacked}, provides a powerful
+approach to this problem by combining multiple candidate prediction
+models to reduce the risk of bias incurred by a single potentially
+mispecified model. In survival analysis, a super learner may for example combine a
+stack of Cox regression models with a stack of random survival forests
+\citep[][Section 8.4]{gerds2021medical}. Such a strategy has recently
+produced KDpredict (\url{https://kdpredict.com/}) a model which
+jointly predicts the risks of kidney failure and all-cause mortality
+at multiple time horizons based on different sets of covariates
 \citep{liu2024predicting}. To evaluate the prediction performance of
 the learners, the super learner behind KDpredict uses inverse
 probability of censoring weighting (IPCW), where the censoring
@@ -166,71 +165,80 @@ distribution is estimated under the restrictive assumption that it
 does not depend on the covariates. This is a potential source of bias
 which is difficult to overcome with the currently available methods.
 
-In this paper, we propose the joint survival super learner, a new
-super learner designed to handle the specific challenges of ensemble
-learning with right-censored data. The joint survival super learner
-simultaneously learns prediction models for the event-time and
+In this article, we propose the {\it joint survival super learner}, a
+new super learner designed to handle the specific challenges of
+ensemble learning with right-censored data. The joint survival super
+learner simultaneously learns prediction models for the event-time and
 censoring distributions. The joint survival super learner is based on
-the simple idea of an artificial competing risks model, in which
-censoring is included as a state of its own. Candidate learners for the
-event-time and censoring hazard functions are then assessed based on
-how well they predict the state occupation probabilities of the
-artificial competing risks model over time, given baseline
-covariate information. Our estimation framework allows for competing
-risks, avoids restrictive assumptions on the censoring distribution,
-and is also fully flexible with respect to the choice of learners. The
-latter is in contrast to other proposals which restrict the library of
-learners to specific model classes
-\citep{polley2011-sl-cens,golmakani2020super}, see
-Section~\ref{sec:super-learning}.
+a competing risks model for the observed data, in which censoring is
+included as a state of its own, such that at any time it is known in
+which state an individual is. We assume conditionally independent
+censoring and exploit well-known relationships between the observed
+data distribution on the one side and the partly unobserved distributions of the event
+time and the censoring time on the other. Learners for the event-time
+and censoring hazard functions are then assessed based on how well
+they predict the state occupation probabilities of the competing risks
+model over time, given baseline covariate information. Our estimation
+framework thus naturally incorporates competing risks, avoids
+restrictive assumptions on the censoring distribution, and produces an
+estimator for the censoring distribution. Our approach is also fully
+flexible with respect to the choice of learners. The latter is in
+contrast to other proposals which restrict the library of learners to
+specific model classes \citep{polley2011-sl-cens,golmakani2020super},
+as we discuss in more detail in Section~\ref{sec:super-learning}.
 
 To analyse the theoretical properties of the joint survival super
 learner, we focus on the discrete super learner, which selects the
 model in the library with the best estimated performance
 \citep{van2007super}. We provide theoretical guarantees for the
 performance of the joint survival super learner, and in particular
-show that the discrete joint survival super learner is consistent
-under natural conditions and satisfies a finite-sample oracle
-inequality. We demonstrate how to construct a library using common
-survival models and how to obtain risk predictions from the resulting
-ensemble.
+show that the discrete joint survival super learner is consistent,
+when the library of learners includes at least one consistent
+learner. We also derive a finite-sample oracle inequality for the
+discrete joint survival super learner. We demonstrate how to construct
+a library of learners using common methods for survival analysis and
+illustrate the use of the joint survival super learner using a
+prostate cancer data set.
 
-The rest of the paper is organized as follows. We introduce our
-notation and framework in Section~\ref{sec:framework}.
+The article is organized as follows. We introduce our notation and
+framework in Section~\ref{sec:framework}.
 Section~\ref{sec:super-learning} introduces loss-based super learning
-and presents existing super learners for right-censored data. In
-Section~\ref{sec:super-learner-simple} we define the joint survival
-super learner, while Section~\ref{sec:theor-results-prop} provides
-theoretical guarantees. Section~\ref{sec:numer-exper} reports the
-results of numerical experiments, and Section~\ref{sec:real-data-appl}
-illustrates the method on prostate cancer data. We conclude with a
-discussion in Section~\ref{sec:discussion}. Proofs are collected in
-the Appendix. Code and an implementation of the joint
-survival super learner are available at
+and discusses other existing super learners for right-censored
+data. In Section~\ref{sec:joint-survival-super-learner} we define the joint
+survival super learner, while Section~\ref{sec:theor-results-prop}
+provides theoretical guarantees. Section~\ref{sec:numer-exper} reports
+the results of a series of numerical experiments, and
+Section~\ref{sec:real-data-appl} illustrates the method on prostate
+cancer data. We conclude with a discussion in
+Section~\ref{sec:discussion}. Proofs are collected in the
+Appendix. Code and an implementation of the joint survival super
+learner in R \citep{R} are available at
 \url{https://github.com/amnudn/joint-survival-super-learner}.
 
 \section{Notation and framework}
 \label{sec:framework}
 
-In a competing risks framework \citep{andersen2012statistical}, let \(
-T\) be a time to event variable, \(D\in\{1,2\}\) the cause of the
-event, and $X \in \mathcal{X}$ a vector of baseline covariates taking
-values in a bounded subset \( \mathcal{X} \subset \R^p \), \( p\in\N
-\). Let $\tau< \infty$ be a fixed prediction horizon. We use \(
-\mathcal{Q} \) to denote the collection of all probability measures on
-\( [0,\tau] \times \{1,2\}\times \mathcal{X} \) such that \( (T, D, X)
-\sim Q \) for some unknown \( Q \in \mathcal{Q} \). For
-\(j\in\{1,2\}\), the cause-specific conditional cumulative hazard
+In a competing risks framework \citep{andersen2012statistical} with
+\(J\) competing risks, let \( T\) be a time to event variable,
+\(D\in\{1,2,\dots,J\}\) the cause of the event, and $X \in
+\mathcal{X}$ a vector of baseline covariates taking values in a
+bounded subset \( \mathcal{X} \subset \R^p \), \( p\in\N \). Let
+$\tau< \infty$ be a fixed prediction horizon. We use \(\mathcal{Q} \)
+to denote the collection of all probability measures on \( [0,\tau]
+\times \{1,2,\dots,J\}\times \mathcal{X} \) such that \( (T, D, X) \sim Q \)
+for some unknown \( Q \in \mathcal{Q} \). For \(j\in\{1,2,
+\dots,J\}\), the cause-specific conditional cumulative hazard
 functions \( \Lambda_{j} \colon [0, \tau] \times \mathcal{X}
 \rightarrow \R_+ \) are defined as
 \begin{equation*}
   % \label{eq:cum-haz}
   \Lambda_{j}(t \mid x) = \int_0^t\frac{  Q(T \in \diff s, D=j \mid X=x )}{Q(T \geq s \mid X=x )}.
-\end{equation*} For ease of presentation we assume throughout that the
-map \( t\mapsto \Lambda_j(t \mid x) \) is continuous for all \( x \)
-and \( j \), however, 
-all technical arguments extend naturally to the general case \citep{andersen2012statistical}.
-The event-free survival function conditional on covariates is
+\end{equation*} For ease of presentation we assume from now on that
+\(J=2\) and that the map \( t\mapsto \Lambda_j(t \mid x) \) is
+continuous for all \( x \) and \( j \), however, all technical
+arguments extend naturally to the general case
+\citep{andersen2012statistical}.  The event-free survival function
+conditional on covariates is given by
 \begin{equation}
   \label{eq:surv-def}
   S(t \mid x)=\exp\left\{-\Lambda_{1}(t \mid x)-\Lambda_{2}(t \mid x)\right\}.
@@ -299,20 +307,20 @@ Thus, we can consider $\Lambda_j$ and \(\Gamma\) as operators which map from
 \section{Loss-based super learning}
 \label{sec:super-learning}
 
-Loss-based super learning requires a library of candidate models (or
-\textit{learners}), a cross-validation algorithm, and a loss function
-for evaluating predictive performance on hold-out samples. Let
-\( \data_n=\{O_i\}_{i=1}^n \in \mathcal{O}^n \) be a data set of
-i.i.d.\ observations from \( P \in \mathcal{P} \), and $\mathcal{A}$ a
+Loss-based super learning requires a library of learners, a
+cross-validation algorithm, and a loss function for evaluating
+predictive performance on hold-out samples. Let \(
+\data_n=\{O_i\}_{i=1}^n \in \mathcal{O}^n \) be a data set of i.i.d.\
+observations from \( P \in \mathcal{P} \), and $\mathcal{A}$ a
 collection of candidate learners. Let \(\Theta\) be the parameter
 space, which in our case is a class of functions representing
-different models. Each learner \(a \in \mathcal{A}\) is a map
-\( a \colon \mathcal{O}^n \rightarrow \Theta \) which takes a data set
-as input and returns an estimate $a(\data_n) \in \Theta$. Let
-\(L\colon \Theta \times \mathcal{O} \rightarrow \R_+\) be a loss
-function, representing the performance of the model
-$\theta \in \Theta$ at the observation \( O \in \mathcal{O} \), where
-lower values mean better performance.
+different models. Each learner \(a \in \mathcal{A}\) is a map \( a
+\colon \mathcal{O}^n \rightarrow \Theta \) which takes a data set as
+input and returns an estimate $a(\data_n) \in \Theta$. Let \(L\colon
+\Theta \times \mathcal{O} \rightarrow \R_+\) be a loss function,
+representing the performance of the model $\theta \in \Theta$ at the
+observation \( O \in \mathcal{O} \), where lower values mean better
+performance.
 
 The expected loss of a learner is estimated by splitting the data set
 $\data_n$ into $K$ disjoint approximately equally sized subsets
@@ -352,12 +360,13 @@ right-censored data is the partial log-likelihood loss
 This loss function is also recommended for super learning with
 right-censored data by \cite{polley2011-sl-cens}, under the assumption
 that data are observed in discrete time. However, the partial
-log-likelihood loss does not work well as a measure of performance in
-hold-out samples observed in continuous time. The is because it
-assigns an infinite value to any learner that predicts piecewise
-constant cumulative hazard functions, if the test set contains event
-times that were not observed in the training set. This problem occurs
-with prominent survival learners including the Kaplan-Meier estimator,
+log-likelihood loss does not work well as a general purpose measure of
+performance in hold-out samples when data are observed in continuous
+time. The reason is that the partial log-likelihood assigns an
+infinite value to any learner that predicts piecewise constant
+cumulative hazard functions, if the test set contains event times that
+are not observed in the training set. This problem occurs with
+prominent survival learners including the Kaplan-Meier estimator,
 random survival forests, and semi-parametric Cox regression models,
 and these learners cannot be included in the library of the super
 learner proposed by \cite{polley2011-sl-cens}. When a proportional
@@ -365,10 +374,11 @@ hazards model is assumed, the baseline hazard function can be profiled
 out of the likelihood \citep{cox1972regression}. The cross-validated
 partial log-likelihood loss \citep{verweij1993cross} has therefore
 been suggested as a loss function for super learning by
-\cite{golmakani2020super}. This choice of loss function restricts the
-library of learners to include only Cox proportional hazards models,
-and hence excludes many learners such as, e.g., random survival
-forests, additive hazards models, and accelerated failure time models.
+\cite{golmakani2020super}. However, this choice of loss function
+restricts the library of learners to include only Cox proportional
+hazards models, and hence excludes many learners such as, e.g., random
+survival forests, additive hazards models, and accelerated failure
+time models.
 
 Alternative approaches for super learning with right-censored data use
 an inverse probability of censoring weighted (IPCW) loss function
@@ -378,29 +388,26 @@ censoring unbiased transformations
 \citep{andersen2003generalised,mogensen2013random,sachs2019ensemble}.
 All these methods rely on an estimator of the censoring distribution,
 and their drawback is that this estimator has to be pre-specified.
-Recent work by
-\cite{han2021inverse} and \cite{westling2021inference} 
+Recent work by \cite{han2021inverse} and \cite{westling2021inference}
 circumvents the need to pre-specify a censoring model by iterating
 between estimation of the outcome and censoring models. However, this
 iterative procedure is in general not guaranteed to converge to the
 true data-generating mechanism
-\citep[][Appendix~A.4]{munch2024thesis}.
+\citep[][Appendix~A.4]{munch2024thesis}. 
 
 
 \section{The joint survival super learner}
-\label{sec:super-learner-simple}
+\label{sec:joint-survival-super-learner}
 
-\subsection{An artificial competing risks model}
-\label{sec:an-artif-comp}
-
-
-The main idea of the joint survival super learner is to jointly use
-learners for \( \Lambda_1 \), \( \Lambda_2 \), and \( \Gamma \), and
-the relations in equation~(\ref{eq:parametrizeP}), to learn a feature
-of the observed data distribution \( P \). The discrete joint survival
-super learner ranks a tuple of learners for \( (\Lambda_1, \Lambda_2, \Gamma) \) based
-on how well they jointly model the observed data. To formally
-introduce the joint survival super learner, we define the process
+The main idea of the joint survival super learner is to specify
+libraries of learners for the hazard functions \( \Lambda_1 \), \(
+\Lambda_2 \), and \( \Gamma \), and to exploit the relations in
+equation~(\ref{eq:parametrizeP}) to define a joint loss function. The
+joint survival super learner thus evaluates a tuple of learners for \(
+(\Lambda_1, \Lambda_2, \Gamma) \) based on how well they jointly
+predict the observed data and the discrete joint survival super
+learner chooses the best performing tupel. To formally introduce the
+joint survival super learner, we define the process
 \begin{equation*}
   \eta(t) = \1\{\tilde{T} \leq t, \tilde D=1\} + 2\,\1\{\tilde{T} \leq t, \tilde
   D=2\} - \1\{\tilde{T} \leq t, \tilde D=0\},
@@ -488,11 +495,13 @@ where in correspondence with the relations in equation
   &= \int_0^t \phi_{a_1,a_2, b}(\data_n)(s-,0,x)  b(\data_n)(\diff s \mid x).
 \end{align*} Notably, the libraries \( \mathcal{A}_1 \), \(
 \mathcal{A}_2 \), and \( \mathcal{B} \) can be constructed using
-standard software for survival analysis. In
-\texttt{R}, for instance, we can construct Cox models as
-learners using the \texttt{survival}-package
-\citep{survival-package}, and we can construct random survival
-forests as learners using the \texttt{randomForestSRC}-package \citep{randomForestSRC}.
+standard software for survival analysis.  For example, in the
+\texttt{R} software we can specify various ways to include covariates
+in a Cox regression model and fit learners of the hazard functions
+using the \texttt{survival}-package \citep{survival-package}, and we
+can specify hyper parameters of a random survival forest and derive
+learners of the hazard functions using the
+\texttt{randomForestSRC}-package \citep{randomForestSRC}.
 
 To evaluate how well a function \( F \) predicts the
 process $\eta$ we use the integrated Brier score \citep{graf1999assessment}
@@ -504,14 +513,12 @@ where \( B_t \) is the Brier score
   \left(
       F(t,l,X) - \1{\{\eta(t)=l\}}
   \right)^2.
-\end{equation*}
-The Brier score is here the squared prediction error across
-all of the four states. Based on a split of a data set \(\data_n\)
-into $K$ disjoint approximately equally sized subsets (c.f., Section
-\ref{sec:super-learning}), each learner \( \phi_{a_1, a_2, b} \) in
-the library
-\( \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \) is
-evaluated using the cross-validated loss,
+\end{equation*} The Brier score is the average squared prediction
+error across the four states. Based on a split of a data set
+\(\data_n\) into $K$ disjoint approximately equally sized subsets
+(c.f., Section \ref{sec:super-learning}), each learner \( \phi_{a_1,
+a_2, b} \) in the library \( \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2,
+\mathcal{B}) \) is evaluated using the cross-validated loss,
 \begin{equation*}
   \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) =
   \frac{1}{K}\sum_{k=1}^{K}
@@ -524,37 +531,31 @@ evaluated using the cross-validated loss,
     \right)
   },
 \end{equation*}
-and the discrete joint survival super learner is 
-\begin{align*}\label{eq:discrete-state-learner}
-  \hat{\phi}_n
-  &=  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
+and the discrete joint survival super learner is best performing tupel of hazard functions:
+\begin{equation}\label{eq:discrete-JSLL}
+  \hat{\phi}_n = (\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})
+  =  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
     \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}).
-\end{align*}
+  \end{equation}
+  
 
+% The joint survival super learner estimates the function \( F \) which
+% depends on the censoring distribution and is therefore typically not
+% of direct interest in itself. For instance, in the prostate cancer
+% example we consider in Sections~\ref{sec:numer-exper}
+% and~\ref{sec:real-data-appl}, the value \( F(t, l, x) \) denotes the
+% conditional probability that a patient with baseline characteristics
+% \( X=x \) will, before time point \( t \): have had tumour recurrence
+% before leaving the study ($l=1$); have died without tumour recurrence
+% before leaving the study ($l=2$); have left the study (state $l=-1$);
+% or be alive and part of the study without tumour recurrence ($l=0$).
+% The reference to still being part of the study is irrelevant from a
+% new patient's perspective. We here demonstrate how clinically relevant
+% risk predictions can instead be obtained from the joint survival super
+% learner.
 
-
-
-\subsection{Obtaining risk predictions}
-\label{sec:use-cases-state}
-
-The joint survival super learner estimates the function \( F \) which
-depends on the censoring distribution and is therefore typically not
-of direct interest in itself. For instance, in the prostate cancer
-example we consider in Sections~\ref{sec:numer-exper}
-and~\ref{sec:real-data-appl}, the value \( F(t, l, x) \) denotes the
-conditional probability that a patient with baseline characteristics
-\( X=x \) will, before time point \( t \): have had tumour recurrence
-before leaving the study ($l=1$); have died without tumour recurrence
-before leaving the study ($l=2$); have left the study (state $l=-1$);
-or be alive and part of the study without tumour recurrence ($l=0$).
-The reference to still being part of the study is irrelevant from a
-new patient's perspective. We here demonstrate how clinically relevant
-risk predictions can instead be obtained from the joint survival super
-learner.
-
-We recall that we work under the assumption of conditional independent
-censoring and positivity, as introduced in
-Section~\ref{sec:framework}. Under these assumptions, it follows by
+Under the assumption of conditional independent censoring and
+positivity, as stated in Section~\ref{sec:framework}, it follows from
 equations~(\ref{eq:lambdaj}) and~(\ref{eq:gamma}) and the definition
 of \( F \) that
 \begin{equation}
@@ -562,56 +563,59 @@ of \( F \) that
   \Lambda_j(t , x) 
   = \int_0^t  \frac{F(\diff s, j, x )}{F(s-, 0, x )},
   \quad j \in \{1,2\}.
-\end{equation}
-Cause-specific risk predictions can be obtained from \( \Lambda_1 \)
-and $\Lambda_2$ using the formula
+\end{equation} Cause-specific risk predictions can be obtained from
+the joint survival super learner \eqref{eq:discrete-JSLL} by
+substituting into the well-known formula
 \citep[e.g.,][]{benichou1990estimates, ozenne2017riskregression},
 \begin{equation}
-  \label{eq:cs-risk-def}
-  Q(T \leq t, D = j \mid X=x) =
-  \int_0^t \exp\left\{-\Lambda_{1}(u \mid x)-\Lambda_{2}(u
-    \mid x)\right\}  \Lambda_j(\diff u \mid x),
-  \quad j \in \{1,2\}.
-\end{equation}
-Hence, given the joint survival super learner's estimate of \( F \) we
-can use equation~\eqref{eq:7} to obtain estimates of the
-cause-specific cumulative hazard functions $\Lambda_j$, which can in
-turn be used to obtain estimates of the cause-specific risks through
-equation~\eqref{eq:cs-risk-def}. For instance, in the prostate cancer
-example, this expression will provide the conditional probability that
-a patient with a certain set of baseline characteristics will, before
-time point \( t \), have had tumour recurrence or have died without
-tumour recurrence.
+  \label{eq:cs-risk-def} \hat Q_n(T \leq t, D = j \mid X=x) = \int_0^t
+\exp\left\{-\hat\Lambda_{1n}(u \mid x)-\Lambda_{2n}(u \mid
+x)\right\} \hat\Lambda_{jn}(\diff u \mid x), \quad j \in \{1,2\}.
+\end{equation} Furthermore, the joint survival super learner provides an
+estimator of the censoring distribution:
+\begin{equation*}
+ \hat G_n(T \leq t \mid X=x) = \exp\left\{-\hat\Gamma_n(t \mid x)\right\}.
+\end{equation*}
 
-We have suggested to implement the joint survival super learner by building a library
-using learners of the cause-specific cumulative hazard functions,
-$\Lambda_j$, and the cumulative hazard function for censoring,
-$\Gamma$. With this implementation, we can directly input the highest
-ranked tuple of cause-specific hazard functions
-$(\Lambda_1, \Lambda_2)$ provided by the joint survival super learner as input to
-equation~\eqref{eq:cs-risk-def}.
+% Hence, given the joint survival super learner's
+% estimate of \( F \) we can use equation~\eqref{eq:7} to obtain
+% estimates of the cause-specific cumulative hazard functions
+% $\Lambda_j$, which can in turn be used to obtain estimates of the
+% cause-specific risks through equation~\eqref{eq:cs-risk-def}. For
+% instance, in the prostate cancer example, this expression will provide
+% the conditional probability that a patient with a certain set of
+% baseline characteristics will, before time point \( t \), have had
+% tumour recurrence or have died without tumour recurrence.
+
+% We suggest to implement the joint survival super learner by building a
+% library using learners of the cause-specific cumulative hazard
+% functions, $\Lambda_j$, and the cumulative hazard function for
+% censoring, $\Gamma$. With this implementation, we can directly input
+% the highest ranked tuple of cause-specific hazard functions
+% $(\Lambda_1, \Lambda_2)$ provided by the joint survival super learner
+% as input to equation~\eqref{eq:cs-risk-def}.
 
 \section{Theoretical guarantees}
 \label{sec:theor-results-prop}
 
-The use of cross-validation underlying the joint survival super
-learner is an intuitively reasonable procedure for fair model
-selection without overfitting. In this section, we follow the works of
-\cite{van2003unicv} and \cite{vaart2006oracle} to provide a
-theoretical justification for this practice in the form of a
-finite-sample oracle inequality. We begin by demonstrating that
-minimizing the integrated Brier score, as defined in
-Section~\ref{sec:super-learner-simple}, is statistically meaningful,
-in that perfect minimisation recovers the parameter of the
+Cross-validation is the backbone of super learning and an intuitively
+reasonable procedure for fair model selection without overfitting. In
+this section, we adapt the work of \cite{van2003unicv} and
+\cite{vaart2006oracle} and provide a theoretical justification for the
+joint survival super learner in the form of a finite-sample oracle
+inequality. We begin by demonstrating that minimizing the integrated
+Brier score, as defined in
+Section~\ref{sec:joint-survival-super-learner}, is statistically
+proper, in the sense that minimisation recovers the parameter of the
 data-generating distribution. Together with our finite-sample oracle
 inequality (Proposition~\ref{prop:oracle-prop} below), this implies
 that the joint survival super learner is consistent when it is based
-on a library that includes a consistent learner. Another consequence
-of our finite-sample oracle inequality is that the joint survival
-super learner converges at (nearly) the optimal rate achievable within
-the library. This statement is made precise in
-Corollary~\ref{cor:asymp-cons} and the following discussion. Proofs
-are deferred to the Appendix.
+on a library that includes at least one consistent learner. Another
+consequence of our finite-sample oracle inequality is that the joint
+survival super learner converges (nearly) at the optimal rate
+achievable within the library of learners. This statement is made
+precise in Corollary~\ref{cor:asymp-cons} and the following
+discussion. Proofs are deferred to the Appendix.
 
 A sensible loss function should attain the minimal expected value at
 the parameter corresponding to the data-generating distribution. Loss
@@ -619,16 +623,16 @@ functions with this property are known as proper scoring rules, and as
 strictly proper scoring rules if the minimizer is unique
 \citep{gneiting2007strictly}. Absence of properness makes it unclear
 why minimizing the (estimated) expected loss is interesting.
-Proposition~\ref{prop:stric-prop} is a formal statement of the fact
-that the integrated Brier score, as defined in our setting (c.f.,
-Section~\ref{sec:super-learner-simple}), is a strictly proper scoring
-rule. To state this result, recall that the function \(F\) implicitly
-depends on the data-generating probability measure \(P\in\mathcal P\)
-but that this was suppressed in the notation. We now make this
-dependence explicit by writing \(F_P\) for the function determined by
-a given \(P \in\mathcal{P}\) in accordance with equation
-equation~(\ref{eq:F-def}). In the following we let
-\( \mathcal{H}_{\mathcal{P}} = \{F_P : P \in \mathcal{P}\} \).
+Proposition~\ref{prop:stric-prop} states that the integrated Brier
+score as defined in Section~\ref{sec:joint-survival-super-learner} is
+a strictly proper scoring rule. To establish this result, recall that
+the function \(F\) implicitly depends on the data-generating
+probability measure \(P\in\mathcal P\) but that this was so-far
+suppressed in the notation. We now make this dependence explicit by
+writing \(F_P\) for the function determined by a given \(P
+\in\mathcal{P}\) in accordance with equation
+equation~(\ref{eq:F-def}). In the following we let \(
+\mathcal{H}_{\mathcal{P}} = \{F_P : P \in \mathcal{P}\} \).
 
 \begin{proposition}
   \label{prop:stric-prop}
@@ -643,13 +647,13 @@ equation~(\ref{eq:F-def}). In the following we let
   \( x \in \mathcal{X} \).
 \end{proposition}
 
-
 To evaluate the performance of the joint survival super learner we
-might benchmark it against the data-generating \( F_P \), as this has
-smallest expected loss by Proposition~\ref{prop:stric-prop}. A more
-nuanced comparison is to benchmark it against the best learner
-available given the library and the training data. This is the
-so-called oracle learner, formally defined as
+benchmark it against the data-generating distribution \( F_P \), which
+according to Proposition~\ref{prop:stric-prop} has the smallest
+expected loss. Another useful benchmark for the joint survival super
+learner is the best learner included in the library of learners. The
+so-called oracle learner is formally defined as
+
 \begin{equation*}
   \tilde{\phi}_n
   =  \argmin_{\phi \in \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) }
@@ -671,9 +675,9 @@ so-called oracle learner, formally defined as
   ,
 \end{equation*}
 where % \(  \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \)
-% was defined in equation~\eqref{eq:jssl-lib-def}, and 
-we use \( \E_P \) to denote expectation under the distribution \( P \)
-for a new observation \( O \) independent of \( \data_n^{-k} \). Like
+% was defined in equation~\eqref{eq:jssl-lib-def}, and
+we use \( \E_P \) to denote the expectation under the distribution \( P \)
+for a new observation \( O \) which is independent of the data \( \data_n^{-k} \). Like
 the joint survival super learner, the oracle learner depends on the library of learners and on the
 specific data partitions, but unlike the joint survival super learner, it also depends on the
 unknown data-generating distribution. It is hence not available in
@@ -696,7 +700,7 @@ measure. For simplicity of presentation, we take \( n \) and the data
 partitions to be such that \( |\data_n^{-k}| = n/K \) with \( K \)
 fixed. We will allow the number of learners to grow with \( n \) and
 write
-\( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1,n}, \mathcal{A}_{2,n},
+\( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1n}, \mathcal{A}_{2n},
 \mathcal{B}_n)\) as short-hand notation emphasing the dependence on
 the sample size. We now state a finite-sample inequality that bounds
 the performance of the joint survival super learner relative to that
@@ -753,8 +757,8 @@ the following asymptotic consequences.
   \end{enumerate}
 \end{corollary}
 
-Proposition~\ref{prop:oracle-prop} provided a precise finite-sample
-bound on the average price we pay for using cross-validation, and
+Proposition~\ref{prop:oracle-prop} provides a finite-sample bound on
+the average price we pay for using cross-validation, and
 Corollary~\ref{cor:asymp-cons} states that this price vanishes
 asymptotically, up to poly-logarithmic terms, provided that the size
 of the library does not grow faster than a polynomial rate in the
@@ -867,7 +871,7 @@ time horizon is \( \approx 38.7 \)\%.
 Each super learner provides a learner for the cumulative hazard
 function for the outcome of interest. From the cumulative hazard
 function, we obtain a risk prediction model as described in
-Section~\ref{sec:use-cases-state}, with the special case of
+Section~\ref{sec:joint-survival-super-learner}, with the special case of
 $\Lambda_2 = 0$. We measure the performance of each super learner by
 calculating the index of prediction accuracy (IPA)
 \citep{kattan2018index} at a fixed time horizon (36 months) for the
@@ -966,7 +970,7 @@ probability function \( F \) defined in equation~(\ref{eq:F-def}). We
 use five folds for training and testing the models, and we repeat
 training and evaluation five times with different splits. The
 integrated Brier score (defined in
-Section~\ref{sec:super-learner-simple}) for all learners are shown in
+Section~\ref{sec:joint-survival-super-learner}) for all learners are shown in
 Figure~\ref{fig:zelefski-real}. We see that the prediction performance
 is mostly affected by the choice of learner for the censoring
 distribution. Several combinations of learners give similar
@@ -1048,7 +1052,7 @@ survival super learner immediately provides estimates of these
 nuisance parameters and is hence particularly well suited for targeted
 and debiased machine learning. We leave the study of the joint
 survival super learner in the context of targeted and debiased machine
-learning for a future paper.
+learning for a future work.
 
 \appendix
 
@@ -1060,7 +1064,7 @@ Define
 \bar{B}_{\tau}(F_P, o) \) and
 \( R_{P}(F) = \E_P{[\bar{B}_{\tau,P}(F, O)]} \), where the
 integrated Brier score \( \bar{B}_{\tau} \) was defined in
-Section~\ref{sec:super-learner-simple}. Recall the norm
+Section~\ref{sec:joint-survival-super-learner}. Recall the norm
 \( \Vert \blank \Vert_{P}\) defined in
 equation~(\ref{eq:norm}).
 
@@ -1101,7 +1105,7 @@ equation~(\ref{eq:norm}).
 Recall that we use \( \mathcal{F}_n \) to denote a library of learners for the
 function \( F \), and that \( \hat{\phi} \) and \( \tilde{\phi} \) denotes,
 respectively, the discrete super learner and the oracle learner for the library
-\( \mathcal{F}_n \), c.f., Section~\ref{sec:super-learner-simple}.
+\( \mathcal{F}_n \), c.f., Section~\ref{sec:joint-survival-super-learner}.
 
 \begin{proof}[of Proposition~\ref{prop:oracle-prop}]
   Minimizing the loss \( \bar{B}_{\tau} \) is equivalent to
