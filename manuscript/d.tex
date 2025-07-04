@@ -1,0 +1,1456 @@
+\documentclass[lineno]{biometrika}
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL a.tex   Fri Jul  4 07:34:56 2025
+%DIF ADD b.tex   Fri Jul  4 07:35:09 2025
+
+\usepackage{amsmath}
+%\usepackage{graphics}
+
+%% Please use the following statements for
+%% managing the text and math fonts for your papers:
+%\usepackage{times}
+%\usepackage[cmbold]{mathtime}
+%\usepackage{bm}
+
+\usepackage{newtxtext}
+\usepackage[subscriptcorrection]{newtxmath}
+
+% \usepackage{natbib}
+
+\graphicspath{{./art/}}
+
+\usepackage[plain,noend]{algorithm2e}
+
+\makeatletter
+\renewcommand{\algocf@captiontext}[2]{#1\algocf@typo. \AlCapFnt{}#2} % text of caption
+\renewcommand{\AlTitleFnt}[1]{#1\unskip}% default definition
+\def\@algocf@capt@plain{top}
+\renewcommand{\algocf@makecaption}[2]{%
+  \addtolength{\hsize}{\algomargin}%
+  \sbox\@tempboxa{\algocf@captiontext{#1}{#2}}%
+  \ifdim\wd\@tempboxa >\hsize%     % if caption is longer than a line
+    \hskip .5\algomargin%
+    \parbox[t]{\hsize}{\algocf@captiontext{#1}{#2}}% then caption is not centered
+  \else%
+    \global\@minipagefalse%
+    \hbox to\hsize{\box\@tempboxa}% else caption is centered
+  \fi%
+  \addtolength{\hsize}{-\algomargin}%
+}
+\makeatother
+
+%%% User-defined macros should be placed here, but keep them to a minimum.
+\def\Bka{{\it Biometrika}}
+
+\def\AIC{\textsc{aic}}
+\def\T{{ \mathrm{\scriptscriptstyle T} }}
+\def\v{{\varepsilon}}
+
+% Notation
+\usepackage{dsfont,enumitem, url}
+\DeclareMathOperator{\E}{\mathbb{E}} % expectation
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\blank}{\makebox[1ex]{\textbf{$\cdot$}}}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\renewcommand{\phi}{\varphi}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\weakly}{\rightsquigarrow}
+\newcommand\smallO{\textit{o}}
+\newcommand\bigO{\textit{O}}
+\newcommand{\midd}{\; \middle|\;}
+\newcommand{\1}{\mathds{1}}
+\usepackage{ifthen} %% Empirical process with default argument
+\newcommand{\G}[2][n]{
+{\ensuremath{\mathbb{G}_{#1}}{\left[#2\right]}}
+}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\newcommand{\data}{\ensuremath{\mathcal{D}}}
+
+
+%\addtolength\topmargin{35pt}
+\DeclareMathOperator{\Thetabb}{\mathcal{C}}
+
+% \usepackage[colorlinks,allcolors=blue]{hyperref}
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF LISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+\begin{document}
+
+\jname{Biometrika}
+%% The year, volume, and number are determined on publication
+\jyear{2025}
+\jvol{112}
+\jnum{1}
+\cyear{2025}
+%% The \doi{...} and \accessdate commands are used by the production team
+%\doi{10.1093/biomet/asm023}
+\accessdate{Advance Access publication on 14 February 2025}
+
+%% These dates are usually set by the production team
+\received{2 January 2024}
+\revised{3 February 2025}
+
+%% The left and right page headers are defined here:
+\markboth{Munch and Gerds}{The joint survival super learner}
+
+%% Here are the title, author names and addresses
+\title{The joint survival super learner: A super learner for right-censored
+  data}
+
+\author{A. MUNCH} %
+\affil{Section of Biostatistics, University of
+  Copenhagen \email{a.munch@sund.ku.dk}}
+
+\author{\and T. A. GERDS}
+\affil{Section of Biostatistics, University of Copenhagen}
+
+\maketitle
+
+\begin{abstract} Risk prediction models are widely used to guide
+real-world decision-making in areas such as healthcare and economics,
+and they also play a key role in estimating nuisance parameters in
+semiparametric inference. The super learner is a machine learning
+framework that combines a library of prediction algorithms into a
+meta-learner using cross-validated loss. In the context of
+right-censored data, careful consideration must be given to both the
+choice of loss function and the estimation of expected loss.
+Moreover, estimators such as inverse probability of censoring
+weighting (IPCW) require accurate modeling and \DIFdelbegin \DIFdel{estimates }\DIFdelend \DIFaddbegin \DIFadd{an estimator }\DIFaddend of the
+censoring distribution. We propose a novel approach to super learning
+for survival analysis that jointly evaluates candidate learners for
+both the event-time distribution and the censoring distribution. Our
+method imposes no restrictions on the algorithms included in the
+library, accommodates competing risks, and does not rely on a single
+pre-specified estimator of the censoring distribution. We establish \DIFdelbegin \DIFdel{theoretical guarantees for our proposed
+  method, including }\DIFdelend a
+finite-sample \DIFdelbegin \DIFdel{oracle inequality. In a simulation
+  study, our super learner was able to better account for different
+  censoring mechanisms than existing methods}\DIFdelend \DIFaddbegin \DIFadd{bound on the average price we pay for using
+cross-validation, and show that this price vanishes asymptotically, up
+to poly-logarithmic terms, provided that the size of the library does
+not grow faster than at a polynomial rate in the sample size}\DIFaddend . We
+demonstrate the practical utility of our method using prostate cancer
+data \DIFaddbegin \DIFadd{and illustrate its performance in small samples with simulated
+data}\DIFaddend .
+\end{abstract}
+
+\begin{keywords}
+competing risks; cross-validation; loss based estimation; right-censored data; super learner
+\end{keywords}
+
+\section{Introduction}
+\label{sec:introduction}
+
+Accurately predicting risk from time-to-event data is a central
+challenge in \DIFdelbegin \DIFdel{diverse }\DIFdelend \DIFaddbegin \DIFadd{various }\DIFaddend research fields, \DIFdelbegin \DIFdel{including }\DIFdelend \DIFaddbegin \DIFadd{such as }\DIFaddend epidemiology, economics,
+and weather forecasting, with applications in clinical decision making
+and policy interventions. For instance, in prostate cancer management,
+clinicians often need to estimate a patient’s risk of disease
+progression and mortality over time to make informed decisions about
+treatment strategies such as active surveillance versus immediate
+intervention. Reliable \DIFdelbegin \DIFdel{time-to-event risk predictions
+}\DIFdelend \DIFaddbegin \DIFadd{risk prediction models }\DIFaddend can help tailor care to
+individual patients, avoid overtreatment, and allocate healthcare
+resources more effectively. Super learning \citep{van2007super}, also
+known as ensemble learning or stacked regression
+\citep{wolpert1992stacked,breiman1996stacked}, provides a powerful
+approach to this problem by combining multiple candidate prediction
+models to reduce the risk of bias incurred by a single potentially
+mispecified model. In survival analysis, a super learner may \DIFaddbegin \DIFadd{for example }\DIFaddend combine a
+stack of Cox regression models with a stack of random survival forests
+\citep[][Section 8.4]{gerds2021medical}. Such a strategy has recently
+produced KDpredict (\url{https://kdpredict.com/}) a model which
+jointly predicts the risks of kidney failure and all-cause mortality
+at multiple time horizons based on different sets of covariates
+\citep{liu2024predicting}. To evaluate the prediction performance of
+the learners, the super learner behind KDpredict uses inverse
+probability of censoring weighting (IPCW), where the censoring
+distribution is estimated under the restrictive assumption that it
+does not depend on the covariates. This is a potential source of bias
+which is difficult to overcome with the currently available methods.
+
+In this \DIFdelbegin \DIFdel{paper}\DIFdelend \DIFaddbegin \DIFadd{article}\DIFaddend , we propose the \DIFaddbegin {\it \DIFaddend joint survival super learner\DIFaddbegin }\DIFaddend , a
+new super learner designed to handle the specific challenges of
+ensemble learning with right-censored data. The joint survival super
+learner simultaneously learns prediction models for the event-time and
+censoring distributions. The joint survival super learner is based on
+\DIFdelbegin \DIFdel{the simple idea of an artificial }\DIFdelend \DIFaddbegin \DIFadd{a }\DIFaddend competing risks model \DIFaddbegin \DIFadd{for the observed data}\DIFaddend , in which censoring is
+included as a state of its own\DIFdelbegin \DIFdel{. Candidate learners }\DIFdelend \DIFaddbegin \DIFadd{, such that at any time it is known in
+which state an individual is. We assume conditionally independent
+censoring and exploit well-known relationships between the observed
+data distribution on the one side and the partly unobserved distributions of the event
+time and the censoring time on the other. Learners }\DIFaddend for the event-time
+and censoring hazard functions are then assessed based on how well
+they predict the state occupation probabilities of the \DIFdelbegin \DIFdel{artificial }\DIFdelend competing risks
+model over time, given baseline covariate information. Our estimation
+framework \DIFdelbegin \DIFdel{allows for }\DIFdelend \DIFaddbegin \DIFadd{thus naturally incorporates }\DIFaddend competing risks, avoids
+restrictive assumptions on the censoring distribution, and \DIFaddbegin \DIFadd{produces an
+estimator for the censoring distribution. Our approach }\DIFaddend is also fully
+flexible with respect to the choice of learners. The latter is in
+contrast to other proposals which restrict the library of learners to
+specific model classes \citep{polley2011-sl-cens,golmakani2020super},
+\DIFdelbegin \DIFdel{see
+}\DIFdelend \DIFaddbegin \DIFadd{as we discuss in more detail in }\DIFaddend Section~\ref{sec:super-learning}.
+
+To analyse the theoretical properties of the joint survival super
+learner, we focus on the discrete super learner, which selects the
+model in the library with the best estimated performance
+\citep{van2007super}. We provide theoretical guarantees for the
+performance of the joint survival super learner, and in particular
+show that the discrete joint survival super learner is consistent\DIFdelbegin \DIFdel{under natural conditions and satisfies }\DIFdelend \DIFaddbegin \DIFadd{,
+when the library of learners includes at least one consistent
+learner. We also derive }\DIFaddend a finite-sample oracle inequality \DIFaddbegin \DIFadd{for the
+discrete joint survival super learner}\DIFaddend . We demonstrate how to construct
+a library \DIFdelbegin \DIFdel{using common
+survival models and
+how to obtain risk predictions from the resulting
+ensemble}\DIFdelend \DIFaddbegin \DIFadd{of learners using common methods for survival analysis and
+illustrate the use of the joint survival super learner using a
+prostate cancer data set}\DIFaddend .
+
+The \DIFdelbegin \DIFdel{rest of the paper }\DIFdelend \DIFaddbegin \DIFadd{article }\DIFaddend is organized as follows. We introduce our notation and
+framework in Section~\ref{sec:framework}.
+Section~\ref{sec:super-learning} introduces loss-based super learning
+and \DIFdelbegin \DIFdel{presents }\DIFdelend \DIFaddbegin \DIFadd{discusses other }\DIFaddend existing super learners for right-censored
+data. In Section~\DIFdelbegin \DIFdel{\ref{sec:super-learner-simple} }\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner} }\DIFaddend we define the joint
+survival super learner, while Section~\ref{sec:theor-results-prop}
+provides theoretical guarantees. Section~\ref{sec:numer-exper} reports
+the results of \DIFaddbegin \DIFadd{a series of }\DIFaddend numerical experiments, and
+Section~\ref{sec:real-data-appl} illustrates the method on prostate
+cancer data. We conclude with a discussion in
+Section~\ref{sec:discussion}. Proofs are collected in the
+Appendix. Code and an implementation of the joint survival super
+learner \DIFaddbegin \DIFadd{in R \mbox{%DIFAUXCMD
+\citep{R} }\hspace{0pt}%DIFAUXCMD
+}\DIFaddend are available at
+\url{https://github.com/amnudn/joint-survival-super-learner}.
+
+\section{Notation and framework}
+\label{sec:framework}
+
+In a competing risks framework \citep{andersen2012statistical} \DIFaddbegin \DIFadd{with
+\(J\) competing risks}\DIFaddend , let \( T\) be a time to event variable,
+\DIFdelbegin \DIFdel{\(D\in\{1,2\}\) }\DIFdelend \DIFaddbegin \DIFadd{\(D\in\{1,2,\dots,J\}\) }\DIFaddend the cause of the event, and $X \in
+\mathcal{X}$ a vector of baseline covariates taking values in a
+bounded subset \( \mathcal{X} \subset \R^p \), \( p\in\N \). Let
+$\tau< \infty$ be a fixed prediction horizon. We use \DIFdelbegin \DIFdel{\(
+\mathcal{Q} \) }\DIFdelend \DIFaddbegin \DIFadd{\(\mathcal{Q} \)
+}\DIFaddend to denote the collection of all probability measures on \DIFdelbegin \DIFdel{\( [0,\tau] \times \{1,2\}\times \mathcal{X} \) }\DIFdelend \DIFaddbegin \DIFadd{\( [0,\tau]
+\times \{1,2,\dots,J\}\times \mathcal{X} \) }\DIFaddend such that \( (T, D, X) \sim Q \)
+for some unknown \( Q \in \mathcal{Q} \). For \DIFdelbegin \DIFdel{\(j\in\{1,2\}\)}\DIFdelend \DIFaddbegin \DIFadd{\(j\in\{1,2,
+\dots,J\}\)}\DIFaddend , the cause-specific conditional cumulative hazard
+functions \( \Lambda_{j} \colon [0, \tau] \times \mathcal{X}
+\rightarrow \R_+ \) are defined as
+\begin{equation*}
+  % \label{eq:cum-haz}
+  \Lambda_{j}(t \mid x) = \int_0^t\frac{  Q(T \in \diff s, D=j \mid X=x )}{Q(T \geq s \mid X=x )}.
+\end{equation*} For ease of presentation we assume \DIFdelbegin \DIFdel{throughout }\DIFdelend \DIFaddbegin \DIFadd{from now on that
+\(J=2\) and }\DIFaddend that the map \( t\mapsto \Lambda_j(t \mid x) \) is
+continuous for all \( x \) and \( j \), however, all technical
+arguments extend naturally to the general case
+\citep{andersen2012statistical}.  The event-free survival function
+conditional on covariates is \DIFaddbegin \DIFadd{given by
+}\DIFaddend \begin{equation}
+  \label{eq:surv-def}
+  S(t \mid x)=\exp\left\{-\Lambda_{1}(t \mid x)-\Lambda_{2}(t \mid x)\right\}.
+\end{equation}
+Let \( \mathcal{M}_{\tau}\) denote the space of all conditional
+cumulative hazard functions on \( [0,\tau] \times\mathcal{X}\). Any
+distribution \( Q \in \mathcal{Q} \) can be characterized by
+\begin{equation*}
+  \label{eq:parametrizeQ}
+  \begin{split}
+    Q(\diff t,j,\diff x)=& \left\{S(t- \mid x)\Lambda_1(\diff t \mid x)H(\diff x)\right\}^{\1{\{j=1\}}}\\
+                         &  \left\{S(t- \mid x)\Lambda_2(\diff t \mid x)H(\diff x)\right\}^{\1{\{j=2\}}},
+  \end{split}
+\end{equation*}
+where \(\Lambda_{j} \in \mathcal{M}_{\tau}\) for \(j=1,2\) and \(H\) is the marginal
+distribution of the covariates.
+
+We consider the right-censored setting in which we observe \(O =
+(\tilde{T},\tilde D, X)\), where $\tilde T = \min(T,C)$ for a
+right-censoring time \(C\), $\Delta = \1{\{T \leq C\}}$, and \(\tilde
+D=\Delta D\). Let \(\mathcal{P}\) denote a set of probability measures
+on the sample space \(\mathcal{O} = [0, \tau] \times \{0, 1, 2\}
+\times \mathcal{X}\) such that \(O \sim P \) for some unknown \(P\in
+\mathcal{P}\). We assume that the event times and the censoring times
+are conditionally independent given covariates, \( T \independent C
+\mid X \). This implies that any distribution \( P \in \mathcal{P} \)
+is characterized by a distribution \( Q \in \mathcal{Q} \) and a
+conditional cumulative hazard function for \( C \) given \( X \)
+\citep[c.f.,][]{begun1983information,gill1997coarsening}. We use
+\(\Gamma\in\mathcal{M}_{\tau}\) to denote the cumulative hazard
+function of the conditional censoring distribution given
+covariates. For ease of presentation we assume that \(t\mapsto
+\Gamma(t \mid x) \) is continuous for all \( x \). We let
+\((t,x)\mapsto G(t \mid x)=\exp\left\{-\Gamma(t \mid x)\right\}\)
+denote the survival function of the conditional censoring
+distribution. The distribution \( P \) is characterized by
+\begin{equation}\label{eq:parametrizeP}
+  \begin{split}
+    P(\diff t, j, \diff x) =& \left\{G(t- \mid x)S(t- \mid x)\Lambda_1(\diff t \mid x)H(\diff x)\right\}^{\1{{\{j=1\}}}}\\
+                            & \left\{G(t- \mid x)S(t- \mid x)\Lambda_2(\diff t \mid x)H(\diff x)\right\}^{\1{{\{j=2\}}}}\\
+                            & \left\{G(t- \mid x)S(t- \mid x)\Gamma(\diff t \mid x)H(\diff x)\right\}^{\1{{\{j=0\}}}}\\
+    = & \left\{G(t- \mid x)Q(\diff t,j,\diff x)\right\}^{\1{{\{j\ne 0\}}}}\\    
+                            & \left\{G(t- \mid x)S(t- \mid x)\Gamma(\diff t \mid x)H(\diff x)\right\}^{\1{{\{j=0\}}}}.
+  \end{split}
+\end{equation}
+Hence, we may write
+\( \mathcal{P} = \{ P_{Q, \Gamma} : Q \in \mathcal{Q}, \Gamma \in
+\mathcal{G} \} \) for some \( \mathcal{G} \subset \mathcal{M}_{\tau} \). We
+also have \(H\)-almost everywhere
+\begin{equation*}
+P(\tilde T>t \mid X=x) = S(t \mid x)G(t \mid x) = \exp\left\{-\Lambda_{1}(t \mid x)-\Lambda_{2}(t \mid x)-\Gamma(t \mid x) \right\}.
+\end{equation*} We assume that there exists \(\kappa<\infty\) such
+that \(\Lambda_{j}(\tau- \mid x)<\kappa \), for \(j\in\{1,2\}\), and
+\(\Gamma(\tau- \mid x)<\kappa\) for almost all \(x\in\mathcal
+X\). This implies that \(G(\tau- \mid x)\) is bounded away
+from zero for almost all \(x\in\mathcal X\).  Under these assumptions,
+the conditional cumulative hazard functions \(\Lambda_{j}\) and
+\(\Gamma\) can be identified from \(P\) by
+\begin{align}
+  \Lambda_{j}(t \mid x) &= \int_0^t\frac{  P(\tilde T \in \diff s, \tilde D=j \mid X=x )}{P(\tilde T \geq s \mid X=x )}, \label{eq:lambdaj}\\
+  \Gamma(t \mid x) &= \int_0^t\frac{  P(\tilde T \in \diff s, \tilde D=0 \mid X=x )}{P(\tilde T \geq s \mid X=x )}\label{eq:gamma}.
+\end{align}
+Thus, we can consider $\Lambda_j$ and \(\Gamma\) as operators which map from
+\( \mathcal{P} \) to \(\mathcal M_{\tau}\).
+
+\section{Loss-based super learning}
+\label{sec:super-learning}
+
+Loss-based super learning requires a library of \DIFdelbegin \DIFdel{candidate models (or
+}\textit{\DIFdel{learners}}%DIFAUXCMD
+\DIFdel{)}\DIFdelend \DIFaddbegin \DIFadd{learners}\DIFaddend , a
+cross-validation algorithm, and a loss function for evaluating
+predictive performance on hold-out samples. Let \(
+\data_n=\{O_i\}_{i=1}^n \in \mathcal{O}^n \) be a data set of i.i.d.\
+observations from \( P \in \mathcal{P} \), and $\mathcal{A}$ a
+collection of candidate learners. Let \(\Theta\) be the parameter
+space, which in our case is a class of functions representing
+different models. Each learner \(a \in \mathcal{A}\) is a map \( a
+\colon \mathcal{O}^n \rightarrow \Theta \) which takes a data set as
+input and returns an estimate $a(\data_n) \in \Theta$. Let \(L\colon
+\Theta \times \mathcal{O} \rightarrow \R_+\) be a loss function,
+representing the performance of the model $\theta \in \Theta$ at the
+observation \( O \in \mathcal{O} \), where lower values mean better
+performance.
+
+The expected loss of a learner is estimated by splitting the data set
+$\data_n$ into $K$ disjoint approximately equally sized subsets
+\(\data_n^1, \data_n^2, \dots, \data_n^K \) and then calculating the
+cross-validated loss
+\begin{equation}
+  \label{eq:cv-risk-est}
+  \hat{R}_n(a; L) =
+  \frac{1}{K}\sum_{k=1}^{K}
+  \frac{1}{| \data_n^{k} |}\sum_{O_i \in \data_n^{k}}
+  L
+  {
+    \left(
+      a{ (\data_n^{-k})}
+      , O_i
+    \right)
+  },
+  \quad \text{with} \quad
+  \data_n^{-k} = \data_n \setminus \data_n^{k}.
+\end{equation}
+The subset \(\data_n^{-k}\) is referred to as the \(k\)'th training
+sample, while \(\data_n^{k}\) is referred to as the \(k\)'th test or
+hold-out sample.
+The discrete super learner is defined as
+\begin{equation*}
+\hat{a}_n = \argmin_{a\in\mathcal A}\hat{R}_n(a; L),
+\end{equation*}
+and depends on both the library of learners and the specific
+partitioning of the data into cross-validation folds
+\( \data_n^1, \dots, \data_n^K \).
+
+When designing a super learner for right-censored data, particular
+care must be taken in the choice of loss function and in the
+estimation of the expected loss. A commonly used loss function for
+right-censored data is the partial log-likelihood loss
+\citep[e.g.,][]{li2016regularized,yao2017deep,lee2018deephit,katzman2018deepsurv,gensheimer2019scalable,lee2021boosted,kvamme2021continuous}.
+This loss function is also recommended for super learning with
+right-censored data by \cite{polley2011-sl-cens}, under the assumption
+that data are observed in discrete time. However, the partial
+log-likelihood loss does not work well as a \DIFaddbegin \DIFadd{general purpose }\DIFaddend measure of
+performance in hold-out samples \DIFaddbegin \DIFadd{when data are }\DIFaddend observed in continuous
+time. The \DIFdelbegin \DIFdel{is because it
+}\DIFdelend \DIFaddbegin \DIFadd{reason is that the partial log-likelihood }\DIFaddend assigns an
+infinite value to any learner that predicts piecewise constant
+cumulative hazard functions, if the test set contains event times that
+\DIFdelbegin \DIFdel{were }\DIFdelend \DIFaddbegin \DIFadd{are }\DIFaddend not observed in the training set. This problem occurs with
+prominent survival learners including the Kaplan-Meier estimator,
+random survival forests, and semi-parametric Cox regression models,
+and these learners cannot be included in the library of the super
+learner proposed by \cite{polley2011-sl-cens}. When a proportional
+hazards model is assumed, the baseline hazard function can be profiled
+out of the likelihood \citep{cox1972regression}. The cross-validated
+partial log-likelihood loss \citep{verweij1993cross} has therefore
+been suggested as a loss function for super learning by
+\cite{golmakani2020super}. \DIFdelbegin \DIFdel{This }\DIFdelend \DIFaddbegin \DIFadd{However, this }\DIFaddend choice of loss function
+restricts the library of learners to include only Cox proportional
+hazards models, and hence excludes many learners such as, e.g., random
+survival forests, additive hazards models, and accelerated failure
+time models.
+
+Alternative approaches for super learning with right-censored data use
+an inverse probability of censoring weighted (IPCW) loss function
+\citep{graf1999assessment,van2003unicv,molinaro2004tree,keles2004asymptotically,hothorn2006survival,gerds2006consistent,gonzalez2021stacked},
+censoring unbiased transformations
+\citep{fan1996local,steingrimsson2019censoring}, or pseudo-values
+\citep{andersen2003generalised,mogensen2013random,sachs2019ensemble}.
+All these methods rely on an estimator of the censoring distribution,
+and their drawback is that this estimator has to be pre-specified.
+Recent work by \cite{han2021inverse} and \cite{westling2021inference}
+circumvents the need to pre-specify a censoring model by iterating
+between estimation of the outcome and censoring models. However, this
+iterative procedure is in general not guaranteed to converge to the
+true data-generating mechanism
+\citep[][Appendix~A.4]{munch2024thesis}. 
+
+
+\section{The joint survival super learner}
+\DIFdelbegin %DIFDELCMD < \label{sec:super-learner-simple}
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\subsection{\DIFdel{An artificial competing risks model}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+%DIFDELCMD < \label{sec:an-artif-comp}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \label{sec:joint-survival-super-learner}
+\DIFaddend 
+
+The main idea of the joint survival super learner is to \DIFdelbegin \DIFdel{jointly use
+learners for }\DIFdelend \DIFaddbegin \DIFadd{specify
+libraries of learners for the hazard functions }\DIFaddend \( \Lambda_1 \), \(
+\Lambda_2 \), and \( \Gamma \), and \DIFaddbegin \DIFadd{to exploit }\DIFaddend the relations in
+equation~(\ref{eq:parametrizeP}) \DIFdelbegin \DIFdel{, to learn a feature
+of the observed data distribution \( P \). The
+discrete }\DIFdelend \DIFaddbegin \DIFadd{to define a joint loss function. The
+}\DIFaddend joint survival super learner \DIFdelbegin \DIFdel{ranks }\DIFdelend \DIFaddbegin \DIFadd{thus evaluates }\DIFaddend a tuple of learners for \(
+(\Lambda_1, \Lambda_2, \Gamma) \) based on how well they jointly
+\DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{predict }\DIFaddend the observed data \DIFaddbegin \DIFadd{and the discrete joint survival super
+learner chooses the best performing tupel}\DIFaddend . To formally introduce the
+joint survival super learner, we define the process
+\begin{equation*}
+  \eta(t) = \1\{\tilde{T} \leq t, \tilde D=1\} + 2\,\1\{\tilde{T} \leq t, \tilde
+  D=2\} - \1\{\tilde{T} \leq t, \tilde D=0\},
+  \quad \text{for} \quad t \in [0, \tau],
+\end{equation*}
+which takes values in \( \{-1,0,1,2\}\). The four values
+represent four mutually exclusive states. Specifically, value
+\( 0 \) represents the state where the individual is still
+event-free and uncensored, value \( 1\) the state where the
+event of interest has occurred, value \( 2\) the state where a
+competing risk has occurred, and value \( -1\) the state where
+the observation is right-censored. The state occupation
+probabilities given baseline covariates \( X \) are given by
+the function
+\begin{equation}
+  \label{eq:F-def}
+  F(t, l, x) = P(\eta(t) = l \mid X=x),
+\end{equation}
+for all \( t \in [0,\tau] \), \( l \in \{-1,0,1,2\} \), and
+\( x \in \mathcal{X} \).
+
+The joint survival super learner is a super learner for the
+function-valued parameter $\theta(P) = F$ which is identified through
+equation~(\ref{eq:F-def}). Under conditional independent censoring,
+each tuple $(\Lambda_{1}, \Lambda_{2}, \Gamma, H)$ characterizes a
+distribution \(P\in\mathcal P\), c.f.\
+equation~\eqref{eq:parametrizeP}, which in turn determines
+\( (F, H) \). Hence, a learner for \( F \) can be constructed from
+learners for \( \Lambda_1 \), \( \Lambda_2 \), and $\Gamma$ as
+follows:
+\begin{equation}\label{eq:transition}
+  \begin{split}
+    F(t, 0, x)
+    &
+      = P(\tilde{T} > t \mid X= x)
+      =
+      \exp{{\{-\Lambda_{1}(t \mid x)-\Lambda_{2}(t \mid x) - \Gamma(t \mid x)\}
+      }},
+    \\
+    F(t, 1, x)
+    &
+      = P(\tilde{T} \leq t, \tilde{D}=1 \mid X=x)
+      = \int_0^t F(s-, 0, x)  \Lambda_{1}(\diff s \mid x),
+    \\
+    F(t, 2, x)
+    &
+      = P(\tilde{T} \leq t, \tilde{D}=2 \mid X=x)
+      = \int_0^t  F(s-, 0, x)  \Lambda_{2}(\diff s \mid x),
+    \\
+    F(t, -1, x)
+    &
+      = P(\tilde{T} \leq t, \tilde{D}=0 \mid X=x)
+      = \int_0^t F(s-, 0, x)  \Gamma(\diff s \mid x).
+  \end{split}
+\end{equation}
+Equation~\eqref{eq:transition} implies that a library for the joint survival super learner can by build from three libraries of learners:
+\(\mathcal{A}_1\), \( \mathcal{A}_2 \), and \( \mathcal{B} \),
+where \(\mathcal{A}_1\) and \( \mathcal{A}_2\) contain
+learners for the conditional cause-specific cumulative hazard
+functions \(\Lambda_1\) and \( \Lambda_2\), respectively, and
+\(\mathcal{B}\) contains learners for the conditional
+cumulative hazard function of the censoring distribution.
+Taking the Cartesian product of these libraries, we obtain a library
+$\mathcal{F}$ of learners for \( F \):
+\begin{equation}
+  \label{eq:jssl-lib-def}
+  \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
+  = \{ \phi_{a_1,a_2, b} : a_1 \in \mathcal{A}_1, a_2 \in \mathcal{A}_2, b \in \mathcal{B}\},
+\end{equation}
+where in correspondence with the relations in equation
+\eqref{eq:transition},
+\DIFdelbegin \begin{align*}
+    \DIFdel{\phi_{a_1,a_2, b}(\data_n)(t,0,x)
+  }&\DIFdel{= \exp{\{-a_1(\data_n)(s \mid x)-a_2(\data_n)(s \mid x) - b(\data_n)(s \mid
+    x)\} },
+  }\\
+  \DIFdel{\phi_{a_1,a_2, b}(\data_n)(t,1,x)
+  }&\DIFdel{= \int_0^t
+    \phi_{a_1,a_2, b}(\data_n)(s-,0,x)  a_1(\data_n)(\diff s \mid x),
+  }\\
+  \DIFdel{\phi_{a_1,a_2, b}(\data_n)(t,2,x)
+  }&\DIFdel{= \int_0^t\phi_{a_1,a_2, b}(\data_n)(s-,0,x)  a_2(\data_n)(\diff s \mid x),
+  }\\
+  \DIFdel{\phi_{a_1,a_2, b}(\data_n)(t,-1,x)
+  }&\DIFdel{= \int_0^t \phi_{a_1,a_2, b}(\data_n)(s-,0,x)  b(\data_n)(\diff s \mid x).
+}\end{align*}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{equation}
+  \DIFadd{\begin{split}\label{eq:anti-transition}
+    \phi_{a_1,a_2, b}(\data_n)(t,0,x)
+  &= \exp{\{-a_1(\data_n)(s \mid x)-a_2(\data_n)(s \mid x) - b(\data_n)(s \mid
+    x)\} },
+  \\
+  \phi_{a_1,a_2, b}(\data_n)(t,1,x)
+  &= \int_0^t
+    \phi_{a_1,a_2, b}(\data_n)(s-,0,x)  a_1(\data_n)(\diff s \mid x),
+  \\
+  \phi_{a_1,a_2, b}(\data_n)(t,2,x)
+  &= \int_0^t\phi_{a_1,a_2, b}(\data_n)(s-,0,x)  a_2(\data_n)(\diff s \mid x),
+  \\
+  \phi_{a_1,a_2, b}(\data_n)(t,-1,x)
+  &= \int_0^t \phi_{a_1,a_2, b}(\data_n)(s-,0,x)  b(\data_n)(\diff s \mid x).
+  \end{split}
+}\end{equation}\DIFaddend 
+  Notably, the libraries \( \mathcal{A}_1 \), \(
+\mathcal{A}_2 \), and \( \mathcal{B} \) can be constructed using
+standard software for survival analysis.  \DIFdelbegin \DIFdel{In
+}\DIFdelend \DIFaddbegin \DIFadd{For example, in the
+}\DIFaddend \texttt{R} \DIFdelbegin \DIFdel{, for instance, we can construct Cox models as
+learners }\DIFdelend \DIFaddbegin \DIFadd{software we can specify various ways to include covariates
+in a Cox regression model and fit learners of the hazard functions
+}\DIFaddend using the \texttt{survival}-package \citep{survival-package}, and we
+can \DIFdelbegin \DIFdel{construct random survival forests as learners }\DIFdelend \DIFaddbegin \DIFadd{specify hyper parameters of a random survival forest and derive
+learners of the hazard functions }\DIFaddend using the
+\texttt{randomForestSRC}-package \citep{randomForestSRC}.
+
+To evaluate how well a function \( F \) predicts the
+process $\eta$ we use the integrated Brier score \citep{graf1999assessment}
+\( \bar B_\tau( F,O) = \int_0^{\tau} B_t(F,O) \diff t \),
+where \( B_t \) is the Brier score
+\citep{brier1950verification} at time \( t \in [0, \tau] \),
+\begin{equation*}
+  B_t(F,O) = \sum_{l=-1}^{2}
+  \left(
+      F(t,l,X) - \1{\{\eta(t)=l\}}
+  \right)^2.
+\end{equation*} The Brier score is \DIFdelbegin \DIFdel{here the }\DIFdelend \DIFaddbegin \DIFadd{the average }\DIFaddend squared prediction
+error across \DIFdelbegin \DIFdel{all of }\DIFdelend the four states. Based on a split of a data set
+\(\data_n\) into $K$ disjoint approximately equally sized subsets
+(c.f., Section \ref{sec:super-learning}), each learner \( \phi_{a_1,
+a_2, b} \) in the library \( \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2,
+\mathcal{B}) \) is evaluated using the cross-validated loss,
+\begin{equation*}
+  \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) =
+  \frac{1}{K}\sum_{k=1}^{K}
+  \frac{1}{| \data_n^{k} |}\sum_{O_i \in \data_n^{k}}
+  \bar B_\tau
+  {
+    \left(
+      \phi_{a_1,a_2,b}{ (\data_n^{-k})}
+      , O_i
+    \right)
+  },
+\end{equation*}
+and the discrete joint survival super learner is \DIFdelbegin \begin{align*}\DIFdel{%DIFDELCMD < \label{eq:discrete-state-learner}%%%
+  \hat{\phi}_n
+  }&\DIFdel{=  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
+    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}).
+}\end{align*}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{best performing tupel of hazard functions:
+}\begin{equation}\DIFadd{\label{eq:discrete-JSLL}
+  (\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})
+  =  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
+    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}).
+}\end{equation}\DIFaddend 
+
+
+\DIFdelbegin \subsection{\DIFdel{Obtaining risk predictions}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+%DIFDELCMD < \label{sec:use-cases-state}
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdel{The joint survival super learner estimates the function \( F \) which
+depends on the censoring distribution and is therefore typically not
+of direct interest in itself. For instance, in the prostate cancer
+example we consider in Sections~\ref{sec:numer-exper}
+and~\ref{sec:real-data-appl}, the value \( F(t, l, x) \) denotes the
+conditional probability that a patient with baseline characteristics
+\( X=x \) will, before time point \( t \):
+have had tumour recurrence
+before leaving the study ($l=1$); have died without tumour recurrence
+before leaving the study ($l=2$); have left the study (state $l=-1$);
+or be alive and part of the study without tumour recurrence ($l=0$).
+The reference to still being part of the study is irrelevant from a
+new patient's perspective. We here demonstrate how clinically relevant
+risk predictions can instead be obtained from the joint survival super
+learner.
+}\DIFdelend %DIF >  The joint survival super learner estimates the function \( F \) which
+%DIF >  depends on the censoring distribution and is therefore typically not
+%DIF >  of direct interest in itself. For instance, in the prostate cancer
+%DIF >  example we consider in Sections~\ref{sec:numer-exper}
+%DIF >  and~\ref{sec:real-data-appl}, the value \( F(t, l, x) \) denotes the
+%DIF >  conditional probability that a patient with baseline characteristics
+%DIF >  \( X=x \) will, before time point \( t \): have had tumour recurrence
+%DIF >  before leaving the study ($l=1$); have died without tumour recurrence
+%DIF >  before leaving the study ($l=2$); have left the study (state $l=-1$);
+%DIF >  or be alive and part of the study without tumour recurrence ($l=0$).
+%DIF >  The reference to still being part of the study is irrelevant from a
+%DIF >  new patient's perspective. We here demonstrate how clinically relevant
+%DIF >  risk predictions can instead be obtained from the joint survival super
+%DIF >  learner.
+
+\DIFdelbegin \DIFdel{We recall that we work under }\DIFdelend \DIFaddbegin \DIFadd{Under }\DIFaddend the assumption of conditional independent censoring and
+positivity, as \DIFdelbegin \DIFdel{introduced }\DIFdelend \DIFaddbegin \DIFadd{stated }\DIFaddend in Section~\ref{sec:framework}\DIFdelbegin \DIFdel{. Under these assumptions}\DIFdelend , it follows \DIFdelbegin \DIFdel{by
+}\DIFdelend \DIFaddbegin \DIFadd{from
+}\DIFaddend equations~(\ref{eq:lambdaj}) and~(\ref{eq:gamma}) and the definition
+of \( F \) that
+\begin{equation}
+  \label{eq:7}
+  \Lambda_j(t , x) 
+  = \int_0^t  \frac{F(\diff s, j, x )}{F(s-, 0, x )},
+  \quad j \in \{1,2\}.
+\end{equation} Cause-specific risk predictions can be obtained from
+\DIFdelbegin \DIFdel{\( \Lambda_1 \)
+and $\Lambda_2$ using the formula
+\mbox{%DIFAUXCMD
+\citep[e.g.,][]{benichou1990estimates, ozenne2017riskregression}}\hspace{0pt}%DIFAUXCMD
+,
+}\begin{displaymath}
+  \DIFdel{%DIFDELCMD < \label{eq:cs-risk-def}%%%
+  Q(T \leq t, D = j \mid X=x) =
+  \int_0^t \exp\left\{-\Lambda_{1}(u \mid x)-\Lambda_{2}(u
+    \mid x)\right\}  \Lambda_j(\diff u \mid x),
+  \quad j \in \{1,2\}.
+}\end{displaymath}%DIFAUXCMD
+\DIFdel{Hence, given }\DIFdelend the joint survival super learner \DIFdelbegin \DIFdel{'s estimate of \( F \) we
+can use equation~}%DIFDELCMD < \eqref{eq:7} %%%
+\DIFdel{to obtain estimates of the
+cause-specific cumulative hazard functions $\Lambda_j$, which can in
+turn be used to obtain estimates of the cause-specific risks through
+equation~}%DIFDELCMD < \eqref{eq:cs-risk-def}%%%
+\DIFdel{. For instance, in the prostate cancer
+example, this expression will provide the conditional probability that
+a patient with a certain set of baseline characteristics will,
+before
+time point \( t \), have had tumour recurrence or have died without
+tumour recurrence.
+}%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdel{We have suggested to implement }\DIFdelend \DIFaddbegin \eqref{eq:discrete-JSLL} \DIFadd{by
+substituting into the well-known formula
+\mbox{%DIFAUXCMD
+\citep[e.g.,][]{benichou1990estimates, ozenne2017riskregression}}\hspace{0pt}%DIFAUXCMD
+,
+}\begin{equation}
+  \DIFadd{\label{eq:cs-risk-def} \hat Q_n(T \leq t, D = j \mid X=x) = \int_0^t
+\exp\left\{-\hat\Lambda_{1n}(u \mid x)-\Lambda_{2n}(u \mid
+x)\right\} \hat\Lambda_{jn}(\diff u \mid x), \quad j \in \{1,2\}.
+}\end{equation} \DIFadd{Furthermore, }\DIFaddend the joint survival super learner \DIFdelbegin \DIFdel{by building a library
+using learners of the cause-specific cumulative hazard functions,
+$\Lambda_j$, and the cumulative hazard function for censoring ,
+$\Gamma$. With this implementation, we can directly input the highest
+ranked tuple of cause-specific hazard functions
+$(\Lambda_1, \Lambda_2)$ provided by the joint survival super learner as input to
+equation~}%DIFDELCMD < \eqref{eq:cs-risk-def}%%%
+\DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{provides an
+estimator of the censoring distribution:
+}\begin{equation*}
+ \DIFadd{\hat G_n(T \leq t \mid X=x) = \exp\left\{-\hat\Gamma_n(t \mid x)\right\}.
+}\end{equation*}
+
+%DIF >  Hence, given the joint survival super learner's
+%DIF >  estimate of \( F \) we can use equation~\eqref{eq:7} to obtain
+%DIF >  estimates of the cause-specific cumulative hazard functions
+%DIF >  $\Lambda_j$, which can in turn be used to obtain estimates of the
+%DIF >  cause-specific risks through equation~\eqref{eq:cs-risk-def}. For
+%DIF >  instance, in the prostate cancer example, this expression will provide
+%DIF >  the conditional probability that a patient with a certain set of
+%DIF >  baseline characteristics will, before time point \( t \), have had
+%DIF >  tumour recurrence or have died without tumour recurrence.
+
+%DIF >  We suggest to implement the joint survival super learner by building a
+%DIF >  library using learners of the cause-specific cumulative hazard
+%DIF >  functions, $\Lambda_j$, and the cumulative hazard function for
+%DIF >  censoring, $\Gamma$. With this implementation, we can directly input
+%DIF >  the highest ranked tuple of cause-specific hazard functions
+%DIF >  $(\Lambda_1, \Lambda_2)$ provided by the joint survival super learner
+%DIF >  as input to equation~\eqref{eq:cs-risk-def}.
+\DIFaddend 
+
+\section{Theoretical guarantees}
+\label{sec:theor-results-prop}
+
+\DIFdelbegin \DIFdel{The use of cross-validation underlying the joint survival super learner is }\DIFdelend \DIFaddbegin \DIFadd{Cross-validation is the backbone of super learning and }\DIFaddend an intuitively
+reasonable procedure for fair model selection without overfitting. In
+this section, we \DIFdelbegin \DIFdel{follow the works }\DIFdelend \DIFaddbegin \DIFadd{adapt the work }\DIFaddend of \cite{van2003unicv} and
+\cite{vaart2006oracle} \DIFdelbegin \DIFdel{to }\DIFdelend \DIFaddbegin \DIFadd{and }\DIFaddend provide a theoretical justification for \DIFdelbegin \DIFdel{this practice }\DIFdelend \DIFaddbegin \DIFadd{the
+joint survival super learner }\DIFaddend in the form of a finite-sample oracle
+inequality. We begin by demonstrating that minimizing the integrated
+Brier score, as defined in
+Section~\DIFdelbegin \DIFdel{\ref{sec:super-learner-simple}}\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner}}\DIFaddend , is statistically
+\DIFdelbegin \DIFdel{meaningful, in that perfect }\DIFdelend \DIFaddbegin \DIFadd{proper, in the sense that }\DIFaddend minimisation recovers the parameter of the
+data-generating distribution. Together with our finite-sample oracle
+inequality (Proposition~\ref{prop:oracle-prop} below), this implies
+that the joint survival super learner is consistent when it is based
+on a library that includes \DIFdelbegin \DIFdel{a }\DIFdelend \DIFaddbegin \DIFadd{at least one }\DIFaddend consistent learner. Another
+consequence of our finite-sample oracle inequality is that the joint
+survival super learner converges \DIFdelbegin \DIFdel{at }\DIFdelend (nearly) \DIFaddbegin \DIFadd{at }\DIFaddend the optimal rate
+achievable within the library \DIFaddbegin \DIFadd{of learners}\DIFaddend . This statement is made
+precise in Corollary~\ref{cor:asymp-cons} and the following
+discussion. Proofs are deferred to the Appendix.
+
+A sensible loss function should attain the minimal expected value at
+the parameter corresponding to the data-generating distribution. Loss
+functions with this property are \DIFdelbegin \DIFdel{known as properscoring rules, and as
+strictly proper scoring rules }\DIFdelend \DIFaddbegin \DIFadd{called proper, and strictly proper }\DIFaddend if
+the minimizer is unique \citep{gneiting2007strictly}. Absence of
+properness makes it unclear why minimizing the (estimated) expected
+loss is interesting.  Proposition~\ref{prop:stric-prop} \DIFdelbegin \DIFdel{is a formal statement of the fact
+}\DIFdelend \DIFaddbegin \DIFadd{states }\DIFaddend that
+the integrated Brier score \DIFdelbegin \DIFdel{, }\DIFdelend as defined in
+\DIFdelbegin \DIFdel{our setting (c.f.,
+Section~\ref{sec:super-learner-simple}), }\DIFdelend \DIFaddbegin \DIFadd{Section~\ref{sec:joint-survival-super-learner} }\DIFaddend is a strictly proper
+scoring rule. To \DIFdelbegin \DIFdel{state }\DIFdelend \DIFaddbegin \DIFadd{establish }\DIFaddend this result, recall that the function \(F\)
+implicitly depends on the data-generating probability measure
+\(P\in\mathcal P\) but that this was \DIFaddbegin \DIFadd{so-far }\DIFaddend suppressed in the
+notation. We now make this dependence explicit by writing \(F_P\) for
+the function determined by a given \(P \in\mathcal{P}\) in accordance
+with equation equation~(\ref{eq:F-def}). In the following we let \(
+\mathcal{H}_{\mathcal{P}} = \{F_P : P \in \mathcal{P}\} \).
+
+\begin{proposition}
+  \label{prop:stric-prop}
+  If \(P \in\mathcal{P}\) then
+  \begin{equation*}
+    F_P = \argmin_{F \in \mathcal{H}_{\mathcal{P}}}
+    \E_P{[\bar{B}_\tau(F, O)]}
+    ,
+  \end{equation*}
+  for all \( l \in \{-1, 0, 1, 2 \} \), almost all
+  \( t \in [0,\tau] \), and \( P \)-almost all
+  \( x \in \mathcal{X} \).
+\end{proposition}
+
+\DIFaddbegin \DIFadd{The discrete joint survival super learner defined in
+}\eqref{eq:discrete-JSLL} \DIFadd{provides an estimate of the function \(F\)
+}\begin{equation*}
+  \DIFadd{\hat{\phi}_n=\phi_{\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n}}
+}\end{equation*} \DIFadd{which is obtained by substituting \((\hat
+\Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) for \((a_1,a_2,b)\) into the structural
+equations }\eqref{eq:anti-transition}\DIFadd{. }\DIFaddend To evaluate the performance of
+\DIFdelbegin \DIFdel{the joint survival super learner we might }\DIFdelend \DIFaddbegin \DIFadd{\(\hat{\phi}_n\) we }\DIFaddend benchmark it against the data-generating
+\DIFaddbegin \DIFadd{distribution }\DIFaddend \( F_P \), \DIFdelbegin \DIFdel{as this has }\DIFdelend \DIFaddbegin \DIFadd{which according to
+Proposition~\ref{prop:stric-prop} has the }\DIFaddend smallest expected
+loss\DIFdelbegin \DIFdel{by Proposition~\ref{prop:stric-prop}. A more
+nuanced comparison is to benchmark it against }\DIFdelend \DIFaddbegin \DIFadd{. Another useful theoretical benchmark is the so-called oracle
+learner which is }\DIFaddend the best learner \DIFdelbegin \DIFdel{available given the library and the training data. This is the
+so-called oracle learner, formally defined as
+}\DIFdelend \DIFaddbegin \DIFadd{included in the library of learners
+and formally defined by
+}\DIFaddend \begin{equation*}
+  \tilde{\phi}_n
+  =  \argmin_{\phi \in \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) }
+  \tilde{R}_{n}(\phi ; \bar{B}_{\tau}),
+  \quad \text{with} \quad 
+  \tilde{R}_n(\phi; \bar{B}_{\tau})=
+  \frac{1}{K}\sum_{k=1}^{K} 
+  \E_P{
+    \left[
+      \bar{B}_{\tau}
+      {
+        \left(
+          \phi{ (\data_n^{-k})}
+          , O
+        \right)
+      } 
+      \midd  \data_n^{-k}
+    \right]}
+  ,
+\end{equation*}
+where %DIF <  \(  \mathcal{F}(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B}) \)
+%DIF <  was defined in equation~\eqref{eq:jssl-lib-def}, and 
+we use \( \E_P \) to denote \DIFaddbegin \DIFadd{the }\DIFaddend expectation
+under the distribution \( P \) for a new observation \( O \) \DIFdelbegin \DIFdel{independent of }\DIFdelend \DIFaddbegin \DIFadd{which is
+independent of the data }\DIFaddend \( \data_n^{-k} \). Like the joint survival
+super learner, the oracle learner depends on the library of learners
+and on the \DIFdelbegin \DIFdel{specific datapartitions}\DIFdelend \DIFaddbegin \DIFadd{actual partition of the data}\DIFaddend , but unlike the joint survival
+super learner, it also depends on the unknown data-generating
+distribution. It is hence not available in practice and serves only as
+a theoretical benchmark.
+
+In the following, we equip the space \( \mathcal{H}_{\mathcal{P}} \)
+with the norm
+\begin{equation}
+  \label{eq:norm}
+  \| F \|_{P} = 
+  \left\{
+    \sum_{l=-1}^{2}
+    \int_0^{\tau} \E_P{\left[ F(t, l, X)^2 \right]} \diff t
+  \right\}^{1/2}.
+\end{equation} This norm is \DIFaddbegin \DIFadd{a natural performance which is }\DIFaddend equal to
+the excess risk\DIFaddbegin \DIFadd{, }\DIFaddend \( \E_P{[\bar{B}_\tau(F, O)]} -
+\E_P{[\bar{B}_\tau(F_P, O)]} \)\DIFdelbegin \DIFdel{by
+}\DIFdelend \DIFaddbegin \DIFadd{, as shown in }\DIFaddend Lemma~\ref{lemma:norm} in
+the Appendix\DIFdelbegin \DIFdel{and is a natural performance
+measure}\DIFdelend . For simplicity of presentation, we \DIFdelbegin \DIFdel{take \( n \) and the data partitions to be such that }\DIFdelend \DIFaddbegin \DIFadd{assume that all folds
+of the data partition have equal size, }\DIFaddend \( |\data_n^{-k}| = n/K \) \DIFdelbegin \DIFdel{with \( K \)
+fixed . We will }\DIFdelend \DIFaddbegin \DIFadd{for
+a fixed number of folds \( K \). We }\DIFaddend allow the number of learners
+to grow with \( n \) and write \DIFdelbegin \DIFdel{\( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1,n}, \mathcal{A}_{2,n},
+\mathcal{B}_n)\) }\DIFdelend \DIFaddbegin \DIFadd{\(
+\mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1n}, \mathcal{A}_{2n},
+\mathcal{B}_n)\) }\DIFaddend as short-hand notation emphasing the dependence on
+the sample size. We now state a finite-sample inequality that bounds
+the performance of the joint survival super learner relative to that
+of the oracle learner.
+
+\begin{proposition}
+  \label{prop:oracle-prop}
+  For all \(P\in\mathcal{P}\), \( n \in \N \), \( k \in \{1, \dots, K\} \),
+  and $\delta>0$,
+  \begin{align*}
+    \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
+    & \leq (1 + 2\delta)
+      \frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
+    \\
+    & \quad
+      + (1+ \delta) 16   K \tau
+      \left(
+      13 + \frac{12}{\delta}
+      \right)
+      \frac{\log(1 + |\mathcal{F}_n|)}{n}.
+  \end{align*}
+\end{proposition}
+
+\DIFdelbegin \DIFdel{The expectations }\DIFdelend \DIFaddbegin \DIFadd{Note that the expectation }\DIFaddend in Proposition~\ref{prop:oracle-prop} \DIFdelbegin \DIFdel{reflect a mild
+abuse of notation, in that they are formally }\DIFdelend \DIFaddbegin \DIFadd{is
+}\DIFaddend taken with respect to the product measure \( P^{n} \) for the \DIFdelbegin \DIFdel{whole }\DIFdelend data set
+\( \data_n \). This means that we are quantifying the average
+performance of the joint survival super learner across \DIFdelbegin \DIFdel{average training
+data }\DIFdelend \DIFaddbegin \DIFadd{all training
+data of size \(n\). A corresponding quantity was called the expected
+true error rate in \mbox{%DIFAUXCMD
+\cite{efron_and_tibshirani97}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend . As with many
+finite-sample oracle inequalities, this result is of little direct
+practical utility because the right-hand side depends on
+data-dependent, unknown quantities. However, it does quantify how the
+number of folds, the time horizon, and the number of learners in the
+library can be expected to influence the performance. The result has
+the following asymptotic consequences.
+
+\begin{corollary}
+  \label{cor:asymp-cons}
+  Assume that \( |\mathcal{F}_n| = \bigO(n^q)\), for some
+  \( q \in \N \) and that there exists a sequence
+  \( \phi_n \in \mathcal{F}_n \), \( n \in \N \), such that
+  \(  \E_{P}{\left[ \Vert
+      \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
+  \bigO(n^{-\alpha}) \), for some \( \alpha\leq 1 \) and
+  \( C_P \geq 0 \).
+  \begin{enumerate}[label=(\alph*)]
+  \item\label{item:1} If $\alpha=1$, then
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+        \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
+    \bigO(\log(n)^{1+\epsilon}n^{-1}) \), $\forall\epsilon>0$.
+  \item\label{item:2} If $\alpha<1$, then
+    \(\frac{1}{K}\sum_{k=1}^{K} \E_{P}{\left[ \Vert
+        \hat{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]} = C_P +
+    \bigO(n^{-\alpha}) \).
+  \end{enumerate}
+\end{corollary}
+
+Proposition~\ref{prop:oracle-prop} \DIFdelbegin \DIFdel{provided a precise }\DIFdelend \DIFaddbegin \DIFadd{thus provides a }\DIFaddend finite-sample bound
+on the average price we pay for using cross-validation, and
+Corollary~\ref{cor:asymp-cons} states that this price vanishes
+asymptotically, up to poly-logarithmic terms, provided that the size
+of the library does not grow faster than \DIFaddbegin \DIFadd{at }\DIFaddend a polynomial rate in the
+sample size. The situation \( C_P=0 \) corresponds to a setting in
+which the library includes a consistent learner. Cases~\ref{item:1}
+and~\ref{item:2} correspond to situations where the oracle learner
+achieves a parametric or non-parametric asymptotic rate of
+convergence, respectively.
+
+To illustrate the content of Corollary~\ref{cor:asymp-cons}, consider
+first a situation where we use a library with an increasing number of
+semi-parametric Cox models with different interaction terms, as well
+as several Poisson regression models based on different
+%DIF >  ANDERS: to me Poisson regression is a way to fit a Cox model
+discretisations of the time scale. Each of these models will
+independently achieve a parametric rate of convergence, and hence
+item~\ref{item:1} of Corollary~\ref{cor:asymp-cons} states that the
+joint survival super learner based on this library will achieve a
+near-parametric rate of convergence. %DIF >  ANDERS: what does "taken equal to mean"? 
+The constant \( C_P \) can be
+taken equal to the distance to the least false model in the library,
+and so the joint survival super learner will approximate the least
+false model in the library at a near-parametric rate. Another
+situation appears if we add more flexible models to the library, such
+as Cox lasso or random survival forests.%DIF > ANDERS: need references here
+These models typically
+converge at non-parametric rates, with the fastest rate depending on
+the unknown data-generating distribution. Item~\ref{item:2} of
+Corollary~\ref{cor:asymp-cons} shows that the joint survival super
+learner achieves the same convergence rate as the best-performing %DIF >  ANDERS: best performing with respect to our integrated Brier score on F?
+algorithm in the library, without any knowledge of the data-generating
+distribution.
+
+\section{Numerical experiments}
+\label{sec:numer-exper}
+
+In this section, we report results from a simulation study where we
+\DIFdelbegin \DIFdel{consider estimation of }\DIFdelend \DIFaddbegin \DIFadd{estimate }\DIFaddend the conditional survival function. \DIFdelbegin \DIFdel{We restrict
+attention to the simpler setting without competing risks to enable }\DIFdelend \DIFaddbegin \DIFadd{In order to enable a
+}\DIFaddend comparison with existing super learner methods \DIFaddbegin \DIFadd{we restrict the
+attention to a setting without competing risks. We report the results
+of the numerical experiments in two parts}\DIFaddend . In the first part, we
+compare the joint survival super learner \DIFdelbegin \DIFdel{to }\DIFdelend \DIFaddbegin \DIFadd{with }\DIFaddend two IPCW based discrete
+super learners that use either the Kaplan-Meier estimator or a Cox
+model to estimate the censoring probability
+\citep{gonzalez2021stacked}. In the second part, we compare the joint
+survival super learner to the super learner proposed by
+\cite{westling2021inference}.
+
+\DIFdelbegin \DIFdel{In both parts, we use the same data-generating mechanism. We generate data
+according to a distribution motivated from a real data set in which censoring
+depends on the baseline covariates. We simulate data based on }\DIFdelend \DIFaddbegin \DIFadd{For our numerical experiments we have synthesized the data of }\DIFaddend the
+prostate cancer study of \cite{kattan2000pretreatment} \DIFaddbegin \DIFadd{based on
+structural equations where we specify Cox-Weibull regression models
+\mbox{%DIFAUXCMD
+\cite{Bender2005} }\hspace{0pt}%DIFAUXCMD
+for the latent event and censoring times}\DIFaddend . The
+outcome of interest is the time to tumour recurrence, and five
+baseline covariates are used to predict outcome: prostate-specific
+antigen (PSA, ng/mL), Gleason score sum (GSS, values between 6 and
+10), radiation dose (RD), hormone therapy (HT, yes/no) and clinical
+stage (CS, six values). The study was designed such that a patient's
+radiation dose depended on when the patient entered the study
+\citep{gerds2013estimating}. This in turn implies that the time of
+censoring depends on the radiation dose. The data were re-analysed in
+\citep{gerds2013estimating} where a sensitivity analysis was conducted
+based on simulated data. Here we use the same simulation setup, where
+event and censoring times are generated according to parametric
+Cox-Weibull models estimated from the original data, and the
+covariates are generated according to either marginal Gaussian normal
+or binomial distributions estimated from the original data
+\citep[c.f.,][Section~4.6]{gerds2013estimating}. We refer to this
+simulation setting as `dependent censoring'. We also considered a
+simulation setting where data were generated in the same way, except
+that censoring was generated completely independently. We refer to
+this simulation setting as `independent censoring'.
+
+For all super learners, we use a library consisting of three
+learners: The Kaplan-Meier estimator
+\citep{kaplan1958nonparametric,Gerds_2019prodlim}, a Cox model
+with main effects \citep{cox1972regression, survival-package},
+and a random survival forest
+\citep{ishwaran2008random,randomForestSRC}. We use the same
+library to learn the outcome distribution and the censoring
+distribution. The three learners in our library of
+learners can be used to learn the cumulative hazard functions
+of the outcome and the censoring distribution. The latter
+works by training the learner on the data set \( \data_n^c \),
+where \( \data_n^c = \{O_i^c\}_{i=1}^n \) with
+\( O_i^c = (\tilde{T}_i, 1-\Delta_i, X_i) \). When we say that
+we use a learner for the cumulative hazard function of the
+outcome to learn the cumulative hazard function of the
+censoring time, we mean that the learner is trained on
+\( \data_n^c \).
+
+We compare the joint survival super learner to two IPCW based super learners: The
+first super learner, called IPCW(Cox), uses a Cox model with main
+effects to estimate the censoring probabilities, while the second
+super learner, called IPCW(KM), uses the Kaplan-Meier estimator to
+estimate the censoring probabilities. The Cox model for the censoring
+distribution is correctly specified in both simulation settings while
+the Kaplan Meier estimator only estimates the censoring model
+correctly in the simulation setting where censoring is
+independent. Both IPCW super learners are fitted using the
+\texttt{R}-package \texttt{riskRegression}
+\citep{Gerds_Ohlendorff_Ozenne_2023}.
+%
+% | time | sim_setting | true_events | true_cens | at_risk |
+% |------+-------------+-------------+-----------+---------|
+% |   36 | original    |      24.619 |    61.853 |  25.774 |
+% |   36 | indep_cens  |      24.674 |    38.740 |  46.141 |
+%
+The IPCW super learners use the integrated Brier score up to a fixed time
+horizon (36 months). The marginal risk of the event before this time horizon is
+\(\approx 24.6\)\%. Under the `dependent censoring' setting the marginal
+censoring probability before the time horizon is \(\approx 61.9\)\%. Under the
+`independent censoring' setting the marginal censoring probability before this
+time horizon is \( \approx 38.7 \)\%.
+
+Each super learner provides a learner for the cumulative hazard
+function for the outcome of interest. From the cumulative hazard
+function, we obtain a risk prediction model as described in
+Section~\DIFdelbegin \DIFdel{\ref{sec:use-cases-state}}\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner}}\DIFaddend , with the special case of
+$\Lambda_2 = 0$. We measure the performance of each super learner by
+calculating the index of prediction accuracy (IPA)
+\citep{kattan2018index} at a fixed time horizon (36 months) for the
+risk prediction model provided by the super learner. The IPA is 1
+minus the ratio between the model's Brier score and the null model's
+Brier score, where the null model is the model that does not use any
+covariate information. The IPA is approximated using a large
+(\( n = 20,000 \)) independent data set of uncensored data. As a
+benchmark, we calculate the performance of the risk prediction model
+chosen by the oracle selector, which uses the large data set of
+uncensored event times to select the learner with the highest IPA.
+
+The results are shown in Figure~\ref{fig:ipcw-fail}. We see that in
+the scenario where censoring depends on the covariates, using the
+Kaplan-Meier estimator to estimate the censoring probabilities
+provides a risk prediction model with an IPA that is lower than the
+risk prediction model provided by the joint survival super learner. The performance
+of the risk prediction model selected by the joint survival super learner is similar
+to the risk prediction model selected by the IPCW(Cox) super learner
+which a priori uses a correctly specified model for the censoring
+distribution. Both these risk prediction models are close to the
+performance of the oracle, except for small sample sizes.
+
+
+\begin{figure}
+\figuresize{0.7}
+\figurebox{20pc}{25pc}{}[experiment-fig-sl-ipcw]
+\caption{For the risk prediction models provided by each of the
+    super learners, the IPA is plotted against sample size. The
+    results are averages across 1000 simulated data sets and the error
+    bars are used to quantify the Monte Carlo uncertainty. JSSL
+    denotes the joint survival super learner. }
+\label{fig:ipcw-fail}
+\end{figure}
+
+We next compare the joint survival super learner to the super learner
+survSL \citep{westling2021inference}. This is another super learner
+which like the joint survival super learner works without a
+pre-specified censoring model. Both the joint survival super learner
+and survSL provide estimates of the event-time and censoring
+distributions. Hence, we compare the performance of these methods with
+respect to both the outcome and the censoring distribution. Again we
+use the IPA to quantify the predictive performance.
+
+The results are shown in Figures~\ref{fig:zelefski-out}
+and~\ref{fig:zelefski-cens}. We see that for most sample sizes, the
+joint survival super learner selects prediction models for both
+censoring and outcome which have similar or higher IPA compared to the
+prediction models selected by survSL.
+\begin{figure}
+\figuresize{0.7}
+\figurebox{20pc}{25pc}{}[experiment-fig-sl-survSL-out]
+\caption{For the risk prediction models of the outcome provided by
+  each of the super learners, the IPA at the fixed time horizon is
+  plotted against sample size. The results are averages across 1000
+  repetitions and the error bars are used to quantify the Monte Carlo
+  uncertainty. JSSL denotes the joint survival super learner.}
+\label{fig:zelefski-out}
+\end{figure}
+
+\begin{figure}
+\figuresize{.7}
+\figurebox{20pc}{25pc}{}[experiment-fig-sl-survSL-cens]
+\caption{For the risk prediction models of the censoring model
+    provided by each of the super learners, the IPA at the fixed time
+    horizon is plotted against sample size. The results are averages
+    across 1000 repetitions and the error bars are used to quantify
+    the Monte Carlo uncertainty. JSSL denotes the joint survival super
+    learner.}
+\label{fig:zelefski-cens}
+\end{figure}
+
+
+\section{Prostate cancer study}
+\label{sec:real-data-appl}
+
+We use the prostate cancer data of \cite{kattan2000pretreatment} to
+illustrate the use of the joint survival super learner in the presence
+of competing risks. We have introduced the data in
+Section~\ref{sec:numer-exper}. The data consists of 1,042 patients who
+are followed from start of followup until tumour recurrence, death
+without tumour recurrence, or end of followup (censored), whatever
+came first. We use the joint survival super learner to rank libraries
+of learners for the cause-specific cumulative hazard functions of
+tumour recurrence, death without tumour recurrence, and censoring. The
+libraries of learners each include five learners: the Nelson-Aalen
+estimator, three Cox regression models (unpenalized, lasso, elastic
+net) each including additive effects of the baseline covariates, and a
+random survival forest. We use the same set of learners to estimate
+the cumulative hazard function of tumour recurrence \( \Lambda_1 \),
+the cumulative hazard function of death without tumour recurrence
+\( \Lambda_2 \), and the cumulative hazard function of the conditional
+censoring distribution $\Gamma$. This gives a library consisting of
+\( 5^3 = 125 \) learners for the conditional state occupation
+probability function \( F \) defined in equation~(\ref{eq:F-def}). We
+use five folds for training and testing the models, and we repeat
+training and evaluation five times with different splits. The
+integrated Brier score (defined in
+Section~\DIFdelbegin \DIFdel{\ref{sec:super-learner-simple}}\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner}}\DIFaddend ) for all learners are shown in
+Figure~\ref{fig:zelefski-real}. We see that the prediction performance
+is mostly affected by the choice of learner for the censoring
+distribution. Several combinations of learners give similar
+performance as measured by the integrated Brier score, provided that
+random survival forest is used to model the censoring distribution.
+
+\begin{figure}
+\figuresize{.7}
+\figurebox{20pc}{25pc}{}[real-data-state-learner]
+\caption{The results of applying the 125 combinations of learners to the
+    prostate cancer data set. The error bars are based on five repetitions using
+    different splits. We refer to learners of \( \Lambda_1 \), \( \Lambda_2 \),
+    and $\Gamma$ as `Tumour learner', `Mortality learner', and `Censoring
+    learner', respectively.}
+\label{fig:zelefski-real}
+\end{figure}
+
+
+\section{Discussion}
+\label{sec:discussion}
+
+A major advantage of the joint survival super learner is that the
+performance of each combination of learners can be estimated without
+additional nuisance parameters. A potential drawback of our approach
+is that we are evaluating the loss of the learners on the level of the
+observed data distribution, while the target of the analysis is either
+the event-time distribution, or the censoring distribution, or both.
+Specifically, the finite-sample oracle inequality in
+Proposition~\ref{prop:oracle-prop} concerns the function \( F \),
+which is a feature of \( P \in \mathcal{P} \), while what we are
+typically interested in is \( \Lambda_j \) or \( S \), which are
+features of \( Q \in \mathcal{Q} \). We emphasize that, while the
+joint survival super learner provides estimates of \( \Lambda_j \) and
+$\Gamma$ based on libraries \( \mathcal{A}_j \) and \( \mathcal{B} \),
+the performance of these learners is not assessed directly in terms of
+their respective target parameters, but only indirectly through the
+performance of \( F \). For settings without competing risks, our
+numerical studies suggest that measuring the performance of \( F \)
+also leads to good performance for estimation of \( S \).
+
+Our proposed super learner can be implemented with a broad library of
+learners and using existing software. Furthermore, while the library
+\( \mathcal{F}(\mathcal{A}_1,\mathcal{A}_2,\mathcal{B}) \) consists of
+\( |\mathcal{A}_1||\mathcal{A}_2||\mathcal{B}| \) many learners, we
+only need to fit
+\( |\mathcal{A}_1| +|\mathcal{A}_2| + |\mathcal{B}| \) many learners
+in each fold. To evaluate the performance of each learner, we need to
+perform \( |\mathcal{A}_1||\mathcal{A}_2||\mathcal{B}| \) many
+operations to calculate the integrated Brier score in each hold-out
+sample (one for each combination of the fitted models), but these
+operations are often negligible compared to fitting the models. Hence
+the joint survival super learner is essentially not more
+computationally demanding than any procedure that uses super learning
+to learn $\Lambda_1$, $\Lambda_2$, and $\Gamma$ separately. While our
+proposal is based on constructing the library \( \mathcal{F} \) from
+libraries for learning \( \Lambda_1 \), $\Lambda_2$, and $\Gamma$, it
+could also be of interest to consider learners that estimate \( F \)
+directly.
+
+In our numerical studies, we only considered learners of $\Lambda_j$ and
+$\Gamma$ that provide cumulative hazard functions which are piecewise constant
+in the time argument. This simplifies the calculation of \( F \) as the
+integrals in equation~(\ref{eq:transition}) reduce to sums. When $\Lambda_j$ or
+\( \Gamma \) are absolutely continuous in the time argument, calculating \( F \)
+is more involved, but we expect that a good approximation can be achieved by
+discretisation.
+
+
+Our original motivation for developing the joint survival super
+learner was for use within the framework of targeted or debiased
+machine learning -- a general methodology that combines flexible,
+data-adaptive estimation with asymptotically valid inference for
+low-dimensional target parameters
+\citep{van2011targeted,chernozhukov2018double}. In settings with
+right-censored competing risks, the relevant nuisance parameters often
+include the cause-specific and censoring cumulative hazard functions
+\citep[e.g.,][]{van2003unified,rytgaard2022targeted}. The joint
+survival super learner immediately provides estimates of these
+nuisance parameters and is hence particularly well suited for targeted
+and debiased machine learning. We leave the study of the joint
+survival super learner in the context of targeted and debiased machine
+learning for a future \DIFdelbegin \DIFdel{paper}\DIFdelend \DIFaddbegin \DIFadd{work}\DIFaddend .
+
+\appendix
+
+\section*{Appendix}
+
+
+Define
+\( \bar{B}_{\tau,P}(F, o) = \bar{B}_{\tau}(F, o) -
+\bar{B}_{\tau}(F_P, o) \) and
+\( R_{P}(F) = \E_P{[\bar{B}_{\tau,P}(F, O)]} \), where the
+integrated Brier score \( \bar{B}_{\tau} \) was defined in
+Section~\DIFdelbegin \DIFdel{\ref{sec:super-learner-simple}}\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner}}\DIFaddend . Recall the norm
+\( \Vert \blank \Vert_{P}\) defined in
+equation~(\ref{eq:norm}).
+
+\begin{lemma}
+  \label{lemma:norm}
+  \( R_{P}(F) = \Vert F - F_P \Vert_{P}^2 \).
+\end{lemma}
+\begin{proof}
+  For any \( t \in [0, \tau] \) and \( l\in \{-1,0,1,2\} \) we have
+  \begin{align*}
+    & \E_{P}{\left[ (F(t, l, X) - \1{\{\eta(t) = l \}})^2 \right]}
+    \\
+    & =    \E_{P}{\left[ (F(t, l, X) - F_P(t, l, X) + F_P(t, l, X) - \1{\{\eta(t) = l
+      \}})^2 \right]}
+    \\
+    & =    \E_{P}{\left[ (F(t, l, X) - F_P(t, l, X))^2\right]}
+      + \E_{P}{\left[ (F_P(t, l, X) - \1{\{\eta(t) = l \}})^2\right]}
+    \\
+    & \quad
+      + 2\E_{P}{\left[ (F(t, l, X) - F_P(t, l, X))(F_P(t, l, X) - \1{\{\eta(t) = l
+      \}})\right]}
+    \\
+    & =    \E_{P}{\left[ (F(t, l, X) - F_P(t, l, X))^2\right]}
+      + \E_{P}{\left[ (F_P(t, l, X) - \1{\{\eta(t) = l \}})^2\right]},
+  \end{align*}
+  where the last equality follows from the tower property. Hence, using Fubini,
+  we have
+  \begin{equation*}
+    \E_P{[\bar{B}_{\tau}(F, O)]}
+    = \Vert F - F_P \Vert_{P}^2 + \E_P{[\bar{B}_{\tau}(F_P, O)]}.
+  \end{equation*}
+\end{proof}
+
+\begin{proof}[of Proposition~\ref{prop:stric-prop}]
+  The result follows from Lemma~\ref{lemma:norm}.
+\end{proof}
+
+Recall that we use \( \mathcal{F}_n \) to denote a library of learners for the
+function \( F \), and that \( \hat{\phi} \) and \( \tilde{\phi} \) denotes,
+respectively, the discrete super learner and the oracle learner for the library
+\( \mathcal{F}_n \), c.f., Section~\DIFdelbegin \DIFdel{\ref{sec:super-learner-simple}}\DIFdelend \DIFaddbegin \DIFadd{\ref{sec:joint-survival-super-learner}}\DIFaddend .
+
+\begin{proof}[of Proposition~\ref{prop:oracle-prop}]
+  Minimizing the loss \( \bar{B}_{\tau} \) is equivalent to
+  minimizing the loss \( \bar{B}_{\tau,P} \), so the discrete super learner and
+  oracle according to \( \bar{B}_{\tau} \) and \( \bar{B}_{\tau,P} \) are
+  identical. By Lemma~\ref{lemma:norm}, \( R_P(F) \geq 0 \) for any
+  \( F \in \mathcal{H}_{\mathcal{P}} \), and so using Theorem 2.3 from
+  \citep{vaart2006oracle} with \( p=1 \), we have that for all \( \delta >0 \),
+\begin{align*}
+  & \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
+  \\
+  &  \quad \leq
+    (1+2\delta)\frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
+  \\
+  & \qquad + (1+\delta) \frac{16 K}{n}
+    \log(1 + |\mathcal{F}_n|)\sup_{F \in \mathcal{H}_{\mathcal{P}}}
+    \left\{
+    M(F) + \frac{v(F)}{R_P(F)}
+    \left(
+    \frac{1}{\delta} + 1
+    \right)
+    \right\}
+\end{align*}
+where for each \( F \in \mathcal{H}_{\mathcal{P}} \),
+\( (M(F), v(F)) \) is some Bernstein pair for the function
+\(o \mapsto \bar{B}_{\tau,P}(F, o) \). As
+\( \bar{B}_{\tau,P}(F, \blank) \) is uniformly bounded by \( \tau \)
+for any \( F \in \mathcal{H}_{\mathcal{P}} \), it follows from section
+8.1 in \citep{vaart2006oracle} that
+\( (\tau, 1.5 \E_P{[\bar{B}_{\tau,P}(F, O)^2]}) \) is a Bernstein
+pair for \( \bar{B}_{\tau,P}(F, \blank) \). Now, for any
+\( a,b,c \in \R \) we have
+\begin{align*}
+  (a-c)^2 - (b-c)^2
+  & = (a-b+b-c)^2 - (b-c)^2
+  \\
+  & = (a-b)^2 + (b-c)^2 +2(b-c)(a-b) - (b-c)^2
+  \\
+  & = (a-b)
+    \left\{
+    (a-b) +  2(b-c)
+    \right\}
+  \\
+  & = (a-b)
+    \left\{
+     a + b -2c
+    \right\},
+\end{align*}
+so using this with \( a=F(t, l, x) \), \( b=F_P(t, l, x) \), and
+\( c = \1{\{\eta(t) = l\}} \), we have by Jensen's inequality
+\begin{align*}
+  & \E_P{[\bar{B}_{\tau,P}(F, O)^2]}
+  \\
+  & \leq
+    2\tau\E_{P}{\left[
+    \sum_{l=-1}^{2} \int_0^{\tau}
+    \left\{
+    \left(
+    F(t, l, X) - \1{\{\eta(t) = l\}}
+    \right)^2
+    -
+    \left(
+    F_P(t, l, X) - \1{\{\eta(t) = l\}}
+    \right)^2
+    \right\}^2
+    \diff t 
+    \right]}
+  \\
+  & =2\tau
+    \E_{P}\Bigg[
+    \sum_{l=-1}^{2} \int_0^{\tau}
+    \left(
+    F(t, l, X) - F_P(t, l, X)
+    \right)^2
+  \\
+  & \quad \quad \quad\quad \quad \quad \times
+    \left\{
+    F(t, l, X) +  F_P(t, l, X)-2 \1{\{\eta(t) = l\}}
+    \right\}^2
+    \diff t 
+    \Bigg]
+  \\
+  & \leq
+    8\tau \E_{P}{\left[
+    \sum_{l=-1}^{2} \int_0^{\tau}
+    \left(
+    F(t, l, X) - F_P(t, l, X)
+    \right)^2
+    \diff t 
+    \right]}.
+  \\
+  & =
+    8\tau \Vert F - F_P \Vert_{P}^2.
+\end{align*}
+Thus when \( v(F) = 1.5 \E_P{[\bar{B}_{\tau,P}(F, O)^2]} \) we have by
+Lemma~\ref{lemma:norm}
+\begin{equation*}
+  \frac{v(F)}{R_P(F)}
+  = 1.5 \frac{\E_P{[\bar{B}_{\tau,P}(F, O)^2]}}{\E_P{[\bar{B}_{\tau,P}(F, O)]}}
+  \leq 12 \tau,
+\end{equation*}
+and so using the Bernstein pairs \( (\tau, 1.5 \E_P{[\bar{B}_{\tau,P}(F, O)^2]}) \) we have
+\begin{equation*}
+  \sup_{F \in \mathcal{H}_{\mathcal{P}}}
+  \left\{
+    M(F) + \frac{v(F)}{R_P(F)}
+    \left(
+      \frac{1}{\delta} + 1
+    \right)
+  \right\}
+  \leq \tau
+  \left(
+    13 + \frac{12}{\delta}
+  \right).
+\end{equation*}
+For all $\delta>0$ we thus have
+\begin{align*}
+  \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ R_P(\hat{\phi}_n(\data_n^{-k})) \right]}
+  \leq
+  &(1+2\delta)\frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ R_P(\tilde{\phi}_n(\data_n^{-k})) \right]}
+  \\
+  & \quad
+    + (1+\delta)\log(1 + |\mathcal{F}_n|) \tau \frac{16 K}{n}
+    \left(
+    13 + \frac{12}{\delta}
+    \right),
+\end{align*}
+and then the final result follows from Lemma~\ref{lemma:norm}.
+\end{proof}
+
+\begin{proof}[of Corollary~\ref{cor:asymp-cons}]
+  By definition of the oracle and Lemma~\ref{lemma:norm},
+  \begin{equation*}
+    \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]} \leq
+    \frac{1}{K} \sum_{k=1}^{K}\E_{P}{\left[ \Vert
+        \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]}
+    =
+    \E_{P}{\left[ \Vert \phi_n(\data_n^{-k}) - F_P \Vert_{P}^2
+      \right]},
+  \end{equation*}
+  for all \( n \in \N \), where the last equality follows because all
+  the training sets \( \data_n^{-k} \) have the same distribution. The
+  result then follows from Proposition~\ref{prop:oracle-prop} by
+  letting $\delta$ grow to zero with \( n \), for instance as
+  $\delta_n = \log(n)^{-\epsilon}$ for some $\epsilon>0$.
+\end{proof}
+
+
+
+
+
+
+\bibliographystyle{biometrika}
+\bibliography{bib.bib}
+
+ 
+
+
+
+
+\end{document}\vspace{0.4cm} 
