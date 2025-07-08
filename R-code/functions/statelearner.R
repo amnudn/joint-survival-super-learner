@@ -3,9 +3,9 @@
 ## Author: Anders Munch
 ## Created: Aug 18 2023 (10:26) 
 ## Version: 
-## Last-Updated: May  7 2025 (16:10) 
-##           By: Anders Munch
-##     Update #: 422
+## Last-Updated: Jul  5 2025 (15:29) 
+##           By: Thomas Alexander Gerds
+##     Update #: 429
 #----------------------------------------------------------------------
 ## 
 ### Commentary: 
@@ -74,21 +74,22 @@ abs_risk_from_cschf <- function(...){
     })
     return(abs_risk)
 }
-## state learner
-statelearner <- function(learners,
-                         data,
-                         time,
-                         integrate = TRUE,
-                         split.method = "cv5",
-                         collapse = TRUE,
-                         B=1,
-                         verbose = FALSE,
-                         time_grid_length = 100,
-                         time_name = "time",
-                         status_name = "status",
-                         cause_codes = c("1" = 1, "2" = 2, "c" = 0),
-                         vars = NULL){
+## joint survival super learner
+jossl <- function(learners,
+                  data,
+                  time,
+                  integrate = TRUE,
+                  split.method = "cv5",
+                  collapse = TRUE,
+                  B=1,
+                  verbose = FALSE,
+                  time_grid_length = 100,
+                  time_name = "time",
+                  status_name = "status",
+                  cause_codes = c("1" = 1, "2" = 2, "c" = 0),
+                  vars = NULL){
     requireNamespace(package = "data.table")
+    requireNamespace(package = "survival")
     comp_event_present = !is.null(learners$cause2)
     ## NB: Expecting that time variable is called time
     partition = riskRegression::getSplitMethod(split.method=split.method,B=B,N=data[, .N])
@@ -220,7 +221,9 @@ statelearner <- function(learners,
     }else{
         winners = list(cause1 = cause1_fit,censor = censor_fit)
     }
-    return(list(cv_fit = cv_return, fitted_winners = winners))
+    out = list(cv_fit = cv_return, fitted_winners = winners)
+    class(out) = "JOSSL"
+    return(out)
 }
 ## TESTING alternative version of statelearner
 statelearner2 <- function(learners,

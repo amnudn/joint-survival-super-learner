@@ -8,18 +8,19 @@
 
 * Setup and load data
 #+BEGIN_SRC R
-  library(here)
-  library(targets)
-  ## Set wd to where we want to place figures
-  try(setwd(here("figures")))
-  ## Load targets
-  tar_load(names = c("zel_sim2_1", "zel_sim2_1_n_events"),
-           store = here("experiments/_targets/"))
-  tar_load(c("zelefsky_statelearner", "ate_est_main_eff","ate_est_inter_eff"), store = here("zelefsky-case-study/_targets/"))
-  library(data.table)
-  library(ggplot2)
-  library(gridExtra)
-  library(MetBrewer)
+library(here)
+library(targets)
+## Set wd to where we want to place figures
+try(setwd(here("figures")))
+## Load targets
+tar_load(names = c("zel_sim2_1", "zel_sim2_1_n_events"),
+         store = here("experiments/_targets/"))
+# tar_load(c("zelefsky_statelearner", "ate_est_main_eff","ate_est_inter_eff"), store = here("zelefsky-case-study/_targets/"))
+tar_load(c("jossl", "ate_est_main_eff","ate_est_inter_eff"), store = here("zelefsky-case-study/_targets/"))
+library(data.table)
+library(ggplot2)
+library(gridExtra)
+library(MetBrewer)
 #+END_SRC
 
 #+RESULTS:
@@ -152,26 +153,96 @@ Marginal event and censoring probabilities:
 #+RESULTS:
 
 * Data application with competing event
-** State learner
-#+BEGIN_SRC R :results graphics file :exports both :file real-data-state-learner.pdf :width 8 :height 4
-  zel_real_plot_dt <- copy(zelefsky_statelearner$cv_fit)
-  learners_levels <- c("km","cox_strata_stage","cox_lasso","cox_elastic","rf")
-  learners_labels <- c("N-Aa","Cox","lasso","elastic","RF")
-  zel_real_plot_dt[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)]
-  zel_real_plot_dt[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)]
-  zel_real_plot_dt[,censor:=factor(censor,levels=learners_levels,labels=paste("Censoring learner\n", learners_labels))]
+** Table 1
 
-  library(ggplot2)
-  ggplot(zel_real_plot_dt, aes(x = cause1, y = loss, col = cause2)) +
-    geom_point(position=position_dodge(width=1), size=.8) +
-    geom_errorbar(aes(ymin = loss-2*sd, ymax = loss+2*sd), width = .4,
-		  position=position_dodge(width=1)) +
-    theme_bw() + ylab("Integrated Brier score") +
-    theme(legend.position="top",
-	  axis.text.x = element_text(angle = 45, vjust = .8)) +
-    xlab("Tumour learner") +
-    facet_grid( ~ censor) +
-    scale_colour_grey("Mortality learner", start = 0, end = 0.7)
+#+BEGIN_SRC R  :results output drawer:exports results  :session *R* :cache yes
+tar_load(jossl_zelefsky)
+d <- copy(jossl_zelefsky$cv_fit)
+learners_levels <- c("aj","cox_unpenalized","cox_lasso","cox_elnet","rf")
+learners_labels <- c("Nelson-Aalen","Cox","LASSO","Elastic net","Random forest")
+u <- capture.output(d[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)])
+u <- capture.output(d[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)])
+u <- capture.output(d[,censor:=factor(censor,levels=learners_levels,labels=learners_labels)])
+u <- capture.output(d[,Rank := 1:.N])
+Publish::publish(d[c(1:5,25,50,75,100,125),.(Rank,"Cause 1" = cause1,"Cause 2" = cause2,"Censored" = censor,Loss = loss,SD = sd)],latex = TRUE,digits = 4)
+#+END_SRC
+
+#+RESULTS[(2025-07-08 09:02:56) e7d28f00e64ff976b50a65a0b8f8b2b237e83ac1]:
+#+begin_example
+\begin{tabular}{ l| c c c c c } 
+ Rank&Cause 1&Cause 2&Censored&Loss&SD \\\hline
+\hline
+ $   1.0000 $&LASSO&Random forest&Random forest&$  6.9725 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $   2.0000 $&Cox&Random forest&Random forest&$  6.9732 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $   3.0000 $&NA&Random forest&Random forest&$  6.9738 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $   4.0000 $&LASSO&Nelson-Aalen&Random forest&$  6.9784 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $   5.0000 $&LASSO&LASSO&Random forest&$  6.9785 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $  25.0000 $&Random forest&Random forest&NA&$  7.3550 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $  50.0000 $&Cox&Cox&Cox&$  7.3785 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $  75.0000 $&LASSO&Cox&NA&$  7.3894 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $ 100.0000 $&Nelson-Aalen&Cox&LASSO&$  7.8182 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\hline
+ $ 125.0000 $&Nelson-Aalen&Nelson-Aalen&Nelson-Aalen&$ 10.3252 $&function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+\end{tabular}
+#+end_example
+
+** Train/test risk predictions for F1 calibration plots
+
+#+BEGIN_SRC R :results file graphics :file ~/research/SuperVision/Anders/statelearner/figures/risks_zelefsky_train_test.pdf :exports none :session *R* :cache yes :width 12 :height 8
+tar_load(score_jossl_1)
+tar_load(score_jossl_2)
+tar_load(score_jossl_0)
+par(mfrow = c(2,3))
+plotRisk(score_jossl_1,plot.main = "Tumor recurrence (3-years)",times = 36)
+plotRisk(score_jossl_2,plot.main="Death without tumor recurrence (3-years)",times = 36)
+plotRisk(score_jossl_0,plot.main="Probability of censoring (3-years)",times = 36)
+plotCalibration(score_jossl_1,plot.main = "Tumor recurrence (3-years)",times = 36)
+plotCalibration(score_jossl_2,plot.main="Death without tumor recurrence (3-years)",times = 36)
+plotCalibration(score_jossl_0,plot.main="Probability of censoring (3-years)",times = 36)
+#+END_SRC
+
+#+RESULTS[(2025-07-08 14:12:14) 90fc273f7cafce5e0c3dee2ee12c9498176c9bf5]:
+[[file:~/research/SuperVision/Anders/statelearner/figures/risks_zelefsky_train_test.pdf]]
+
+** Old 
+
+#+BEGIN_SRC R :results graphics file :exports both :file real-data-state-learner.pdf :width 8 :height 4
+zel_real_plot_dt <- copy(zelefsky_statelearner$cv_fit)
+learners_levels <- c("km","cox_unpenalized","cox_lasso","cox_elastic","rf")
+learners_labels <- c("N-Aa","Cox","lasso","elastic","RF")
+zel_real_plot_dt[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)]
+zel_real_plot_dt[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)]
+zel_real_plot_dt[,censor:=factor(censor,levels=learners_levels,labels=paste("Censoring learner\n", learners_labels))]
+
+library(ggplot2)
+ggplot(zel_real_plot_dt, aes(x = cause1, y = loss, col = cause2)) +
+  geom_point(position=position_dodge(width=1), size=.8) +
+  geom_errorbar(aes(ymin = loss-2*sd, ymax = loss+2*sd), width = .4,
+                position=position_dodge(width=1)) +
+  theme_bw() + ylab("Integrated Brier score") +
+  theme(legend.position="top",
+        axis.text.x = element_text(angle = 45, vjust = .8)) +
+  xlab("Tumour learner") +
+  facet_grid( ~ censor) +
+  scale_colour_grey("Mortality learner", start = 0, end = 0.7)
 #+END_SRC
 
 #+RESULTS:

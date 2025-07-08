@@ -3,9 +3,9 @@
 ## Author: Anders Munch
 ## Created: Nov 12 2023 (15:55) 
 ## Version: 
-## Last-Updated: May 21 2024 (09:43) 
-##           By: Anders Munch
-##     Update #: 76
+## Last-Updated: Jul  7 2025 (09:44) 
+##           By: Thomas Alexander Gerds
+##     Update #: 77
 #----------------------------------------------------------------------
 ## 
 ### Commentary: 
@@ -49,7 +49,7 @@ if(FALSE){
     saveRDS(zelefsky_summary, file = here("R-code", "zelefsky-sim-summary.rda"))
 }
 
-zelefsky_summary <- readRDS(here("R-code", "zelefsky-sim-summary.rda"))
+## zelefsky_summary <- readRDS(here("R-code", "zelefsky-sim-summary.rda"))
 
 simZelefsky <- function(n,censoring = TRUE,simulation_input = zelefsky_summary, ...){
     m <- lvm()

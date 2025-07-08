@@ -1,4 +1,4 @@
-% Created 2024-04-04 Thu 13:21
+% Created 2025-07-05 Sat 15:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -20,111 +20,196 @@
 \usepackage{natbib}
 \author{Anders Munch}
 \date{\today}
-\title{statelearner sim results}
+\title{Make figures for article}
 \begin{document}
 
 \maketitle
-\tableofcontents
+\section{Setup and load data}
+\label{sec:orge24a45c}
+\section{Multi state illustration}
+\label{sec:org6284f65}
+\begin{lstlisting}[language=r,numbers=none]
+library(prodlim)
+library(here)
+nTrans <- 3
+stateLabels = c("Initial","Cause 1", "Cause 2", "Censored")
+crHist <- Hist(time = 1:nTrans, event = list(from = rep("1", nTrans), to = stateLabels[-1]))
+plot(crHist,stateLabels = stateLabels,arrowLabels = FALSE,
+     tagBoxes = c(0,1,2,-1),
+     box.width = 25) 
+\end{lstlisting}
 
-n\#+OPTIONS:   num:t toc:nil ':t \^{}:t
-
-\section{IPCW super learners}
-\label{sec:org30b08e8}
-
-\begin{verbatim}
-     n_obs    sim_set  type            SL time type.1       IPA           se
-  1:   300   original  cens        survSL    6   cens 0.6978450 0.0008305614
-  2:   300   original  cens State learner    6   cens 0.6989384 0.0008192387
-  3:   300   original  cens        Oracle    6   cens 0.6992857 0.0008149009
-  4:   300   original event        survSL    6  event 0.3488385 0.0019823097
-  5:   300   original event State learner    6  event 0.3468667 0.0019972122
- ---                                                                        
-380:  2400 indep_cens event        survSL   36  event 0.1922440 0.0003727166
-381:  2400 indep_cens event State learner   36  event 0.2005905 0.0002755740
-382:  2400 indep_cens event      IPCW(KM)   36  event 0.2005905 0.0002755740
-383:  2400 indep_cens event     IPCW(Cox)   36  event 0.2005905 0.0002755740
-384:  2400 indep_cens event        Oracle   36  event 0.2005905 0.0002755740
-     n_obs               sim_set  type            SL time type.1       IPA           se
-  1:   300   Dependent censoring  cens        survSL    6   cens 0.6978450 0.0008305614
-  2:   300   Dependent censoring  cens State learner    6   cens 0.6989384 0.0008192387
-  3:   300   Dependent censoring  cens        Oracle    6   cens 0.6992857 0.0008149009
-  4:   300   Dependent censoring event        survSL    6  event 0.3488385 0.0019823097
-  5:   300   Dependent censoring event State learner    6  event 0.3468667 0.0019972122
- ---                                                                                   
-380:  2400 Independent censoring event        survSL   36  event 0.1922440 0.0003727166
-381:  2400 Independent censoring event State learner   36  event 0.2005905 0.0002755740
-382:  2400 Independent censoring event      IPCW(KM)   36  event 0.2005905 0.0002755740
-383:  2400 Independent censoring event     IPCW(Cox)   36  event 0.2005905 0.0002755740
-384:  2400 Independent censoring event        Oracle   36  event 0.2005905 0.0002755740
-\end{verbatim}
+\begin{center}
+\includegraphics[width=.9\linewidth]{figure-multi-state-process.pdf}
+\label{}
+\end{center}
+\section{Numerical experiments}
+\label{sec:orgcfd1849}
+Marginal event and censoring probabilities:
+\phantomsection
+\label{}
+\begin{center}
+\begin{tabular}{rlrrr}
+time & sim\textsubscript{setting} & true\textsubscript{events} & true\textsubscript{cens} & at\textsubscript{risk}\\
+\hline
+36 & original & 24.619 & 61.853 & 25.774\\
+36 & indep\textsubscript{cens} & 24.674 & 38.740 & 46.141\\
+\end{tabular}
+\end{center}
+\subsection{IPCW based super learners}
+\label{sec:org8486058}
+\begin{lstlisting}[language=r,numbers=none]
+  ipa_plot(data = summ_zel_sim2_1[time == 36 & type == "event" & SL != "survSL"])
+\end{lstlisting}
 
 \begin{center}
 \includegraphics[width=.9\linewidth]{experiment-fig-sl-ipcw.pdf}
+\label{}
 \end{center}
+\subsection{State learner versus survSL}
+\label{sec:orgde73ddc}
 
-\section{survSL}
-\label{sec:org8951f83}
+\begin{lstlisting}[language=r,numbers=none]
+  ipa_plot(data = summ_zel_sim2_1[time == 36 & type == "event" & !grepl("IPCW", SL)],
+           linetype_vals = c(1,1,2))
+\end{lstlisting}
+
 \begin{center}
-\includegraphics[width=.9\linewidth]{experiment-fig-sl-survSL.pdf}
+\includegraphics[width=.9\linewidth]{experiment-fig-sl-survSL-out.pdf}
+\label{}
 \end{center}
 
+\begin{lstlisting}[language=r,numbers=none]
+  ipa_plot(data = summ_zel_sim2_1[time == 36 & type == "cens" & !grepl("IPCW", SL)],
+           linetype_vals = c(1,1,2), scales = "free_y", nrow = 2, ncol = 1)
+\end{lstlisting}
 
-\section{Real Zelefski data with competing event new version}
-\label{sec:org1137d4f}
-
-\subsection{State learner}
-\label{sec:orgec9334e}
 \begin{center}
-\includegraphics[width=.9\linewidth]{zelefski-real-data.pdf}
+\includegraphics[width=.9\linewidth]{experiment-fig-sl-survSL-cens.pdf}
+\label{}
 \end{center}
+\section{Data application with competing event}
+\label{sec:orgeafe8e7}
+\subsection{Table 1}
+\label{sec:org89f8d1b}
 
-Table
-
+\phantomsection
+\label{}
 \begin{verbatim}
-                      cause1           cause2 censor      loss          sd
-  1:            \\texttt{RF}               km     rf  7.022057 0.046024265
-  2: \\texttt{Cox strata CT}      cox_elastic     rf  7.025097 0.032110343
-  3:            \\texttt{RF}      cox_elastic     rf  7.025267 0.046638952
-  4:            \\texttt{RF}               rf     rf  7.025504 0.046457079
-  5: \\texttt{Cox strata CT}        cox_lasso     rf  7.025648 0.031585447
- ---                                                                      
-121:            \\texttt{KM}               rf     km 10.299304 0.005481968
-122:            \\texttt{KM}        cox_lasso     km 10.310004 0.004864230
-123:            \\texttt{KM}      cox_elastic     km 10.310062 0.005185197
-124:            \\texttt{KM} cox_strata_stage     km 10.310763 0.003174509
-125:            \\texttt{KM}               km     km 10.328653 0.004108411
-                      cause1                  cause2 censor      loss          sd
-  1:            \\texttt{RF}            \\texttt{KM}     rf  7.022057 0.046024265
-  2: \\texttt{Cox strata CT}       \\texttt{Elastic}     rf  7.025097 0.032110343
-  3:            \\texttt{RF}       \\texttt{Elastic}     rf  7.025267 0.046638952
-  4:            \\texttt{RF}            \\texttt{RF}     rf  7.025504 0.046457079
-  5: \\texttt{Cox strata CT}         \\texttt{Lasso}     rf  7.025648 0.031585447
- ---                                                                             
-121:            \\texttt{KM}            \\texttt{RF}     km 10.299304 0.005481968
-122:            \\texttt{KM}         \\texttt{Lasso}     km 10.310004 0.004864230
-123:            \\texttt{KM}       \\texttt{Elastic}     km 10.310062 0.005185197
-124:            \\texttt{KM} \\texttt{Cox strata CT}     km 10.310763 0.003174509
-125:            \\texttt{KM}            \\texttt{KM}     km 10.328653 0.004108411
-                      cause1                  cause2       censor      loss          sd
-  1:            \\texttt{RF}            \\texttt{KM} \\texttt{RF}  7.022057 0.046024265
-  2: \\texttt{Cox strata CT}       \\texttt{Elastic} \\texttt{RF}  7.025097 0.032110343
-  3:            \\texttt{RF}       \\texttt{Elastic} \\texttt{RF}  7.025267 0.046638952
-  4:            \\texttt{RF}            \\texttt{RF} \\texttt{RF}  7.025504 0.046457079
-  5: \\texttt{Cox strata CT}         \\texttt{Lasso} \\texttt{RF}  7.025648 0.031585447
- ---                                                                                   
-121:            \\texttt{KM}            \\texttt{RF} \\texttt{KM} 10.299304 0.005481968
-122:            \\texttt{KM}         \\texttt{Lasso} \\texttt{KM} 10.310004 0.004864230
-123:            \\texttt{KM}       \\texttt{Elastic} \\texttt{KM} 10.310062 0.005185197
-124:            \\texttt{KM} \\texttt{Cox strata CT} \\texttt{KM} 10.310763 0.003174509
-125:            \\texttt{KM}            \\texttt{KM} \\texttt{KM} 10.328653 0.004108411
+\begin{tabular}{ l| c c c c c } 
+ Rank&Cause 1&Cause 2&Censored&Loss&SD \\\hline
+\hline
+ $   1.0000 $&Elastic net&Elastic net&Random forest&$  7.0205 $&$ 0.030977 $ \\
+\hline
+ $   2.0000 $&LASSO&Elastic net&Random forest&$  7.0209 $&$ 0.031035 $ \\
+\hline
+ $   3.0000 $&Cox&Elastic net&Random forest&$  7.0224 $&$ 0.030871 $ \\
+\hline
+ $   4.0000 $&Elastic net&LASSO&Random forest&$  7.0225 $&$ 0.030170 $ \\
+\hline
+ $   5.0000 $&LASSO&LASSO&Random forest&$  7.0228 $&$ 0.030237 $ \\
+\hline
+ $  25.0000 $&Random forest&Random forest&LASSO&$  7.3845 $&$ 0.026975 $ \\
+\hline
+ $  50.0000 $&Elastic net&Random forest&LASSO&$  7.3974 $&$ 0.021290 $ \\
+\hline
+ $  75.0000 $&LASSO&Cox&LASSO&$  7.4059 $&$ 0.024660 $ \\
+\hline
+ $ 100.0000 $&Nelson-Aalen&Cox&Elastic net&$  7.8300 $&$ 0.016719 $ \\
+\hline
+ $ 125.0000 $&Nelson-Aalen&Nelson-Aalen&Nelson-Aalen&$ 10.3298 $&$ 0.003289 $ \\
+\end{tabular}
 \end{verbatim}
 
 
 
-\subsection{Target parameter}
-\label{sec:orgb537d14}
+
+\begin{lstlisting}[language=r,numbers=none]
+zel_real_plot_dt <- copy(zelefsky_statelearner$cv_fit)
+learners_levels <- c("km","cox_unpenalized","cox_lasso","cox_elastic","rf")
+learners_labels <- c("Nelson-Aalen","Cox","LASSO","Elastic net","Random forest")
+zel_real_plot_dt[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)]
+zel_real_plot_dt[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)]
+## zel_real_plot_dt[,censor:=factor(censor,levels=learners_levels,labels=paste("Censoring learner\n", learners_labels))]
+zel_real_plot_dt[,censor:=factor(censor,levels=learners_levels,labels=learners_labels)]
+library(tidyverse)
+df <- zel_real_plot_dt
+df <- df[,label_wrapped:= str_wrap(paste(cause1,cause2,censor,collapse = ", "), width = 30)]
+
+ggplot(df[cause2 == "Random forest"], aes(x = loss)) + geom_bar(stat="identity", position=position_dodge())+facet_grid(~cause1)
+
+ggplot(zel_real_plot_dt, aes(x = cause1, y = cause2, fill = loss)) +
+  geom_tile(color = "white") +
+  facet_wrap(~censor) +
+  scale_fill_viridis_c(option = "C") +
+  labs(title = "Performance by Learner Combinations",
+       x = "Cause 1 Learner", y = "Cause 2 Learner", fill = "Performance") +
+  theme_minimal()
+
+library(ggplot2)
+ggplot(zel_real_plot_dt, aes(x = cause1, y = loss, col = cause2)) +
+  geom_point(position=position_dodge(width=1), size=.8) +
+  geom_errorbar(aes(ymin = loss-2*sd, ymax = loss+2*sd), width = .4,
+                position=position_dodge(width=1)) +
+  theme_bw() + ylab("Integrated Brier score") +
+  theme(legend.position="top",
+        axis.text.x = element_text(angle = 45, vjust = .8)) +
+  xlab("Tumour learner") +
+  facet_grid( ~ censor) +
+  scale_colour_grey("Mortality learner", start = 0, end = 0.7)
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[language=r,numbers=none]
+zel_real_plot_dt <- copy(zelefsky_statelearner$cv_fit)
+learners_levels <- c("km","cox_strata_stage","cox_lasso","cox_elastic","rf")
+learners_labels <- c("N-Aa","Cox","lasso","elastic","RF")
+zel_real_plot_dt[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)]
+zel_real_plot_dt[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)]
+zel_real_plot_dt[,censor:=factor(censor,levels=learners_levels,labels=paste("Censoring learner\n", learners_labels))]
+
+library(ggplot2)
+ggplot(zel_real_plot_dt, aes(x = cause1, y = loss, col = cause2)) +
+  geom_point(position=position_dodge(width=1), size=.8) +
+  geom_errorbar(aes(ymin = loss-2*sd, ymax = loss+2*sd), width = .4,
+                position=position_dodge(width=1)) +
+  theme_bw() + ylab("Integrated Brier score") +
+  theme(legend.position="top",
+        axis.text.x = element_text(angle = 45, vjust = .8)) +
+  xlab("Tumour learner") +
+  facet_grid( ~ censor) +
+  scale_colour_grey("Mortality learner", start = 0, end = 0.7)
+\end{lstlisting}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{zelefsky-data-target-par.pdf}
+\includegraphics[width=.9\linewidth]{real-data-state-learner.pdf}
+\label{}
+\end{center}
+
+Table
+\subsection{Target parameter}
+\label{sec:orge24e597}
+
+\begin{lstlisting}[language=r,numbers=none]
+  ate_est_inter_eff[effect == "ATE" & est_type == "one-step"] |>
+    (\(plot_data)
+      {
+	plot_data[,cause:=factor(cause,levels=c("cause1","cause2"),labels=c("Tumor recurrence","Death"))]
+	ggplot(plot_data, aes(x = time, y = est)) +
+	  geom_errorbar(aes(ymin = lower, ymax = upper), width = 1) + 
+	  geom_point() +
+	  geom_hline(yintercept = 0, linetype = 2) +
+	  theme_bw() +
+	  facet_wrap( ~ cause) +
+	  xlab("Months after baseline") + ylab("Average treatment effect of hormone therapy") +
+	  scale_x_continuous(breaks = seq(6,36,12)) +
+	  scale_y_continuous(labels = scales::percent)
+      })()
+\end{lstlisting}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{real-data-target.pdf}
+\label{}
 \end{center}
 \end{document}
