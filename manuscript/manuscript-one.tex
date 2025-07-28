@@ -992,15 +992,15 @@ cause-specific Cox regression models to the training set. In the
 training set the discrete joint survival super learner chooses the
 unpenalized Cox regression model for tumor recurrence, the elastic net
 Cox regression for death without tumor recurrence and the random
-survival forest for censoring. Figure \ref{fig:7} compares the 3-year
-risk predictions in the test set. Figure \ref{fig:8} shows the
-corresponding calibration plots for the 3-year risk predictions. We
-see that the discrete joint survival super learner is competitive for
-the prediction of tumor recurrence and death without tumor recurrence
-(note that even though the AUC is higher for the prespecified Cox
-regression model, the Brier score is lower for the discrete joint
-survival super learner), and much better at predicting the 3-year
-probabilities.
+survival forest for censoring. The top panel of Figure
+\ref{fig:zelefski-real} compares the 3-year risk predictions in the
+test set, and the bottom panel shows the corresponding calibration
+plots for the 3-year risk predictions. We see that the discrete joint
+survival super learner is competitive for the prediction of tumor
+recurrence and death without tumor recurrence (note that even though
+the AUC is higher for the prespecified Cox regression model, the Brier
+score is lower for the discrete joint survival super learner), and
+much better at predicting the 3-year probabilities.
 
 \begin{table}[h]
   \caption{The results of applying the 125 combinations of learners to
@@ -1009,6 +1009,7 @@ selected intermediate ranks.  The ``Loss'' is the integrated Brier
 score evaluated at 36 months and ``SD'' is the standard deviation
 across the 5 repetitions of 5-fold cross-validation. The discrete
 joint survival super learner chooses rank 1. }
+\begin{center} 
 \begin{tabular}{ l| c c c c c } 
  Rank&Cause 1&Cause 2&Censored&Loss&SD \\\hline
  $   1 $&Elastic net&Elastic net&Random forest&$  7.0205 $&$ 0.030977 $ \\
@@ -1022,7 +1023,9 @@ joint survival super learner chooses rank 1. }
  $ 100 $&Nelson-Aalen&Cox&Elastic net&$  7.8300 $&$ 0.016719 $ \\
  $ 125 $&Nelson-Aalen&Nelson-Aalen&Nelson-Aalen&$ 10.3298 $&$ 0.003289 $ \\
 \end{tabular}\label{tab:1}
+\end{center}
 \end{table}
+
 
 ANDERS: figuren viser flere resultater (se opdateret targets og sl-make-figures.org)
 man kunne sikkert vise noget andet eller bar ingenting. lad os snakke om det eller du bestemmer
