@@ -572,7 +572,7 @@ substituting into the well-known formula
 \citep[e.g.,][]{benichou1990estimates, ozenne2017riskregression},
 \begin{equation}
   \label{eq:cs-risk-def} \hat Q_n(T \leq t, D = j \mid X=x) = \int_0^t
-\exp\left\{-\hat\Lambda_{1n}(u \mid x)-\Lambda_{2n}(u \mid
+\exp\left\{-\hat\Lambda_{1n}(u \mid x)-\hat\Lambda_{2n}(u \mid
 x)\right\} \hat\Lambda_{jn}(\diff u \mid x), \quad j \in \{1,2\}.
 \end{equation} Furthermore, the joint survival super learner provides an
 estimator of the censoring distribution:
@@ -609,7 +609,7 @@ joint survival super learner in the form of a finite-sample oracle
 inequality. We begin by demonstrating that minimizing the integrated
 Brier score, as defined in
 Section~\ref{sec:joint-survival-super-learner}, is statistically
-proper, in the sense that minimisation recovers the parameter of the
+proper, in the sense that minimization recovers the parameter of the
 data-generating distribution. Together with our finite-sample oracle
 inequality (Proposition~\ref{prop:oracle-prop} below), this implies
 that the joint survival super learner is consistent when it is based
@@ -700,14 +700,16 @@ with the norm
     \sum_{l=-1}^{2}
     \int_0^{\tau} \E_P{\left[ F(t, l, X)^2 \right]} \diff t
   \right\}^{1/2}.
-\end{equation} This norm is a natural performance which is equal to
-the excess risk, \( \E_P{[\bar{B}_\tau(F, O)]} -
-\E_P{[\bar{B}_\tau(F_P, O)]} \), as shown in Lemma~\ref{lemma:norm} in
-the Appendix. For simplicity of presentation, we assume that all folds
-of the data partition have equal size, \( |\data_n^{-k}| = n/K \) for
-a fixed number of folds \( K \). We allow the number of learners
-to grow with \( n \) and write \(
-\mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1n}, \mathcal{A}_{2n},
+\end{equation}
+This norm induces a natural performance measure, because
+$\| F-F_P \|_{P}$ is equal to the excess risk,
+\( \E_P{[\bar{B}_\tau(F, O)]} - \E_P{[\bar{B}_\tau(F_P, O)]} \), as
+shown in Lemma~\ref{lemma:norm} in the Appendix. For simplicity of
+presentation, we assume that all folds of the data partition have
+equal size, \( |\data_n^{-k}| = n/K \) for a fixed number of folds
+\( K \). We allow the number of learners to grow with \( n \) and
+write
+\( \mathcal{F}_n=\mathcal{F}(\mathcal{A}_{1n}, \mathcal{A}_{2n},
 \mathcal{B}_n)\) as short-hand notation emphasing the dependence on
 the sample size. We now state a finite-sample inequality that bounds
 the performance of the joint survival super learner relative to that
@@ -731,7 +733,7 @@ of the oracle learner.
   \end{align*}
 \end{proposition}
 
-Note that the expectation in Proposition~\ref{prop:oracle-prop} is
+The expectation in Proposition~\ref{prop:oracle-prop} is
 taken with respect to the product measure \( P^{n} \) for the data set
 \( \data_n \). This means that we are quantifying the average
 performance of the joint survival super learner across all training
@@ -802,7 +804,7 @@ distribution.
 The numerical experiments have two aims. The first aim is to
 demonstrate that the joint survival super learner can outperform the
 IPCW based discrete super learners of \citep{gonzalez2021stacked}
-which prespecify a potentially misspecified model for the censoring
+which pre-specify a potentially misspecified model for the censoring
 mechanism. The second aim is to show that the discrete joint survival
 super learner can compete and outperform the ensemble super learner
 proposed by \cite{westling2021inference}.
@@ -848,13 +850,12 @@ learners: The first super learner, called IPCW(Cox), uses a Cox
 regression model with additive effects of the five covariates to
 estimate the censoring probabilities, while the second super learner,
 called IPCW(KM), uses the Kaplan-Meier estimator to estimate the
-censoring probabilities. Note that the Cox model for the censoring
-distribution is correctly specified in both simulation settings while
-the Kaplan Meier estimator only estimates the censoring model
-correctly in the simulation setting where censoring is
-independent. Both IPCW super learners are fitted using the
-\texttt{R}-package \texttt{riskRegression}
-\citep{Gerds_Ohlendorff_Ozenne_2023}.
+censoring probabilities. The Cox model for the censoring distribution
+is thus correctly specified in both simulation settings, while the
+Kaplan-Meier estimator only estimates the censoring model correctly in
+the simulation setting where censoring is independent. Both IPCW super
+learners are fitted using the \texttt{R}-package
+\texttt{riskRegression} \citep{Gerds_Ohlendorff_Ozenne_2023}.
 %
 % | time | sim_setting | true_events | true_cens | at_risk |
 % |------+-------------+-------------+-----------+---------|
@@ -919,10 +920,10 @@ The results for the second aim are shown in
 Figures~\ref{fig:zelefski-out} and~\ref{fig:zelefski-cens}. We see
 that for most sample sizes, the joint survival super learner has
 similar or higher IPA compared to survSL with respect to both the
-prediction of the censoring and the outcome risks. The advantage of
-the joint survival super learner in this particular simulation setting
-seems to be mostly due that it is a discrete super learner whereas
-survSL combines the learners.
+prediction of the censoring and the outcome risks. We note that the
+advantage of the joint survival super learner in this particular
+simulation setting might be due that it is a discrete super learner,
+whereas survSL combines the learners.
 
 \begin{figure}
 \figuresize{0.7}
@@ -967,47 +968,41 @@ covariates, and a random survival forest. The Nelson-Aalen estimator
 is estimated without covariates and serves as a benchmark model which
 guarantees that the joint survival super learner is not worse than a
 model which predicts the same probability to all individuals. The
-other 4 learners use the 5 baseline covariates listed in section
-\ref{sec:numer-exper} to predict the three cumulative hazard functions
-of time to tumour recurrence \( \Lambda_1 \), time to death without
-tumour recurrence \( \Lambda_2 \), and time to censoring $\Gamma$. The
-resulting library consists of \( 5^3 = 125 \) learners. We use five
-folds for training and testing the models, repeat training and
-evaluation five times with different splits, and obtain the discrete
-joint survival super learner as the combination with the best average
-5-fold integrated Brier score across the 5 repetitions. Table
-\ref{tab:1} shows integrated Brier scores for the conditional state
-occupation probability function \( F \) as defined in
-Section~\ref{sec:joint-survival-super-learner} evaluated 3 years after
-randomization for a selection of the 125 learners. We see that among
-the 5 best combinations the random survival forest is always selected
-for \(\Gamma\) and that the differences for different learners of
-\(\Lambda_1\) and \(\Lambda_2\) are small. To illustrate the
-comparative performance of the discrete joint survival super learner
-we also split the data randomly into a training set with \(n=658\)
-individuals and a test set with the remaining \(n=384\) individuals.
-We fit the discrete joint survival super learner (5 repetitions of
-5-fold cross-validation) and for comparison prespecified
-cause-specific Cox regression models to the training set. In the
-training set the discrete joint survival super learner chooses the
-unpenalized Cox regression model for tumor recurrence, the elastic net
-Cox regression for death without tumor recurrence and the random
-survival forest for censoring. The top panel of Figure
-\ref{fig:zelefski-real} compares the 3-year risk predictions in the
-test set, and the bottom panel shows the corresponding calibration
-plots for the 3-year risk predictions. We see that the discrete joint
-survival super learner is competitive for the prediction of tumor
-recurrence and death without tumor recurrence (note that even though
-the AUC is higher for the prespecified Cox regression model, the Brier
-score is lower for the discrete joint survival super learner), and
-much better at predicting the 3-year probabilities.
+other four learners use the five baseline covariates listed in
+Section~\ref{sec:numer-exper} to predict the three cumulative hazard
+functions of time to tumour recurrence \( \Lambda_1 \), time to death
+without tumour recurrence \( \Lambda_2 \), and time to censoring
+$\Gamma$. The resulting library consists of \( 5^3 = 125 \)
+learners. We use five folds for training and testing the models,
+repeat training and evaluation five times with different splits, and
+obtain the discrete joint survival super learner as the combination
+with the best average five-fold integrated Brier score across the five
+repetitions. Table \ref{tab:1} shows integrated Brier scores for the
+conditional state occupation probability function \( F \) as defined
+in Section~\ref{sec:joint-survival-super-learner}, evaluated 3 years
+after randomization for a selection of the 125 learners. We see that
+among the five best combinations, the random survival forest is always
+selected for \(\Gamma\) and that the differences for different
+learners of \(\Lambda_1\) and \(\Lambda_2\) are small. To illustrate
+the comparative performance of the discrete joint survival super
+learner, we also split the data randomly into a training set with
+\(n=658\) individuals and a test set with the remaining \(n=384\)
+individuals.  We fit the discrete joint survival super learner (five
+repetitions of five-fold cross-validation) and for comparison
+pre-specified cause-specific Cox regression models to the training
+set. In the training set, the discrete joint survival super learner
+chooses the unpenalized Cox regression model for tumor recurrence, the
+elastic net Cox regression for death without tumor recurrence and the
+random survival forest for censoring. Figure \ref{fig:zelefski-real}
+compares the 3-year risk predictions from the pre-specified Cox model
+and the joint survival super learner in the test set.
 
 \begin{table}[h]
   \caption{The results of applying the 125 combinations of learners to
 the prostate cancer data set. Shown are the best 5 combinations and
 selected intermediate ranks.  The ``Loss'' is the integrated Brier
-score evaluated at 36 months and ``SD'' is the standard deviation
-across the 5 repetitions of 5-fold cross-validation. The discrete
+score evaluated at 3 years and ``SD'' is the standard deviation
+across the five repetitions of five-fold cross-validation. The discrete
 joint survival super learner chooses rank 1. }
 \begin{center} 
 \begin{tabular}{ l| c c c c c } 
@@ -1027,14 +1022,12 @@ joint survival super learner chooses rank 1. }
 \end{table}
 
 
-ANDERS: figuren viser flere resultater (se opdateret targets og sl-make-figures.org)
-man kunne sikkert vise noget andet eller bar ingenting. lad os snakke om det eller du bestemmer
-jeg har ikke beskrevet endnu hvad figuren viser fordi jeg er usikker paa om du vil have den med. 
-
 \begin{figure}
-% \figuresize{.7}
-\figurebox{20pc}{25pc}{}[risks_zelefsky_train_test.pdf]
-\caption{Comparison of the discrete joint survival super learner and pre-specified Cox regression ...}
+\figuresize{.7}
+ \figurebox{20pc}{25pc}{}[risks_zelefsky_single.pdf]
+ \caption{Comparison of risk predictions of the discrete joint
+   survival super learner and pre-specified Cox regressions in an
+   independent test data set.}
 \label{fig:zelefski-real}
 \end{figure}
 
@@ -1042,10 +1035,32 @@ jeg har ikke beskrevet endnu hvad figuren viser fordi jeg er usikker paa om du v
 \section{Discussion}
 \label{sec:discussion}
 
-ANDERS: jeg vil helst holde den her discussion kort for biometrika. men, noget af det udkommenterede
-kunne jo rykkes op i teksten hvis du synes at det skal vaere med. en ting som kunne kommentere paa her
-er discrete vs ensemble 
+A major advantage of the joint survival super learner is that the
+performance of each combination of learners can be estimated without
+additional nuisance parameters. A potential drawback of our approach
+is that we are evaluating the loss of the learners on the level of the
+observed data distribution, while the target of the analysis is either
+the event-time distribution, or the censoring distribution, or both.
 
+A relevant application of the joint survival super learner is within
+the framework of targeted learning \citep{van2011targeted}, also known
+as debiased machine learning \citep{chernozhukov2018double}, -- a
+general methodology that combines flexible, data-adaptive estimation
+of nuisance parameters with asymptotically valid inference for
+low-dimensional target parameters.  For example, the methods in
+\cite{van2003unified,rytgaard2022targeted} target the average
+treatment effect in a survival setting, which require estimates of the
+cause-specific cumulative hazard functions and the censoring
+cumulative hazard function. The joint survival super learner can be
+used to estimate these nuisance parameters and is more generally well
+suited for targeted and debiased machine learning with right-censored
+data.
+
+We have focused on a discrete version of the joint survival super
+learner, but it is of interest to extend the method to a proper
+ensemble learner, where learners are combined, e.g., through
+stacking. How an ensemble should be build for tuples of learners is an
+interesting topic for future research.
 
 % A major advantage of the joint survival super learner is that the
 % performance of each combination of learners can be estimated without
@@ -1093,22 +1108,10 @@ er discrete vs ensemble
 % is more involved, but we expect that a good approximation can be achieved by
 % discretisation.
 
-In this article we have introduced the joint survival super learner
-and illustrated how it can be used to simultaneously predict the risk
-of the outcome events as well as the censoring probability over time
-using baseline covariates. Another application of the joint survival
-super learner is within the framework of targeted learning
-\citep{van2011targeted}, also known as debiased machine learning
-\citep{chernozhukov2018double}, -- a general methodology that combines
-flexible, data-adaptive estimation of nuisance parameters with
-asymptotically valid inference for low-dimensional target parameters.
-For example, the methods in \cite{van2003unified,rytgaard2022targeted}
-target the average treatment effect in a survival setting which
-require estimates of the cause-specific cumulative hazard functions
-and the censoring cumulative hazard function. The joint survival super
-learner can be used to estimate these nuisance parameters and is more
-generally well suited for targeted and debiased machine learning with
-right censored data. 
+% In this article we have introduced the joint survival super learner
+% and illustrated how it can be used to simultaneously predict the risk
+% of the outcome events as well as the censoring probability over time
+% using baseline covariates. 
 
 \appendix
 

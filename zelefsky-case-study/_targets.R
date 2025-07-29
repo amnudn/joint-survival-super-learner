@@ -4,7 +4,7 @@ if (!file.exists("~/research/SuperVision/Anders/statelearner/zelefsky-case-study
     library(here)
     library(parallel)
     try(setwd(here("zelefsky-case-study")),silent = TRUE)
-    tar_source(here("R-code/functions"))
+    ## tar_source(here("R-code/functions"))
 }else{
     try(setwd("~/research/SuperVision/Anders/statelearner/zelefsky-case-study/"),silent = TRUE)
     ## tar_source("../R-code/functions")
@@ -95,10 +95,11 @@ list(
                                 cause_codes = c("1" = 1, "2" = 2, "c" = 0),
                                 vars = c("logPSA","stage","ggtot","sDose","hormones"))
                }),
-    tar_target(name = jossl_predictions,{
-        command = 
-            predictRisk.jossl(jossl_train,newdata = test_zelefsky,times = 1:36,cause = 1)
-    }),
+    ## ## These are not used?
+    ## tar_target(name = jossl_predictions,{
+    ##     command = 
+    ##         predictRisk.jossl(jossl_train,newdata = test_zelefsky,times = 1:36,cause = 1)
+    ## }),
     tar_target(name = score_jossl_1,
                command ={
                    x <- riskRegression::Score(list(Jossl = jossl_train,
