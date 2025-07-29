@@ -25,6 +25,7 @@ list(
         }
         zelefsky[,event := (vital == "Dead")*2]
         zelefsky[status == 1,event := 1]
+        zelefsky[, time := dmos]
         z = zelefsky[, .(time,status,event,logPSA,stage,ggtot,sDose,hormones,vital)]
         z[]
     }),
