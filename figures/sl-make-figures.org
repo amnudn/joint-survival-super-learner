@@ -24,6 +24,8 @@
 #+END_SRC
 
 #+RESULTS:
+: here() starts at /home/amnudn/Documents/phd/joint-survival-super-learner
+: data.table 1.17.8 using 8 threads (see ?getDTthreads).  Latest news: r-datatable.com
 
 
 
@@ -158,10 +160,10 @@ Marginal event and censoring probabilities:
 ** Table 1
 
 #+BEGIN_SRC R  :results output drawer:exports results  :session *R* :cache yes
-  tar_load(jossl_zelefsky)
+  ## tar_load(jossl_zelefsky)
   d <- copy(jossl_zelefsky$cv_fit)
   learners_levels <- c("aj","cox_unpenalized","cox_lasso","cox_elnet","rf")
-  learners_labels <- c("Nelson-Aalen","Cox","LASSO","Elastic net","Random forest")
+  learners_labels <- c("Nelson-Aalen","Cox","lasso","elastic net","random forest")
   u <- capture.output(d[,cause1:=factor(cause1,levels=learners_levels,labels=learners_labels)])
   u <- capture.output(d[,cause2:=factor(cause2,levels=learners_levels,labels=learners_labels)])
   u <- capture.output(d[,censor:=factor(censor,levels=learners_levels,labels=learners_labels)])
@@ -169,40 +171,30 @@ Marginal event and censoring probabilities:
   Publish::publish(d[c(1:5,25,50,75,100,125),.(Rank,"Cause 1" = cause1,"Cause 2" = cause2,"Censored" = censor,Loss = loss,SD = sd)],latex = TRUE,digits = 4)
 #+END_SRC
 
-#+RESULTS[(2025-07-08 09:02:56) e7d28f00e64ff976b50a65a0b8f8b2b237e83ac1]:
+#+RESULTS[5a5ffc0f08fc3528b18dbd86e5eeb08bc4452821]:
 #+begin_example
 \begin{tabular}{ l| c c c c c } 
  Rank&Cause 1&Cause 2&Censored&Loss&SD \\\hline
 \hline
- $   1.0000 $&LASSO&Random forest&Random forest&$  6.9725 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $   1.0000 $&elastic net&elastic net&random forest&$  7.0147 $&$ 0.041282 $ \\
 \hline
- $   2.0000 $&Cox&Random forest&Random forest&$  6.9732 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $   2.0000 $&lasso&elastic net&random forest&$  7.0150 $&$ 0.041652 $ \\
 \hline
- $   3.0000 $&NA&Random forest&Random forest&$  6.9738 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $   3.0000 $&Cox&elastic net&random forest&$  7.0152 $&$ 0.041736 $ \\
 \hline
- $   4.0000 $&LASSO&Nelson-Aalen&Random forest&$  6.9784 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $   4.0000 $&elastic net&lasso&random forest&$  7.0159 $&$ 0.042231 $ \\
 \hline
- $   5.0000 $&LASSO&LASSO&Random forest&$  6.9785 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $   5.0000 $&lasso&lasso&random forest&$  7.0163 $&$ 0.042584 $ \\
 \hline
- $  25.0000 $&Random forest&Random forest&NA&$  7.3550 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $  25.0000 $&elastic net&elastic net&Cox&$  7.3961 $&$ 0.027644 $ \\
 \hline
- $  50.0000 $&Cox&Cox&Cox&$  7.3785 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $  50.0000 $&lasso&lasso&lasso&$  7.4042 $&$ 0.026741 $ \\
 \hline
- $  75.0000 $&LASSO&Cox&NA&$  7.3894 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $  75.0000 $&Cox&Cox&lasso&$  7.4125 $&$ 0.029119 $ \\
 \hline
- $ 100.0000 $&Nelson-Aalen&Cox&LASSO&$  7.8182 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $ 100.0000 $&Nelson-Aalen&Cox&elastic net&$  7.8260 $&$ 0.007352 $ \\
 \hline
- $ 125.0000 $&Nelson-Aalen&Nelson-Aalen&Nelson-Aalen&$ 10.3252 $&function (x, na.rm = FALSE) 
-sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm = na.rm)) \\
+ $ 125.0000 $&Nelson-Aalen&Nelson-Aalen&Nelson-Aalen&$ 10.3301 $&$ 0.005971 $ \\
 \end{tabular}
 #+end_example
 
