@@ -107,29 +107,30 @@
 
 \maketitle
 
-\begin{abstract} Risk prediction models are widely used to guide
-real-world decision-making in areas such as healthcare and economics,
-and they also play a key role in estimating nuisance parameters in
-semiparametric inference. The super learner is a machine learning
-framework that combines a library of prediction algorithms into a
-meta-learner using cross-validated loss. In the context of
-right-censored data, careful consideration must be given to both the
-choice of loss function and the estimation of expected loss.
-Moreover, estimators such as inverse probability of censoring
-weighting require accurate modeling and an estimator of the
-censoring distribution. We propose a novel approach to super learning
-for survival analysis that jointly evaluates candidate learners for
-both the event-time distribution and the censoring distribution. Our
-method imposes no restrictions on the algorithms included in the
-library, accommodates competing risks, and does not rely on a single
-pre-specified estimator of the censoring distribution. We establish a
-finite-sample bound on the average price we pay for using
-cross-validation, and show that this price vanishes asymptotically, up
-to poly-logarithmic terms, provided that the size of the library does
-not grow faster than at a polynomial rate in the sample size. We
-demonstrate the practical utility of our method using prostate cancer
-data and compare it to existing super learner algorithms for survival
-analysis using synthesized data.
+\begin{abstract}
+  Risk prediction models are widely used to guide
+  real-world decision-making in areas such as healthcare and
+  economics, and they also play a key role in estimating nuisance
+  parameters in semiparametric inference. The super learner is a
+  machine learning framework that combines a library of prediction
+  algorithms into a meta-learner using cross-validated loss. In the
+  context of right-censored data, careful consideration must be given
+  to both the choice of loss function and the estimation of expected
+  loss.  Moreover, estimators such as inverse probability of censoring
+  weighting require accurate modeling and an estimator of the
+  censoring distribution. We propose a novel approach to super
+  learning for survival analysis that jointly evaluates candidate
+  learners for both the event-time distribution and the censoring
+  distribution. Our method imposes no restrictions on the algorithms
+  included in the library, accommodates competing risks, and does not
+  rely on a single pre-specified estimator of the censoring
+  distribution. We establish a finite-sample bound on the average
+  price we pay for using cross-validation, and show that this price
+  vanishes asymptotically, up to poly-logarithmic terms, provided that
+  the size of the library does not grow faster than at a polynomial
+  rate in the sample size. We demonstrate the practical utility of our
+  method using prostate cancer data and compare it to existing super
+  learner algorithms for survival analysis using synthesized data.
 \end{abstract}
 
 \begin{keywords}
@@ -665,7 +666,7 @@ equal size, \( |\data_n^{-k}| = n/K \) for a fixed number of folds
 \( K \). We allow the number of learners to grow with \( n \) and
 write
 \( \Phi_n=\Phi(\mathcal{A}_{1n}, \mathcal{A}_{2n},
-\mathcal{B}_n)\) as short-hand notation emphasing the dependence on
+\mathcal{B}_n)\) as short-hand notation emphasizing the dependence on
 the sample size. We now state a finite-sample inequality that bounds
 the performance of the joint survival super learner relative to that
 of the oracle learner.
