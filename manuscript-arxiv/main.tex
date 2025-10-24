@@ -1,47 +1,31 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% A template for Wiley article submissions.
-% Developed by Overleaf. 
-%
-% Please note that whilst this template provides a 
-% preview of the typeset manuscript for submission, it 
-% will not necessarily be the final publication layout.
-%
-% Usage notes:
-% The "blind" option will make anonymous all author, affiliation, correspondence and funding information.
-% Use "num-refs" option for numerical citation and references style.
-% Use "alpha-refs" option for author-year citation and references style.
+\documentclass[a4paper,danish]{article}
+\usepackage[margin=3.5cm]{geometry}
 
-\documentclass[alpha-refs]{wiley-article}
-% \documentclass[blind,alpha-refs]{wiley-article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{natbib, dsfont, enumitem, authblk,
+  amssymb,soul,xcolor,amsmath,amsthm,graphicx,subcaption,verbatim,pgfplots,tikz,prodint}
+\usetikzlibrary{calc,patterns,angles,quotes,automata, positioning,arrows,shapes}
 
+% Ref and bibliography style 
+\bibliographystyle{abbrvnat}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%% JDT:  Annotation Code %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Handling new lines
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
 
-\usepackage{color}
-\usepackage{ulem}
+% Handling space after sections
+\usepackage{titlesec}
+\titlespacing*{\section}{0em}{2em}{0em}
+\titlespacing*{\subsection}{0em}{2em}{0em}
+\titlespacing*{\subsubsection}{0em}{2em}{0em}
 
- % Uncomment to display with annotation; comment out otherwise
-\newcommand{\add}[1]{\textcolor{blue}{#1}}
-\newcommand{\delete}[1]{\textcolor{red}{\sout{#1}}}
-\newcommand{\edit}[2]{\textcolor{red}{\sout{#1}} \textcolor{blue}{#2}}
-\newcommand{\mnote}[1]{\marginpar{\textcolor{green}{\textbf{#1}}}}
+% No spacing after in start of list
+\setlist[itemize]{topsep=0pt}
+\setlist[enumerate]{topsep=0pt}
 
- % Uncomment to display without annotation; comment out otherwise
-%\newcommand{\add}[1]{#1}
-%\newcommand{\delete}[1]{}
-%\newcommand{\edit}[2]{#2}
-%\newcommand{\mnote}[1]{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Add additional packages here if required
-\usepackage{siunitx}
-
-\usepackage[colorlinks,allcolors=blue]{hyperref}
+\definecolor{linkcolor}{rgb}{0, 0, 0.54}
+\usepackage[colorlinks=true,allcolors=linkcolor,linktocpage=true]{hyperref} 
 
 % Notation
 \usepackage{dsfont,enumitem, url}
@@ -69,37 +53,44 @@
 \newcommand{\data}{\ensuremath{\mathcal{D}}}
 \newcommand{\sample}{\ensuremath{\mathcal{S}}}
 
+%% Theorem environments
+\theoremstyle{plain} % plain italic style
+\newtheorem{theorem}{Theorem}
+\numberwithin{theorem}{section}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition} % non-italic
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
 
 
-% Update article type if known
-\papertype{Original Article}
-% Include section in journal if known, otherwise delete
-\paperfield{Journal Section}
-
-\title{The joint survival super learner: A super learner for right-censored
-  data}
 
 
-% Include full author names and degrees, when required by the journal.
-% Use the \authfn to add symbols for additional footnotes and present addresses, if any. Usually start with 1 for notes about author contributions; then continuing with 2 etc if any author has a different present address.
+\title{The joint survival super learner: A super learner for
+  right-censored data}
+
+
 \author[1]{Anders Munch}
 \author[1]{Thomas A.~Gerds}
 
-% \contrib[\authfn{1}]{Equally contributing authors.}
 
-% Include full affiliation details for all authors
+
 \affil[1]{Section of Biostatistics, University of Copenhagen}
 
-\corraddress{Anders Munch, Section of Biostatistics, University of
-  Copenhagen, 1355 Copenhagen, Denmark}
-\corremail{a.munch@sund.ku.dk}
+% \corraddress{Anders Munch, Section of Biostatistics, University of
+%   Copenhagen, 1355 Copenhagen, Denmark}
+% \corremail{a.munch@sund.ku.dk}
 
-% \presentadd[\authfn{2}]{Department, Institution, City, State or Province, Postal Code, Country}
-
-% \fundinginfo{Funder One, Funder One Department, Grant/Award Number: 123456, 123457 and 123458; Funder Two, Funder Two Department, Grant/Award Number: 123459}
-
-% Include the name of the author that should appear in the running header
-\runningauthor{Munch and Gerds}
 
 \begin{document}
 
@@ -129,11 +120,11 @@
   rate in the sample size. We demonstrate the practical utility of our
   method using prostate cancer data and compare it to existing super
   learner algorithms for survival analysis using synthesized data.
-
-  % Please include a maximum of seven keywords
-  \keywords{competing risks, cross-validation, loss based estimation,
-    right-censored data, super learner}
 \end{abstract}
+
+
+\textbf{Keywords}: competing risks, cross-validation, loss based estimation,
+right-censored data, super learner
 
 
 \section{Introduction}
@@ -591,7 +582,7 @@ the function determined by a given \(P \in\mathcal{P}\) in accordance
 with equation equation~(\ref{eq:F-def}). In the following we let \(
 \mathcal{F}_{\mathcal{P}} = \{F_P : P \in \mathcal{P}\} \).
 
-\begin{proposition}
+\begin{proposition} 
   \label{prop:stric-prop}
   If \(P \in\mathcal{P}\) then
   \begin{equation*}
@@ -1246,3 +1237,5 @@ final result then follows from Lemma~\ref{lemma:norm}.
 
 
 \end{document}
+
+\typeout{get arXiv to do 4 passes: Label(s) may have changed. Rerun}

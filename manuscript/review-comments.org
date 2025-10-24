@@ -1,0 +1,250 @@
+* Reviewer: 1
+
+Comments to the Author
+
+This paper proposes a super learner-style estimator of conditional
+cumulative hazard functions in the context of right-censored
+time-to-event data with competing risks. The user specifies libraries
+of candidate estimators of the conditional cumulative hazards of the
+event, censoring, and competing risk times. The proposed method then
+selects the element of the product of these libraries that has the
+smallest cross-validated empirical risk, where the risk is based on a
+carefully constructed loss function. A key benefit of the proposed
+methods over alternatives is that it jointly estimates the three
+cumulative hazards, rather than iterating between estimation of them
+or requiring a pre-specified censoring survival estimator. The authors
+provided an oracle inequality demonstrating that the true risk of the
+estimator is no worse than a constant multiple of the oracle risk up
+to a logarithmic penalty in the size of the library. The authors also
+provide numerical studies and a simulation illustrating the good
+performance of the proposed method.
+
+Overall, this is a nice contribution to the literature, and I am
+grateful to the authors for the methods an accompanying theory. The
+paper is well written and careful, though I think more effort could be
+made in parts to make the notation somewhat more accessible. In
+particular, an outline of the proposed algorithm in its totality would
+be useful for readers.
+
+- [ ] Answer: Thank you for this comment, we agree that it is a good
+  idea with an outline of the proposed algorithm. We have added a
+  pseudo-algorithm to the paper.
+
+I have two main comments. My first comment regards a sentence in the
+discussion: ``A potential drawback of our approach is that we are
+evaluating the loss of the learners on the level of the observed data
+distribution, while the target of the analysis is either the
+event-time distribution, or the censoring distribution, or both.” I
+didn’t quite catch this on a first read-through of the paper, but I
+think it is an important point that deserves to be emphasized more
+throughout the paper. Specifically, this makes me wonder about the
+relevance of the oracle inequalities in Proposition 2 and Corollary 3:
+do we actually care about these risks? I usually care about
+inequalities and rates of convergence of the conditional survival (or
+cumulative hazard) function of the event time, censoring time, and
+competing risk. If I understand the above comment correctly, the risk
+considered in the paper doesn’t directly give such inequalities and
+rates. Is that correct? If so, it deserves to be mentioned and at
+least briefly discussed in the section on theoretical results.
+
+- [ ] Answer: This is an important point, which we agree should be
+  made clear in the paper. We have now added ...
+
+  Notes: Add to theory section and maybe other places throughout?
+  Point out the because we hope/expect that good performance for F
+  translate into good performance of S etc. and that this is what we
+  see in the simulation study. 
+
+Similarly, this makes me question the relevance of the IPA metric
+considered in the numerical study. How do the different algorithms
+compare in terms of pointwise or integrated error for the conditional
+survival or cumulative hazard functions?
+
+- [ ] Answer: In the numerical studies, we in fact do use the IPA for
+  the survival function of interest. We have now made this clear by
+  adding the following:
+
+  [As we simulate the data, we have access to ...]
+
+Second, and more minor, I wonder if the authors could expand on why it
+is difficult to extend the method to an ensemble estimator in this
+setting.
+
+- [ ] Answer: Thank you for this comment. We do not believe that it
+  needs to be particularly difficult, but there are at least two
+  strategies that could be pursued, and we think that some additional
+  thought on this is needed. We have expanded on this in the
+  discussion with the following:
+  
+  [Generalizing our proposal to ensemble learning is ... At least two
+  strategies could be pursued. First, ensemble for F. More
+  interestingly, jointly build ensembles for all element of the tuple.]
+
+
+
+* Reviewer: 2
+
+Section 3:
+
+P5. The point that the partial log-likelihood does not work well as an
+evaluation criterion is interesting and warrants further
+elaboration. An additional sentence explaining this point would be
+helpful. Additionally, I wonder if this problem can be circumvented in
+other ways: perhaps models that normally yield piecewise constant
+hazards could be included in a slightly modified form with smoothed
+hazards. What would be the consequences of this approach?
+
+- [ ] Answer: We agree that this is an important point, and we have
+  elaborated further with the following:
+
+Section 4:
+
+P5. I find the notation using "1" for the indicator function difficult
+to read, especially when preceded by other numerals. Why not use I, δ,
+or a bold or blackboard/double-struck 1?
+
+- [ ] Answer: This is a good point, we have changed the notation to...
+
+P6. The manuscript explains that it is in principle fairly easy to use
+the survival package to estimate libraries of models for A₁, A₂, and
+B. The practical value of the article would improve with a web
+appendix showing code implementing this for the prostate cancer study
+data.
+
+- [ ] Answer:
+
+  Notes: Emphasize that we do provide code. Perhaps make an example
+  where we "manually" implement and article using tools from the
+  survival package.
+
+Section 5:
+
+P8. You state that a sensible objective function must be proper. While
+I don't disagree, this point often generates discussion. One might
+argue that in certain problems, our objective need not be the correct
+recovery of the probability distribution. Rather, we may want to
+predict outcomes at specific time points while incorporating relative
+costs of incorrect predictions. It's not clear that using
+probabilities as an intermediate step is always optimal, especially
+when these are estimated with error. Furthermore, while a proper loss
+function might be optimal with large sample sizes, this may not hold
+for finite samples. More discussion of this point would be valuable.
+
+- [ ] Answer: ...
+
+  Notes: We now discuss utility / cost benefit. unclear what is meant
+  by finite sample problem of proper loss but penalized likelihood is
+  a good example.
+
+P8. The authors quickly move from using proper scoring rules to the
+Brier score, which feels less general. Are the results expected to
+hold for other proper scoring rules?
+
+- [ ] Answer:
+
+  Notes: yes, what other proper scoring rules are there? is there an
+  integrated deviance (log - score) maybe in Putter's book?
+
+P9. At the top of the page, it's argued that the oracle inequality
+provides insights into how the number of folds, time horizon, and
+number of learners influence performance. Could the practical utility
+of this be illustrated in the context of the prostate cancer example?
+
+- [ ] Answer: ...
+
+  Notes: no, but we have now added a comment about this.. Unclear how
+  to address this, because I do not believe there is any actual
+  practical utility to be gained from the types of inequalities.
+
+P10. The performance will be specified using the IPA, which needs more
+discussion. Please briefly state how it is defined and why it was
+chosen. (Is the IPA itself proper? If not, does this still make sense
+here? Do we need other metrics as well?)
+
+- [ ] Answer:
+
+  Notes: IPA is simply R2 (refer to text) it is easy to see that it is proper:
+
+
+P10. The SurvSL model should be described in more detail.
+
+- [ ] Answer:
+
+  Notes: Do this in the simulation setup?
+
+P10. For the 'second aim,' it's suggested that an advantage of the
+joint survival learner may be that it is a discrete super
+learner. This warrants more explanation—why is this an advantage? Is
+there more risk of overfitting in small samples?
+
+- [ ] Answer: This is an interesting point. To our knowledge, the
+  finite sample performance of a discrete versus continuous (ensemble)
+  super learner is not well understood. In the special case where the
+  data-generating model is included as a learner in the library, we
+  think that a discrete super learner could have an advantage, because
+  it is forced to pick one model from the library, and will with good
+  change pick the correct one, while an ensemble learner will always
+  be a mixture of the correct model and a mis-specified one. We have
+  expanded on this and tried to clarify that this only a possible
+  explanation and not a strict fact.
+
+  Notes: because we have the dgm as one of the learners.
+
+Section 7:
+
+P11. The prostate cancer study seems like an afterthought. It would be
+beneficial to reference it more when introducing the problem to
+demonstrate practical relevance.
+
+- [ ] Answer:
+
+  Notes: THOMAS todo.
+
+P11. The splitting into training and test data seems wasteful. Could
+nested cross-validation be used instead?
+
+- [ ] Answer:
+
+  Notes: we try it out and then decide
+
+P11. More discussion of the results is needed. What exactly do we
+learn from this practical use case?
+
+- [ ] Answer:
+
+  Notes: ask chatgpt: prompt could you help us answer the reviewers
+  request: here is the paragraph of our paper copy-paste
+
+P11. The usefulness of this manuscript for practical researchers would
+be greatly enhanced with a link to a code supplement.
+
+- [ ] Answer:
+
+  Notes: Yes, we already have this...
+
+Section 8:
+
+P12. The stated drawback—that the authors evaluate the loss of
+learners at the level of the observed data distribution while the
+target is either the event-time distribution, censoring distribution,
+or both—needs more detailed explanation. Are there alternatives to
+this approach, and what would be their drawbacks?
+
+- [ ] Answer:
+
+  Notes: find more about drawbacks of other methods from the earlier
+  versions of the manuscript. So this is about reiterating some of the
+  points made in the introduction. 
+
+P12. The authors claim that targeted learning is also known as
+debiased machine learning.  However, these are often presented as
+distinct approaches. This should be clarified.
+
+- [ ] Answer: Yes, this is a fair point. We have adjusted accordingly: 
+
+P12. The discussion lacks reflection on the results from sections 6
+and 7.
+
+- [ ] Answer:
+
+  Notes: just to this.
