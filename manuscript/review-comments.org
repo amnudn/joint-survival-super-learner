@@ -154,7 +154,13 @@ of this be illustrated in the context of the prostate cancer example?
 
   Notes: no, but we have now added a comment about this.. Unclear how
   to address this, because I do not believe there is any actual
-  practical utility to be gained from the types of inequalities.
+  practical utility to be gained from the types of inequalities. Hmm,
+  maybe we could say something about that in this case, our analyses
+  indicates that fairly complex models are used. If this is true, our
+  finite sample inequality shows that, for large enough samples, the
+  error rate will be dominated by that flexible models and not by the
+  cross-validation estimation step -- refer to that we seem to be in
+  case (b) of Corollary 3.
 
 P10. The performance will be specified using the IPA, which needs more
 discussion. Please briefly state how it is defined and why it was

@@ -42,6 +42,8 @@
 \usepackage{siunitx}
 
 \usepackage[colorlinks,allcolors=blue]{hyperref}
+\usepackage[ruled]{algorithm2e}
+\SetArgSty{textnormal}
 
 % Notation
 \usepackage{dsfont,enumitem, url}
@@ -535,8 +537,10 @@ and the discrete joint survival super learner is the best performing tuple of ha
 \begin{equation}\label{eq:discrete-JSLL}
   (\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})
   =  \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
-    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}).
+  \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}).
 \end{equation}
+We provide a summary of the procedure for obtaining the joint survival
+super learner in Algorithm~\ref{algo:jossl}.
   
 Cause-specific risk predictions can be obtained from
 the joint survival super learner \eqref{eq:discrete-JSLL} by
@@ -551,6 +555,78 @@ estimator of the censoring distribution:
 \begin{equation*}
  \hat G_n(T \leq t \mid X=x) = \exp\left\{-\hat\Gamma_n(t \mid x)\right\}.
 \end{equation*}
+
+\begin{algorithm}[H]
+  \label{algo:jossl}
+  \caption{The joint survival super learner using the integrated Brier
+    score}
+  \KwIn{Data set \( \data_n \), libraries of learners
+    \( \mathcal{A}_1 \), \( \mathcal{A}_2 \), and \( \mathcal{B} \),
+    number of folds \( K \in \N \), and time horizon $\tau$.}
+
+  \KwOut{Selected tuple of learner \( (\hat{\Lambda}_{1n},
+    \hat{\Lambda}_{2n}, \hat{\Gamma}_n) \in  \mathcal{A}_1 \times
+    \mathcal{A}_2 \times \mathcal{B} \).
+  }
+
+  Partition the data set \( \data_n \) randomly into \( K \) subsets
+  \( \{\data_n^1, \dots , \data_n^K\} \) of approximately equal size.
+
+  \For{$k = 1, \dots, K$}{
+
+    Fit all learners in all libraries to the \( k \)'th training data
+    to obtain the collections of fitted learners:
+    \begin{list}{}{
+          \setlength{\parsep}{0pt}       % space between paragraphs within an item
+          \setlength{\topsep}{2pt}       % space above/below the list
+      }
+    \item[\( \hat{\mathcal{A}}_1^{-k} \)]         
+      \(  = \{ a_1(\data_n^{-k}) : a_1 \in
+        \mathcal{A}_1 \}  \),
+      \item[\( \hat{\mathcal{A}}_2^{-k} \)]         
+        \(  = \{ a_2(\data_n^{-k}) : a_2 \in
+        \mathcal{A}_2 \}  \),
+      \item[\( \hat{\mathcal{B}}^{-k} \)]         
+        \(  = \{ b(\data_n^{-k}) : b \in
+        \mathcal{B} \}  \) ,
+    \end{list}
+    where \( \data_n^{-k} = \data_n\setminus \data_n^{k} \).
+    
+    \For{$(a_1, a_2, b) \in
+      \mathcal{A}_1 \times \mathcal{A}_2 \times
+      \mathcal{B} $}{
+
+      Use equation~(\ref{eq:anti-transition}) and the fitted learners
+      \( \( a_1(\data_n^{-k}) \in \hat{\mathcal{A}}_1^{-k} \)
+      \), \( a_2(\data_n^{-k}) \in \hat{\mathcal{A}}_2^{-k} \),
+      and \( b(\data_n^{-k}) \in \hat{\mathcal{B}}^{-k} \) to
+      obtain the fitted \( F \)-learner,
+      \( \phi_{a_1, a_2, b}(\data_n^{-k}) \).
+
+      Calculate the estimated risk in the \( k \)'th hold out data
+      using the integrated Brier score:
+      \begin{equation*}
+        \hat{R}_n^k(\phi_{a_1, a_2,
+          b}; \bar{B}_{\tau}) =
+          \frac{1}{| \data_n^{k} |}\sum_{O_i \in \data_n^{k}}
+          \bar B_\tau
+          {
+            \left(
+              \phi_{a_1, a_2, b}(\data_n^{-k}), O_i
+            \right)
+          }.
+        \end{equation*}      
+      } }
+    \For{$(a_1, a_2, b) \in \mathcal{A}_1 \times \mathcal{A}_2 \times
+      \mathcal{B} $}{ Calculate the cross-validated risk:
+      \( \hat{R}_n(\phi_{a_1, a_2, b}; \bar{B}_{\tau}) = \frac{1}{K}
+      \sum_{k=1}^{K} \hat{R}_n^k(\phi_{a_1, a_2, b}; \bar{B}_{\tau})
+      \).}
+    \Return{ \( (\hat{\Lambda}_{1n},
+      \hat{\Lambda}_{2n}, \hat{\Gamma}_n)
+      = \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
+    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) \) }
+\end{algorithm}
 
 
 \section{Theoretical guarantees}
