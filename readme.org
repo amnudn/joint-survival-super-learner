@@ -164,7 +164,7 @@ We can know specify a library as follows using the learner
 
 We see that this learner agrees with the pre-defined ~model="cox"~ option:
 
-#+BEGIN_SRC R
+#+BEGIN_SRC R :exports both
   set.seed(114)
   cox_jossl_fit = jossl(learners = list(cause1 = cox_learners,
 					cause2 = learners[c(3,5)],
