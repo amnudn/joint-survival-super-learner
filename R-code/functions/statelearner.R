@@ -43,23 +43,32 @@ fit_cause_model <- function(model, data, cause, x_form = NULL, ...){
         form = Surv(time, internal_event_var) ~ .
     else
         form = update(x_form, Surv(time, internal_event_var) ~ .)
-    if(model == "cox"){
-        wd[, internal_event_var := 1*(internal_event_var == 1)] ## To make this cause of interest
-        out = coxph(form, data = wd,x = TRUE,y = TRUE, ...)
+    if(is.character(model)){
+        if(model == "cox"){
+            wd[, internal_event_var := 1*(internal_event_var == 1)] ## To make this cause of interest
+            out = coxph(form, data = wd,x = TRUE,y = TRUE, ...)
+        }
+        if(model == "GLMnet"){
+            wd[, internal_event_var := 1*(internal_event_var == 1)] ## To make this cause of interest
+            out = GLMnet(form, data = wd, ...)
+        }
+        ## NB! Why the internal_event_var := 1*(internal_event_var == 1) not needed for rfsrc...?
+        if(model == "rfsrc"){
+            out = rfsrc(form, data = wd, ...)
+        }
+        if(model == "rfsrc.fast"){
+            out = rfsrc.fast(form, data = wd, forest = TRUE, ...)
+        }
+        if(is.null(out))
+            stop(paste("The model", model, "is not implemented in statelearner."))
+        return(out)
     }
-    if(model == "GLMnet"){
-        wd[, internal_event_var := 1*(internal_event_var == 1)] ## To make this cause of interest
-        out = GLMnet(form, data = wd, ...)
+    if(is.function(model)){
+        wd[, internal_event_var := 1*(internal_event_var == 1)]
+        out = model(data = wd, form = form)
+        return(out)
     }
-    if(model == "rfsrc"){
-        out = rfsrc(form, data = wd, ...)
-    }
-    if(model == "rfsrc.fast"){
-        out = rfsrc.fast(form, data = wd, forest = TRUE, ...)
-    }
-    if(is.null(out))
-        stop(paste("The model", model, "is not implemented in statelearner."))
-    return(out)
+    stop("The argument 'model' must be either a character string or a function.")
 }
 ## Calculate F from CSCHFs
 abs_risk_from_cschf <- function(...){

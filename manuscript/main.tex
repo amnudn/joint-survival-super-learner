@@ -39,14 +39,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Add additional packages here if required
-\usepackage{siunitx}
+\usepackage{amsfonts,siunitx}
 
 \usepackage[colorlinks,allcolors=blue]{hyperref}
 \usepackage[ruled]{algorithm2e}
 \SetArgSty{textnormal}
 
 % Notation
-\usepackage{dsfont,enumitem, url}
+\usepackage{enumitem, url}
 \DeclareMathOperator{\E}{\mathbb{E}} % expectation
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\R}{\mathbb{R}}
@@ -61,7 +61,7 @@
 \newcommand{\weakly}{\rightsquigarrow}
 \newcommand\bigO{\ensuremath{\mathcal{O}}}
 \newcommand{\midd}{\; \middle|\;}
-\newcommand{\1}{\mathds{1}}
+\newcommand{\1}{\mathbb{1}}
 \usepackage{ifthen} %% Empirical process with default argument
 \newcommand{\G}[2][n]{
 {\ensuremath{\mathbb{G}_{#1}}{\left[#2\right]}}
@@ -597,11 +597,10 @@ estimator of the censoring distribution:
       \mathcal{B} $}{
 
       Use equation~(\ref{eq:anti-transition}) and the fitted learners
-      \( \( a_1(\data_n^{-k}) \in \hat{\mathcal{A}}_1^{-k} \)
-      \), \( a_2(\data_n^{-k}) \in \hat{\mathcal{A}}_2^{-k} \),
-      and \( b(\data_n^{-k}) \in \hat{\mathcal{B}}^{-k} \) to
-      obtain the fitted \( F \)-learner,
-      \( \phi_{a_1, a_2, b}(\data_n^{-k}) \).
+      \( a_1(\data_n^{-k}) \in \hat{\mathcal{A}}_1^{-k} \),
+      \( a_2(\data_n^{-k}) \in \hat{\mathcal{A}}_2^{-k} \), and
+      \( b(\data_n^{-k}) \in \hat{\mathcal{B}}^{-k} \) to obtain the
+      fitted \( F \)-learner, \( \phi_{a_1, a_2, b}(\data_n^{-k}) \).
 
       Calculate the estimated risk in the \( k \)'th hold out data
       using the integrated Brier score:
@@ -617,8 +616,7 @@ estimator of the censoring distribution:
           }.
         \end{equation*}      
       } }
-    \For{$(a_1, a_2, b) \in \mathcal{A}_1 \times \mathcal{A}_2 \times
-      \mathcal{B} $}{ Calculate the cross-validated risk:
+    \For{\( (a_1, a_2, b) \in \mathcal{A}_1 \times \mathcal{A}_2 \times \mathcal{B} \)}{ Calculate the cross-validated risk:
       \( \hat{R}_n(\phi_{a_1, a_2, b}; \bar{B}_{\tau}) = \frac{1}{K}
       \sum_{k=1}^{K} \hat{R}_n^k(\phi_{a_1, a_2, b}; \bar{B}_{\tau})
       \).}
@@ -684,9 +682,11 @@ The discrete joint survival super learner defined in
 \eqref{eq:discrete-JSLL} provides an estimate of the function \(F\)
 \begin{equation*}
   \hat{\phi}_n=\phi_{\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n}}
-\end{equation*} which is obtained by substituting \((\hat
-\Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) for \((a_1,a_2,b)\) into the structural
-equations \eqref{eq:anti-transition}. To evaluate the performance of
+\end{equation*}
+which is obtained by substituting
+\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) for
+\((a_1,a_2,b)\) into the structural equations
+\eqref{eq:anti-transition}. To evaluate the performance of
 \(\hat{\phi}_n\) we benchmark it against the data-generating
 distribution \( F_P \), which according to
 Proposition~\ref{prop:stric-prop} has the smallest expected
@@ -835,6 +835,26 @@ learner achieves the same convergence rate as the best-performing
 learner in the library, without any knowledge of the data-generating
 distribution.
 
+The norm defined in equation~(\ref{eq:norm}) operates on functions
+\( F \) which are features of the observed data distribution. This
+means that Proposition~\ref{prop:oracle-prop} and
+Corollary~\ref{cor:asymp-cons} provide guarantees in terms of a how
+well the function $\hat{\phi}_n$ predicts the observed data. Ideally,
+we would like performance guarantees for, e.g., the selected learners
+$\hat{\Lambda}_{jn}$ or the derived risk-prediction learner
+$\hat{Q}_{n}$ defined in equation~(\ref{eq:cs-risk-def}). There is a
+one-to-one correspondence between the learner $\hat{\phi}_n$ and the
+tuple of learners
+\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) through
+equations~(\ref{eq:lambdaj})-(\ref{eq:gamma}) and
+(\ref{eq:transition}), and we expect that the performance guarantees
+provided for $\hat{\phi}_n$ will in many cases translate into similar
+performance guarantees for each element of the tuple
+\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\). We do not
+investigate this further theoretically, but investigate is empirically
+in our numerical experiments in Section~\ref{sec:numer-exper}.
+
+
 \section{Numerical experiments}
 \label{sec:numer-exper}
 
@@ -909,18 +929,33 @@ time horizon is \( \approx 38.7 \)\%.
 Each super learner provides a learner for the cumulative hazard
 function for the outcome of interest. From the cumulative hazard
 function, we obtain a risk prediction model as described in
-Section~\ref{sec:joint-survival-super-learner}, with the special case
-of $\Lambda_2 = 0$. We measure the performance of each super learner
-by calculating the index of prediction accuracy (IPA)
+Section~\ref{sec:joint-survival-super-learner}, see in particular
+equation~(\ref{eq:cs-risk-def}) with the special case of
+$\Lambda_2 = 0$. We
+measure the performance of the risk prediction model provided by each
+super learner by calculating the index of prediction accuracy (IPA)
 \citep{kattan2018index} at a fixed time horizon (36 months) for the
-risk prediction model provided by the super learner. The IPA is 1
-minus the ratio between the model's Brier score and the null model's
-Brier score, where the null model is the model that does not use any
-covariate information. The value of IPA is approximated using a large
-(\( n = 20,000 \)) independent data set of uncensored data. As a
-benchmark, we calculate the performance of the risk prediction model
-chosen by the oracle selector, which has the highest IPA in the
-simulation setting.
+risk prediction model provided by the super learner. For a risk
+prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
+time \( \tau \) is
+\begin{equation*}
+  1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
+  {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
+  % {\E_Q{[( \E_Q{[\1{\{T \leq \tau\}}]} - \1{\{T \leq \tau\}})^2]}}
+\end{equation*}
+We chose IPA as a performance measure because it is proper,
+incorporates both discrimination and calibration, and is easy to
+interpret as it measures the relative performance gain compared to the
+null model which does not use any baseline information. The definition
+of IPA involves the uncensored survival time \( T \), which is not
+available in practice. However, in the numerical studies, this
+quantity is available because we know the data-generating mechanism
+used to generate \( T \). In practice, we Monte Carlo approximate the
+IPA by generating a large (\( n = 20,000 \)) independent data set of
+uncensored survival times, and calculate the empirical version of the
+IPA in there. As a benchmark, we calculate the performance of the risk
+prediction model chosen by the oracle selector, which has the highest
+IPA in the simulation setting.
 
 The results for the first aim are shown in
 Figure~\ref{fig:ipcw-fail}. We see that in the scenario where
@@ -1076,7 +1111,28 @@ performance of each combination of learners can be estimated without
 additional nuisance parameters. A potential drawback of our approach
 is that we are evaluating the loss of the learners on the level of the
 observed data distribution, while the target of the analysis is either
-the event-time distribution, or the censoring distribution, or both.
+the event-time distribution, or the censoring distribution, or
+both. Our numerical experiments suggest that our approach does provide
+estimates of the conditional survival functions which perform well,
+also when the predictive performance is measured against the true
+survival function with no censoring present.
+
+Alternatives to using a performance measure defined with respect the
+observed data are the use of IPCW loss functions, censoring unbiased
+transformations, or pseudo-values. As mentioned in
+Section~\ref{sec:super-learning}, the drawback of these approaches is
+that they all need a pre-specified estimator of the censoring
+distribution, and hence these methods are not immediately applicable
+if we do not in advance know how to model the censoring
+distribution. We note that for the special case where the partial
+log-likelihood loss can be used, this loss function, like our
+suggested approach, also measures performance with respect to a
+feature defined by the observed data distribution
+\citep[e.g.,][]{hjort1992inference,whitney2019comment}. We do not know
+of any method that would allow us to evaluate performance of a
+risk-prediction model in censored data without either modeling
+additional nuisance parameters (such as the censoring distribution) or
+measuring performance directly with respect to the observed data.
 
 A relevant application of the joint survival super learner is within
 the framework of targeted learning \citep{van2011targeted}, also known
@@ -1095,8 +1151,20 @@ right-censored data.
 We have focused on a discrete version of the joint survival super
 learner, but it is of interest to extend the method to a proper
 ensemble learner, where learners are combined, e.g., through
-stacking. How an ensemble should be build for tuples of learners is an
-interesting topic for future research.
+stacking. There are at least two possible directions for constructing
+an ensemble version of the joints survival super leaner. One option is
+to construct a single convex combination of the F-learners
+\( \phi \in \Phi(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
+\). Another, perhaps more interesting option, is to construct three
+separate convex combinations of the learners in \( \mathcal{A}_1 \),
+\( \mathcal{A}_2 \), and \( \mathcal{B} \).  How such an ensemble
+should be build and implemented is an interesting topic for future
+research.
+
+[Generalizing our proposal to ensemble learning is ... At least two
+   strategies could be pursued. First, ensemble for F. More
+   interestingly, jointly build ensembles for all element of the tuple.]
+
 
 \appendix
 

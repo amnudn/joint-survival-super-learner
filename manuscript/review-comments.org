@@ -1,4 +1,21 @@
-* Reviewer: 1
+#+TITLE: Response to reviewers
+#+Author: Anders Munch and Thomas A. Gerds
+#+Date: \today
+#+OPTIONS:   num:nil toc:nil ':t ^:t
+
+
+
+We thank the the reviewers for their useful comments. We have
+incorporated their suggestions into the manuscript, and we find it
+much improved. Please see our point-to-point responses below.
+
+Quotes from the old version of the manuscript is inserted in
+@@latex:{\color{red} red}@@ boxes, quotes from the updated manuscript
+is inserted in @@latex:{\color{gray} gray}@@ boxes, and when relevant
+newly added text is show in @@latex:{\color{blue} blue}@@.
+
+
+* Reviewer 1
 
 Comments to the Author
 
@@ -20,170 +37,302 @@ provide numerical studies and a simulation illustrating the good
 performance of the proposed method.
 
 Overall, this is a nice contribution to the literature, and I am
-grateful to the authors for the methods an accompanying theory. The
-paper is well written and careful, though I think more effort could be
-made in parts to make the notation somewhat more accessible. In
-particular, an outline of the proposed algorithm in its totality would
-be useful for readers.
+grateful to the authors for the methods and accompanying theory. The
+paper is well written and careful, though I think more effort could
+be made in parts to make the notation somewhat more accessible. In
+particular, an outline of the proposed algorithm in its totality
+would be useful for readers.
 
-- [ ] Answer: Thank you for this comment, we agree that it is a good
-  idea with an outline of the proposed algorithm. We have added a
-  pseudo-algorithm to the paper.
+#+begin_export latex
+ \answer{Thank you for this comment, we agree that it is a good
+idea with an outline of the proposed algorithm. We have added a
+pseudo-algorithm to the paper.}
+#+end_export
 
-I have two main comments. My first comment regards a sentence in the
-discussion: ``A potential drawback of our approach is that we are
-evaluating the loss of the learners on the level of the observed data
-distribution, while the target of the analysis is either the
-event-time distribution, or the censoring distribution, or both.” I
-didn’t quite catch this on a first read-through of the paper, but I
-think it is an important point that deserves to be emphasized more
-throughout the paper. Specifically, this makes me wonder about the
-relevance of the oracle inequalities in Proposition 2 and Corollary 3:
-do we actually care about these risks? I usually care about
-inequalities and rates of convergence of the conditional survival (or
-cumulative hazard) function of the event time, censoring time, and
-competing risk. If I understand the above comment correctly, the risk
-considered in the paper doesn’t directly give such inequalities and
-rates. Is that correct? If so, it deserves to be mentioned and at
-least briefly discussed in the section on theoretical results.
+1. I have two main comments. My first comment regards a sentence in
+   the discussion: ``A potential drawback of our approach is that we
+   are evaluating the loss of the learners on the level of the
+   observed data distribution, while the target of the analysis is
+   either the event-time distribution, or the censoring distribution,
+   or both.” I didn’t quite catch this on a first read-through of the
+   paper, but I think it is an important point that deserves to be
+   emphasized more throughout the paper. Specifically, this makes me
+   wonder about the relevance of the oracle inequalities in
+   Proposition 2 and Corollary 3: do we actually care about these
+   risks? I usually care about inequalities and rates of convergence
+   of the conditional survival (or cumulative hazard) function of the
+   event time, censoring time, and competing risk. If I understand the
+   above comment correctly, the risk considered in the paper doesn’t
+   directly give such inequalities and rates. Is that correct? If so,
+   it deserves to be mentioned and at least briefly discussed in the
+   section on theoretical results. Similarly, this makes me question
+   the relevance of the IPA metric considered in the numerical
+   study. How do the different algorithms compare in terms of
+   pointwise or integrated error for the conditional survival or
+   cumulative hazard functions?
 
-- [ ] Answer: This is an important point, which we agree should be
-  made clear in the paper. We have now added ...
+   #+begin_export latex
+      \answer{This is an important point, which we agree should be made
+	clear in the paper. We have added the following paragraph discussing
+	this point at the end of Section 5.}
 
-  Notes: Add to theory section and maybe other places throughout?
-  Point out the because we hope/expect that good performance for F
-  translate into good performance of S etc. and that this is what we
-  see in the simulation study. 
+	\qrev{The norm defined in equation~(\ref{eq:norm}) operates on functions
+	\( F \) which are features of the observed data distribution. This
+	means that Proposition~\ref{prop:oracle-prop} and
+	Corollary~\ref{cor:asymp-cons} provide guarantees in terms of a how
+	well the function $\hat{\phi}_n$ predicts the observed data. Ideally,
+	we would like performance guarantees for, e.g., the selected learners
+	$\hat{\Lambda}_{jn}$ or the derived risk-prediction learner
+	$\hat{Q}_{n}$ defined in equation~(\ref{eq:cs-risk-def}). There is a
+	one-to-one correspondence between the learner $\hat{\phi}_n$ and the
+	tuple of learners
+	\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) through
+	equations~(\ref{eq:lambdaj})-(\ref{eq:gamma}) and
+	(\ref{eq:transition}), and we expect that the performance guarantees
+	provided for $\hat{\phi}_n$ will in many cases translate into similar
+	performance guarantees for each element of the tuple
+	\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\). We do not
+	investigate this further theoretically, but investigate is empirically
+	in our numerical experiments in Section~\ref{sec:numer-exper}.}
 
-Similarly, this makes me question the relevance of the IPA metric
-considered in the numerical study. How do the different algorithms
-compare in terms of pointwise or integrated error for the conditional
-survival or cumulative hazard functions?
+	\answer{We have also added the following reflection to the discussion in Section 8 (new
+	  text in \color{blue}{blue}.)}.
 
-- [ ] Answer: In the numerical studies, we in fact do use the IPA for
-  the survival function of interest. We have now made this clear by
-  adding the following:
+	\qrev{A potential drawback of our approach
+	is that we are evaluating the loss of the learners on the level of the
+	observed data distribution, while the target of the analysis is either
+	the event-time distribution, or the censoring distribution, or
+	both. \color{blue}{Our numerical experiments suggest that our approach does provide
+	estimates of the conditional survival functions which perform well,
+	also when the predictive performance is measured against the true
+	survival function with no censoring present.}}
+     
+     \answer{In the numerical studies, we in fact do use the IPA for the
+       risk prediction model (1 $-$ the conditional survival function) of
+       interest. We have now attempted to make this clearer by updating the
+       following paragraph in Section 6:}
 
-  [As we simulate the data, we have access to ...]
+     \qold{Each super learner provides a learner for the cumulative hazard
+       function for the outcome of interest. From the cumulative hazard
+       function, we obtain a risk prediction model as described in
+       Section~4, with the special
+       case of $\Lambda_2 = 0$. We measure the performance of each super
+       learner by calculating the index of prediction accuracy (IPA)
+       (Kattan and Gerds, 2018) at a fixed time horizon (36 months) for the
+       risk prediction model provided by the super learner. The IPA is 1
+       minus the ratio between the model's Brier score and the null model's
+       Brier score, where the null model is the model that does not use any
+       covariate information. The value of IPA is approximated using a
+       large (\( n = 20,000 \)) independent data set of uncensored data. }
 
-Second, and more minor, I wonder if the authors could expand on why it
-is difficult to extend the method to an ensemble estimator in this
-setting.
+     \qrev{Each super learner provides a learner for the cumulative hazard
+     function for the outcome of interest. From the cumulative hazard
+     function, we obtain a risk prediction model as described in
+     Section~\ref{sec:joint-survival-super-learner}, see in particular
+     equation~(\ref{eq:cs-risk-def}) with the special case of
+     $\Lambda_2 = 0$. We
+     measure the performance of the risk prediction model provided by each
+     super learner by calculating the index of prediction accuracy (IPA)
+     \citep{kattan2018index} at a fixed time horizon (36 months) for the
+     risk prediction model provided by the super learner. For a risk
+     prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
+     time \( \tau \) is
+     \begin{equation*}
+       1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
+       {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
+     \end{equation*}
+     We chose IPA as a performance measure because it is proper,
+     incorporates both discrimination and calibration, and is easy to
+     interpret as it measures the relative performance gain compared to
+     the null model which does not use any baseline information. The
+     definition of IPA involves the uncensored survival time \( T \),
+     which is not available in practice. However, in the numerical
+     studies, this quantity is available because we know the
+     data-generating mechanism used to generate \( T \). In practice, we
+     Monte Carlo approximate the IPA by generating a large
+     (\( n = 20,000 \)) independent data set of uncensored survival
+     times, and calculate the empirical version of the IPA in there.}
+  #+end_export
 
-- [ ] Answer: Thank you for this comment. We do not believe that it
-  needs to be particularly difficult, but there are at least two
-  strategies that could be pursued, and we think that some additional
-  thought on this is needed. We have expanded on this in the
-  discussion with the following:
-  
-  [Generalizing our proposal to ensemble learning is ... At least two
-  strategies could be pursued. First, ensemble for F. More
-  interestingly, jointly build ensembles for all element of the tuple.]
+2. Second, and more minor, I wonder if the authors could expand on why
+   it is difficult to extend the method to an ensemble estimator in
+   this setting.
+
+   #+begin_export latex
+   \answer{Thank you for this comment. We do not believe that it needs to
+     be particularly difficult, but there are at least two strategies
+     that could be pursued, and we think that some additional thought on
+     this is needed. We have expanded on this in the discussion by
+     updating the following paragraph:}
+
+   \qold{
+   We have focused on a discrete version of the joint survival super
+   learner, but it is of interest to extend the method to a proper
+   ensemble learner, where learners are combined, e.g., through
+   stacking. How an ensemble should be build for tuples of learners is an
+   interesting topic for future research.
+   }
+
+   \qrev{
+   We have focused on a discrete version of the joint survival super
+   learner, but it is of interest to extend the method to a proper
+   ensemble learner, where learners are combined, e.g., through
+   stacking. There are at least two possible directions for constructing
+   an ensemble version of the joints survival super leaner. One option is
+   to construct a single convex combination of the F-learners
+   \( \phi \in \Phi(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
+   \). Another, perhaps more interesting option, is to construct
+   three separate convex combinations of the learners in
+   \( \mathcal{A}_1 \), \( \mathcal{A}_2 \), and \( \mathcal{B} \).  How
+   such an ensemble should be build and implemented is an interesting
+   topic for future research.
+   }
+   #+end_export
 
 
 
-* Reviewer: 2
+
+
+* Reviewer 2
 
 Section 3:
 
-P5. The point that the partial log-likelihood does not work well as an
-evaluation criterion is interesting and warrants further
-elaboration. An additional sentence explaining this point would be
-helpful. Additionally, I wonder if this problem can be circumvented in
-other ways: perhaps models that normally yield piecewise constant
-hazards could be included in a slightly modified form with smoothed
-hazards. What would be the consequences of this approach?
+- P5. The point that the partial log-likelihood does not work well as
+  an evaluation criterion is interesting and warrants further
+  elaboration. An additional sentence explaining this point would be
+  helpful. Additionally, I wonder if this problem can be circumvented
+  in other ways: perhaps models that normally yield piecewise constant
+  hazards could be included in a slightly modified form with smoothed
+  hazards. What would be the consequences of this approach?
 
-- [ ] Answer: We agree that this is an important point, and we have
+  Answer: We agree that this is an important point, and we have
   elaborated further with the following:
 
 Section 4:
 
-P5. I find the notation using "1" for the indicator function difficult
-to read, especially when preceded by other numerals. Why not use I, δ,
-or a bold or blackboard/double-struck 1?
+- P5. I find the notation using "1" for the indicator function
+  difficult to read, especially when preceded by other numerals. Why
+  not use I, δ, or a bold or blackboard/double-struck 1?
 
-- [ ] Answer: This is a good point, we have changed the notation to...
+  #+begin_export latex
+  \answer{Thank you for this comment. The blackboard/double-struck was
+    lost when converting to the journal's template, and we have now
+    corrected that.}
+  #+end_export
 
-P6. The manuscript explains that it is in principle fairly easy to use
-the survival package to estimate libraries of models for A₁, A₂, and
-B. The practical value of the article would improve with a web
-appendix showing code implementing this for the prostate cancer study
-data.
 
-- [ ] Answer:
+- P6. The manuscript explains that it is in principle fairly easy to
+  use the survival package to estimate libraries of models for A₁, A₂,
+  and B. The practical value of the article would improve with a web
+  appendix showing code implementing this for the prostate cancer
+  study data.
 
-  Notes: Emphasize that we do provide code. Perhaps make an example
-  where we "manually" implement and article using tools from the
-  survival package.
+  NB Note: Add example to github page.
+
+  #+begin_export latex
+  \answer{A code supplement is provided at the Github repository that is
+    referenced at the end of the Introduction. We have now added an
+    example that demonstrates how tools from the survival package can be
+    used to construct learner. We cannot share the original data, but we
+    share an emulated data set and demonstrate how the joint survival
+    super learner can be fitted to the data at the referenced Github
+    repository.}
+  #+end_export
+
+
+  Answer notes: Emphasize that we do provide code. Perhaps make an
+  example where we "manually" implement and article using tools from
+  the survival package.
 
 Section 5:
 
-P8. You state that a sensible objective function must be proper. While
-I don't disagree, this point often generates discussion. One might
-argue that in certain problems, our objective need not be the correct
-recovery of the probability distribution. Rather, we may want to
-predict outcomes at specific time points while incorporating relative
-costs of incorrect predictions. It's not clear that using
-probabilities as an intermediate step is always optimal, especially
-when these are estimated with error. Furthermore, while a proper loss
-function might be optimal with large sample sizes, this may not hold
-for finite samples. More discussion of this point would be valuable.
+- P8. You state that a sensible objective function must be
+  proper. While I don't disagree, this point often generates
+  discussion. One might argue that in certain problems, our objective
+  need not be the correct recovery of the probability
+  distribution. Rather, we may want to predict outcomes at specific
+  time points while incorporating relative costs of incorrect
+  predictions. It's not clear that using probabilities as an
+  intermediate step is always optimal, especially when these are
+  estimated with error. Furthermore, while a proper loss function
+  might be optimal with large sample sizes, this may not hold for
+  finite samples. More discussion of this point would be valuable.
 
-- [ ] Answer: ...
+  Answer notes: We now discuss utility / cost benefit. unclear what is
+  meant by finite sample problem of proper loss but penalized
+  likelihood is a good example.
 
-  Notes: We now discuss utility / cost benefit. unclear what is meant
-  by finite sample problem of proper loss but penalized likelihood is
-  a good example.
+- P8. The authors quickly move from using proper scoring rules to the
+  Brier score, which feels less general. Are the results expected to
+  hold for other proper scoring rules?
 
-P8. The authors quickly move from using proper scoring rules to the
-Brier score, which feels less general. Are the results expected to
-hold for other proper scoring rules?
+  Answer notes: yes, what other proper scoring rules are there? is
+  there an integrated deviance (log - score) maybe in Putter's book?
 
-- [ ] Answer:
+- P9. At the top of the page, it's argued that the oracle inequality
+  provides insights into how the number of folds, time horizon, and
+  number of learners influence performance. Could the practical
+  utility of this be illustrated in the context of the prostate cancer
+  example?
 
-  Notes: yes, what other proper scoring rules are there? is there an
-  integrated deviance (log - score) maybe in Putter's book?
+  Answer notes: no, but we have now added a comment about
+  this.. Unclear how to address this, because I do not believe there
+  is any actual practical utility to be gained from the types of
+  inequalities. Hmm, maybe we could say something about that in this
+  case, our analyses indicates that fairly complex models are used. If
+  this is true, our finite sample inequality shows that, for large
+  enough samples, the error rate will be dominated by that flexible
+  models and not by the cross-validation estimation step -- refer to
+  that we seem to be in case (b) of Corollary 3.
 
-P9. At the top of the page, it's argued that the oracle inequality
-provides insights into how the number of folds, time horizon, and
-number of learners influence performance. Could the practical utility
-of this be illustrated in the context of the prostate cancer example?
+- P10. The performance will be specified using the IPA, which needs
+  more discussion. Please briefly state how it is defined and why it
+  was chosen. (Is the IPA itself proper? If not, does this still make
+  sense here? Do we need other metrics as well?)
 
-- [ ] Answer: ...
+  #+begin_export latex
 
-  Notes: no, but we have now added a comment about this.. Unclear how
-  to address this, because I do not believe there is any actual
-  practical utility to be gained from the types of inequalities. Hmm,
-  maybe we could say something about that in this case, our analyses
-  indicates that fairly complex models are used. If this is true, our
-  finite sample inequality shows that, for large enough samples, the
-  error rate will be dominated by that flexible models and not by the
-  cross-validation estimation step -- refer to that we seem to be in
-  case (b) of Corollary 3.
+  \answer{We have now defined the IPA explicitly, please see our
+    response to Reviewer 1's first. The IPA is just a scaled version of the Brier score so it
+    is indeed proper.}
 
-P10. The performance will be specified using the IPA, which needs more
-discussion. Please briefly state how it is defined and why it was
-chosen. (Is the IPA itself proper? If not, does this still make sense
-here? Do we need other metrics as well?)
+  % \qold{The IPA is 1
+  % minus the ratio between the model's Brier score and the null model's
+  % Brier score, where the null model is the model that does not use any
+  % covariate information. The value of IPA is approximated using a large
+  % (\( n = 20,000 \)) independent data set of uncensored data.}
 
-- [ ] Answer:
+  % \qrev{For a risk
+  % prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
+  % time \( \tau \) is
+  % \begin{equation*}
+  %   1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
+  %   {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
+  % \end{equation*}
+  % We chose IPA as a performance measure because it is proper,
+  % incorporates both discrimination and calibration, and is easy to
+  % interpret as it measures the relative performance gain compared to
+  % the null model which does not use any baseline information. The
+  % definition of IPA involves the uncensored survival time \( T \),
+  % which is not available in practice. However, in the numerical
+  % studies, this quantity is available because we know the
+  % data-generating mechanism used to generate \( T \). In practice, we
+  % Monte Carlo approximate the IPA by generating a large
+  % (\( n = 20,000 \)) independent data set of uncensored survival
+  % times, and calculate the empirical version of the IPA in there.}
+  #+end_export
 
-  Notes: IPA is simply R2 (refer to text) it is easy to see that it is proper:
 
+- P10. The SurvSL model should be described in more detail.
 
-P10. The SurvSL model should be described in more detail.
+  Answer notes: Do this in the simulation setup?
 
-- [ ] Answer:
+- P10. For the 'second aim,' it's suggested that an advantage of the
+  joint survival learner may be that it is a discrete super
+  learner. This warrants more explanation—why is this an advantage? Is
+  there more risk of overfitting in small samples?
 
-  Notes: Do this in the simulation setup?
-
-P10. For the 'second aim,' it's suggested that an advantage of the
-joint survival learner may be that it is a discrete super
-learner. This warrants more explanation—why is this an advantage? Is
-there more risk of overfitting in small samples?
-
-- [ ] Answer: This is an interesting point. To our knowledge, the
+  Draft answer: This is an interesting point. To our knowledge, the
   finite sample performance of a discrete versus continuous (ensemble)
   super learner is not well understood. In the special case where the
   data-generating model is included as a learner in the library, we
@@ -194,63 +343,194 @@ there more risk of overfitting in small samples?
   expanded on this and tried to clarify that this only a possible
   explanation and not a strict fact.
 
-  Notes: because we have the dgm as one of the learners.
+  Todo: add something to the manuscript. 
 
 Section 7:
 
-P11. The prostate cancer study seems like an afterthought. It would be
-beneficial to reference it more when introducing the problem to
-demonstrate practical relevance.
+- P11. The prostate cancer study seems like an afterthought. It would
+  be beneficial to reference it more when introducing the problem to
+  demonstrate practical relevance.
 
-- [ ] Answer:
+  Todo TAG.
 
-  Notes: THOMAS todo.
+- P11. The splitting into training and test data seems wasteful. Could
+  nested cross-validation be used instead?
 
-P11. The splitting into training and test data seems wasteful. Could
-nested cross-validation be used instead?
+  Todo: Try it out and then decide.
 
-- [ ] Answer:
+- P11. More discussion of the results is needed. What exactly do we
+  learn from this practical use case?
 
-  Notes: we try it out and then decide
+  Answer notes: Todo: ask chatgpt: prompt could you help us answer the
+  reviewers request: here is the paragraph of our paper copy-paste
 
-P11. More discussion of the results is needed. What exactly do we
-learn from this practical use case?
+- P11. The usefulness of this manuscript for practical researchers
+  would be greatly enhanced with a link to a code supplement.
 
-- [ ] Answer:
+  #+begin_export latex
+  \answer{A code supplement is provided at the Github repository that is
+    referenced at the end of the Introduction, please also see our
+    answer to you comment to Section 4, page 6.}
+  #+end_export
 
-  Notes: ask chatgpt: prompt could you help us answer the reviewers
-  request: here is the paragraph of our paper copy-paste
-
-P11. The usefulness of this manuscript for practical researchers would
-be greatly enhanced with a link to a code supplement.
-
-- [ ] Answer:
-
-  Notes: Yes, we already have this...
 
 Section 8:
 
-P12. The stated drawback—that the authors evaluate the loss of
-learners at the level of the observed data distribution while the
-target is either the event-time distribution, censoring distribution,
-or both—needs more detailed explanation. Are there alternatives to
-this approach, and what would be their drawbacks?
+- P12. The stated drawback—that the authors evaluate the loss of
+  learners at the level of the observed data distribution while the
+  target is either the event-time distribution, censoring
+  distribution, or both—needs more detailed explanation. Are there
+  alternatives to this approach, and what would be their drawbacks?
 
-- [ ] Answer:
+  #+begin_export latex
+  \answer{We have addressed this partly in our answer to Reviewer 1's
+    first comment, please see above. We briefly mention alternative
+    approaches in Section 3, and we now reiterate and expand on these
+    points in the Discussion, please see the paragraph below which we
+    have added to the Discussion.}
 
-  Notes: find more about drawbacks of other methods from the earlier
-  versions of the manuscript. So this is about reiterating some of the
-  points made in the introduction. 
+  \qrev{
+  Alternatives to using a performance measure defined with respect the
+  observed data are the use of IPCW loss functions, censoring unbiased
+  transformations, or pseudo-values. As mentioned in
+  Section~3, the drawback of these approaches is
+  that they all need a pre-specified estimator of the censoring
+  distribution, and hence these methods are not immediately applicable
+  if we do not in advance know how to model the censoring
+  distribution. We note that for the special case where the partial
+  log-likelihood loss can be used, this loss function, like our
+  suggested approach, also measures performance with respect to a
+  feature defined by the observed data distribution
+  \citep[e.g.,][]{hjort1992inference,whitney2019comment}. We do not know
+  of any method that would allow us to evaluate performance of a
+  risk-prediction model in censored data without either modeling
+  additional nuisance parameters (such as the censoring distribution) or
+  measuring performance directly with respect to the observed data.
+  }
+ #+end_export
 
-P12. The authors claim that targeted learning is also known as
-debiased machine learning.  However, these are often presented as
-distinct approaches. This should be clarified.
 
-- [ ] Answer: Yes, this is a fair point. We have adjusted accordingly: 
+- P12. The authors claim that targeted learning is also known as
+  debiased machine learning.  However, these are often presented as
+  distinct approaches. This should be clarified.
 
-P12. The discussion lacks reflection on the results from sections 6
-and 7.
+  #+begin_export latex
+  \answer{This is a fair point. We have updated the text accordingly:}
 
-- [ ] Answer:
+  \qold{
+  A relevant application of the joint survival super learner is within
+  the framework of targeted learning \citep{van2011targeted}, also known
+  as debiased machine learning \citep{chernozhukov2018double}, -- a
+  general methodology that combines flexible, data-adaptive estimation
+  of nuisance parameters with asymptotically valid inference for
+  low-dimensional target parameters.
+  }
 
-  Notes: just to this.
+  \qrev{ A relevant application of the joint survival super learner is
+    within the framework of targeted learning \citep{van2011targeted} or
+    debiased machine learning \citep{chernozhukov2018double}, which are
+    general methodologies for combining flexible, data-adaptive
+    estimation of nuisance parameters with asymptotically valid
+    inference for low-dimensional target parameters.  }
+  #+end_export
+
+
+- P12. The discussion lacks reflection on the results from sections 6
+  and 7.
+
+  TODO.
+
+
+
+
+* Readme / notes :noexport:
+
+- Adjust final old/new version statements in this document when final
+  version of resubmission is done with latex diff. For now, it is only
+  drafts, so could be outdated later.
+
+
+
+* latex setup :noexport:
+#+LANGUAGE:  en
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper,danish]
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \usepackage{natbib, dsfont, enumitem, amssymb,
+#+LATEX_HEADER:  soul,xcolor,amsmath,graphicx,subcaption,verbatim,pgfplots,tikz,prodint,pgfpages, caption}
+#+LATEX_HEADER: \usetikzlibrary{calc,patterns,angles,quotes,automata, positioning,arrows,shapes}
+#+LaTeX_HEADER: \definecolor{linkcolor}{rgb}{0, 0, 0.54}
+#+LaTeX_HEADER: \hypersetup{colorlinks=true,allcolors=linkcolor,linktocpage=true}
+#+LaTeX_HEADER: \bibliographystyle{abbrvnat}
+#+BIBLIOGRAPHY: bib plain
+
+# Spacing
+#+LaTeX_HEADER: % Handling new lines
+#+LaTeX_HEADER: \setlength{\parskip}{1em}
+#+LaTeX_HEADER: \setlength{\parindent}{0em}
+#+LaTeX_HEADER: 
+#+LaTeX_HEADER: % Handling space after sections
+#+LaTeX_HEADER: \usepackage{titlesec}
+#+LaTeX_HEADER: \titlespacing*{\section}{0em}{2em}{0em}
+#+LaTeX_HEADER: \titlespacing*{\subsection}{0em}{2em}{0em}
+#+LaTeX_HEADER: \titlespacing*{\subsubsection}{0em}{2em}{0em}
+#+LaTeX_HEADER: 
+#+LaTeX_HEADER: % No spacing after in start of list
+#+LaTeX_HEADER: \setlist[itemize]{topsep=0pt}
+#+LaTeX_HEADER: \setlist[enumerate]{topsep=0pt}
+
+#+LaTeX_HEADER: % Todo and notes
+#+LaTeX_HEADER: \usepackage[author=]{fixme}
+#+LaTeX_HEADER: \fxusetheme{color}
+#+LaTeX_HEADER: \definecolor{fxtarget}{rgb}{.5,.5,.5}
+#+LaTeX_HEADER: \definecolor{fxnote}{rgb}{.5,.5,.5}
+#+LaTeX_HEADER: \fxsetup{status=draft}
+
+# Commands
+# % New operators and commands
+#+LaTeX_HEADER: \newcommand{\E}{{\ensuremath{\mathop{{\mathbb{E}}}}}} 
+#+LaTeX_HEADER: \newcommand{\R}{\mathbb{R}}
+#+LaTeX_HEADER: \newcommand{\N}{\mathbb{N}}
+#+LaTeX_HEADER: \newcommand{\blank}{\makebox[1ex]{\textbf{$\cdot$}}}
+#+LaTeX_HEADER: \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+#+LaTeX_HEADER: \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+#+LaTeX_HEADER: \renewcommand{\phi}{\varphi}
+#+LaTeX_HEADER: \renewcommand{\epsilon}{\varepsilon}
+#+LaTeX_HEADER: \newcommand*\diff{\mathop{}\!\mathrm{d}}
+#+LaTeX_HEADER: \newcommand{\weakly}{\rightsquigarrow}
+#+LaTeX_HEADER: \newcommand\smallO{\textit{o}}
+#+LaTeX_HEADER: \newcommand\bigO{\textit{O}}
+#+LaTeX_HEADER: \newcommand{\midd}{\; \middle|\;}
+#+LaTeX_HEADER: \newcommand{\1}{\mathds{1}}
+#+LaTeX_HEADER: \usepackage{ifthen} %% Empirical process with default argument
+#+LaTeX_HEADER: \newcommand{\G}[2][n]{{\ensuremath{\mathbb{G}_{#1}}{\left[#2\right]}}}
+#+LaTeX_HEADER: \DeclareMathOperator*{\argmin}{\arg\!\min}
+#+LaTeX_HEADER: \DeclareMathOperator*{\argmax}{\arg\!\max}
+#+LaTeX_HEADER: \newcommand{\V}{\mathrm{Var}} % variance
+#+LaTeX_HEADER: \newcommand{\eqd}{\stackrel{d}{=}} % equality in distribution
+#+LaTeX_HEADER: \newcommand{\arrow}[1]{\xrightarrow{\; {#1} \;}}
+#+LaTeX_HEADER: \newcommand{\arrowP}{\xrightarrow{\; P \;}} % convergence in probability
+#+LaTeX_HEADER: \newcommand{\KL}{\ensuremath{D_{\mathrm{KL}}}}
+#+LaTeX_HEADER: \newcommand{\leb}{\lambda} % the Lebesgue measure
+#+LaTeX_HEADER: \DeclareMathOperator{\TT}{\Psi} % target parameter
+#+LaTeX_HEADER: \newcommand{\empmeas}{\ensuremath{\mathbb{P}_n}} % empirical measure
+
+#+LaTeX_HEADER:\usepackage{tcolorbox}
+#+LaTeX_HEADER:\newcommand{\qrev}[1]{
+#+LaTeX_HEADER:  \vspace{.5em}
+#+LaTeX_HEADER:  \begin{tcolorbox}[boxrule=0pt]
+#+LaTeX_HEADER:    \hfill{\it\footnotesize Quote from revised manuscript}\\[.5em]
+#+LaTeX_HEADER:    #1
+#+LaTeX_HEADER:  \end{tcolorbox}
+#+LaTeX_HEADER:}
+#+LaTeX_HEADER:\newcommand{\qold}[1]{
+#+LaTeX_HEADER:  \vspace{.5em}
+#+LaTeX_HEADER:  \begin{tcolorbox}[boxrule=0pt,colback=pink]
+#+LaTeX_HEADER:    \hfill{\it\footnotesize Quote from old version of manuscript}\\[.5em]
+#+LaTeX_HEADER:    #1
+#+LaTeX_HEADER:  \end{tcolorbox}
+#+LaTeX_HEADER:}
+#+LaTeX_HEADER:\newcommand{\answer}[1]{{\vspace{1em}{\bf #1}\vspace{1em}}}
+
+

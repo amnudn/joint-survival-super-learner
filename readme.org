@@ -23,13 +23,14 @@ functions.
 #+begin_example
 here() starts at /home/amnudn/Documents/phd/joint-survival-super-learner
 data.table 1.17.8 using 8 threads (see ?getDTthreads).  Latest news: r-datatable.com
-riskRegression version 2025.05.26
+riskRegression version 2025.09.05
 
  randomForestSRC 3.4.1 
  
  Type rfsrc.news() to see new features, changes, and bug fixes. 
  
 
+RStudio Community is a great place to get help: https://forum.posit.co/c/tidyverse
 
 Attaching package: ‘ggplot2’
 
@@ -121,4 +122,60 @@ Here we use an interval of 36 month and show the 6 highest ranked triples.
 : 4: cox_penalty        N_Aa    cox 8.609008     1
 : 5:         cox         cox    cox 8.610104     1
 : 6: cox_penalty         cox    cox 8.610470     1
+
+The =learners= list used to specify the learners in the library can
+alternatively be defined by supplying a function under the =model=
+entry. This function should take =data= and =form= as arguments, and
+return an object which have a =predictCHF= method. We illustrate this
+with the following example, where we manually implement a Cox learner
+using tools from the =survival= package.
+
+#+BEGIN_SRC R
+  my_surv_cox <- function(data, form){
+    fit <- coxph(formula = form, data = data, x = TRUE, y = TRUE)
+    class(fit) <- c("my_surv_cox", class(fit))
+    return(fit)
+  }
+
+  predictCHF.my_surv_cox <- function(object, newdata, times){
+    s_fit <- survfit(object, newdata = newdata)
+    chf = t(-log(summary(s_fit, times = times)$surv))
+    return(chf)
+  }
+#+END_SRC
+
+#+RESULTS:
+
+We can know specify a library as follows using the learner
+=my_surv_cox= defined above. 
+
+#+BEGIN_SRC R
+  cox_learners <- list(
+    my_surv_cox = list(model = my_surv_cox, x_form = ~logPSA+stage),
+    cox = list(model = "cox", x_form = ~logPSA+stage)
+    )
+#+END_SRC
+
+#+RESULTS:
+
+We see that this learner agrees with the pre-defined ~model="cox"~ option:
+
+#+BEGIN_SRC R
+  set.seed(114)
+  cox_jossl_fit = jossl(learners = list(cause1 = cox_learners,
+					cause2 = learners[c(3,5)],
+					censor = learners[c(3)]),
+			data = canc_dt,
+			time = 36)
+  cox_jossl_fit$cv_fit
+#+END_SRC
+
+#+RESULTS:
+: Key: <loss>
+:         cause1 cause2 censor     loss     b
+:         <fctr> <fctr> <fctr>    <num> <int>
+: 1: my_surv_cox   N_Aa   N_Aa 10.24290     1
+: 2:         cox   N_Aa   N_Aa 10.24290     1
+: 3: my_surv_cox     rf   N_Aa 10.25349     1
+: 4:         cox     rf   N_Aa 10.25349     1
 
