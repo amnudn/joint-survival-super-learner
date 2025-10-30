@@ -126,9 +126,13 @@ Here we use an interval of 36 month and show the 6 highest ranked triples.
 The =learners= list used to specify the learners in the library can
 alternatively be defined by supplying a function under the =model=
 entry. This function should take =data= and =form= as arguments, and
-return an object which have a =predictCHF= method. We illustrate this
-with the following example, where we manually implement a Cox learner
-using tools from the =survival= package.
+return an object which have a =predictCHF= method. The =predictCHF=
+method should be a function that takes =object=, =newdata=, and
+=times= as input, and uses =object= to estimate the cumulative hazard
+function for all samples in =newdata= at all times point in
+=times=. We illustrate this with the following example, where we
+manually implement a Cox learner using tools from the =survival=
+package.
 
 #+BEGIN_SRC R
   my_surv_cox <- function(data, form){
