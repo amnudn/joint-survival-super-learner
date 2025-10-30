@@ -368,20 +368,37 @@ performance in hold-out samples when data are observed in continuous
 time. The reason is that the partial log-likelihood assigns an
 infinite value to any learner that predicts piecewise constant
 cumulative hazard functions, if the test set contains event times that
-are not observed in the training set. This problem occurs with
-prominent survival learners including the Kaplan-Meier estimator,
-random survival forests, and semi-parametric Cox regression models,
-and these learners cannot be included in the library of the super
-learner proposed by \cite{polley2011-sl-cens}. When a proportional
-hazards model is assumed, the baseline hazard function can be profiled
-out of the likelihood \citep{cox1972regression}. The cross-validated
-partial log-likelihood loss \citep{verweij1993cross} has therefore
-been suggested as a loss function for super learning by
-\cite{golmakani2020super}. However, this choice of loss function
-restricts the library of learners to include only Cox proportional
-hazards models, and hence excludes many learners such as, e.g., random
-survival forests, additive hazards models, and accelerated failure
-time models.
+are not observed in the training set. For instance, if no competing
+risks are present, a piecewise constant cumulative hazard function
+postulates a model for the distribution of the survival times where
+all probability is assigned to the finite number of time points at
+which the cumulative hazard function jumps. The likelihood according
+to such a model is zero at almost all time points, and thus the
+likelihood of any hold-out sample will almost surely be zero when data
+are observed in continuous time. This problem occurs with prominent
+survival learners including the Kaplan-Meier estimator, random
+survival forests, and semi-parametric Cox regression models, and these
+learners cannot be included in the library of the super learner
+proposed by \cite{polley2011-sl-cens}. One might attempt to resolve
+this issue by smoothing an estimated cumulative hazard functions to
+obtain an estimate of the hazard function itself. This is a
+theoretically unattractive approach, as estimation of a hazard
+function is much harder than estimation of a cumulative hazard
+function. In practice, this approach would also introduces the
+additional problem of tuning a smoothing parameter, which may be
+infeasible for more complicated estimators like random survival
+forest, where the smoothing would have to be done conditional on
+baseline covariates.
+
+When a proportional hazards model is assumed, the baseline hazard
+function can be profiled out of the likelihood
+\citep{cox1972regression}. The cross-validated partial log-likelihood
+loss \citep{verweij1993cross} has therefore been suggested as a loss
+function for super learning by \cite{golmakani2020super}. However,
+this choice of loss function restricts the library of learners to
+include only Cox proportional hazards models, and hence excludes many
+learners such as, e.g., random survival forests, additive hazards
+models, and accelerated failure time models.
 
 Alternative approaches for super learning with right-censored data use
 an IPCW loss function

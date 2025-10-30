@@ -118,7 +118,7 @@ pseudo-algorithm to the paper.}
        Section~4, with the special
        case of $\Lambda_2 = 0$. We measure the performance of each super
        learner by calculating the index of prediction accuracy (IPA)
-       (Kattan and Gerds, 2018) at a fixed time horizon (36 months) for the
+       \citep{kattan2018index} at a fixed time horizon (36 months) for the
        risk prediction model provided by the super learner. The IPA is 1
        minus the ratio between the model's Brier score and the null model's
        Brier score, where the null model is the model that does not use any
@@ -133,7 +133,7 @@ pseudo-algorithm to the paper.}
      $\Lambda_2 = 0$. We
      measure the performance of the risk prediction model provided by each
      super learner by calculating the index of prediction accuracy (IPA)
-     \citep{kattan2018index} at a fixed time horizon (36 months) for the
+     (Kattan and Gerds, 2018) at a fixed time horizon (36 months) for the
      risk prediction model provided by the super learner. For a risk
      prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
      time \( \tau \) is
@@ -204,9 +204,45 @@ Section 3:
   in other ways: perhaps models that normally yield piecewise constant
   hazards could be included in a slightly modified form with smoothed
   hazards. What would be the consequences of this approach?
+  
+  #+begin_export latex
+  \answer{We agree that this is an important point, and we have
+    elaborated further. It is an interesting idea to attempt to smooth
+    the problematic piecewise constant cumulative hazard functions. We
+    believe that this introduces other issues that would have to be
+    addressed, and we briefly reflect on that now. Please see the
+    updated paragraph below with new text in \color{blue}{blue}.}
 
-  Answer: We agree that this is an important point, and we have
-  elaborated further with the following:
+  \qrev{However, the partial
+    log-likelihood loss does not work well as a general purpose measure
+    of performance in hold-out samples when data are observed in
+    continuous time. The reason is that the partial log-likelihood
+    assigns an infinite value to any learner that predicts piecewise
+    constant cumulative hazard functions, if the test set contains event
+    times that are not observed in the training set. \color{blue}For
+      instance, if no competing risks are present, a piecewise constant
+      cumulative hazard function postulates a model for the distribution
+      of the survival times where all probability is assigned to the
+      finite number of time points at which the cumulative hazard
+      function jumps. The likelihood according to such a model is zero
+      at almost all time points, and thus the likelihood of any hold-out
+      sample will almost surely be zero when data are observed in
+      continuous time. \color{black} This problem occurs with prominent survival
+    learners including the Kaplan-Meier estimator, random survival
+    forests, and semi-parametric Cox regression models, and these
+    learners cannot be included in the library of the super learner
+    proposed by Polley and van der Laan (2011). \color{blue}{One might
+    attempt to resolve this issue by smoothing an estimated
+      cumulative hazard functions to obtain an estimate of the hazard
+      function itself. This is a theoretically unattractive approach, as
+      estimation of a hazard function is much harder than estimation of
+      a cumulative hazard function. In practice, this approach would
+      also introduces the additional problem of tuning a smoothing
+      parameter, which may be infeasible for more complicated estimators
+      like random survival forest, where the smoothing would have to be
+      done conditional on baseline covariates.}  }
+  #+end_export
+
 
 Section 4:
 
@@ -227,22 +263,16 @@ Section 4:
   appendix showing code implementing this for the prostate cancer
   study data.
 
-  NB Note: Add example to github page.
-
   #+begin_export latex
   \answer{A code supplement is provided at the Github repository that is
     referenced at the end of the Introduction. We have now added an
     example that demonstrates how tools from the survival package can be
-    used to construct learner. We cannot share the original data, but we
+    used to construct learners. We cannot share the original data, but we
     share an emulated data set and demonstrate how the joint survival
     super learner can be fitted to the data at the referenced Github
     repository.}
   #+end_export
 
-
-  Answer notes: Emphasize that we do provide code. Perhaps make an
-  example where we "manually" implement and article using tools from
-  the survival package.
 
 Section 5:
 
@@ -400,7 +430,8 @@ Section 8:
   distribution. We note that for the special case where the partial
   log-likelihood loss can be used, this loss function, like our
   suggested approach, also measures performance with respect to a
-  feature defined by the observed data distribution
+  feature defined by the observed data distribution (e.g., Hjort, 1992;
+Whitney et al., 2019).
   \citep[e.g.,][]{hjort1992inference,whitney2019comment}. We do not know
   of any method that would allow us to evaluate performance of a
   risk-prediction model in censored data without either modeling
@@ -449,6 +480,10 @@ Section 8:
   version of resubmission is done with latex diff. For now, it is only
   drafts, so could be outdated later.
 
+
+* References
+\renewcommand{\section}[2]{} 
+\bibliography{bib.bib}
 
 
 * latex setup :noexport:
