@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-10-24 fre 15:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="Anders Munch" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8c59f53">1. Reviewer: 1</a></li>
+<li><a href="#org1c55296">2. Reviewer: 2</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8c59f53" class="outline-2">
+<h2 id="org8c59f53"><span class="section-number-2">1.</span> Reviewer: 1</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Comments to the Author
+</p>
+
+<p>
+This paper proposes a super learner-style estimator of conditional
+cumulative hazard functions in the context of right-censored
+time-to-event data with competing risks. The user specifies libraries
+of candidate estimators of the conditional cumulative hazards of the
+event, censoring, and competing risk times. The proposed method then
+selects the element of the product of these libraries that has the
+smallest cross-validated empirical risk, where the risk is based on a
+carefully constructed loss function. A key benefit of the proposed
+methods over alternatives is that it jointly estimates the three
+cumulative hazards, rather than iterating between estimation of them
+or requiring a pre-specified censoring survival estimator. The authors
+provided an oracle inequality demonstrating that the true risk of the
+estimator is no worse than a constant multiple of the oracle risk up
+to a logarithmic penalty in the size of the library. The authors also
+provide numerical studies and a simulation illustrating the good
+performance of the proposed method.
+</p>
+
+<p>
+Overall, this is a nice contribution to the literature, and I am
+grateful to the authors for the methods an accompanying theory. The
+paper is well written and careful, though I think more effort could be
+made in parts to make the notation somewhat more accessible. In
+particular, an outline of the proposed algorithm in its totality would
+be useful for readers.
+</p>
+
+<ul class="org-ul">
+<li class="on"><code>[X]</code> Answer: Thank you for this comment, we agree that it is a good
+idea with an outline of the proposed algorithm. We have added a
+pseudo-algorithm to the paper.</li>
+</ul>
+
+<p>
+I have two main comments. My first comment regards a sentence in the
+discussion: ``A potential drawback of our approach is that we are
+evaluating the loss of the learners on the level of the observed data
+distribution, while the target of the analysis is either the
+event-time distribution, or the censoring distribution, or both.” I
+didn’t quite catch this on a first read-through of the paper, but I
+think it is an important point that deserves to be emphasized more
+throughout the paper. Specifically, this makes me wonder about the
+relevance of the oracle inequalities in Proposition 2 and Corollary 3:
+do we actually care about these risks? I usually care about
+inequalities and rates of convergence of the conditional survival (or
+cumulative hazard) function of the event time, censoring time, and
+competing risk. If I understand the above comment correctly, the risk
+considered in the paper doesn’t directly give such inequalities and
+rates. Is that correct? If so, it deserves to be mentioned and at
+least briefly discussed in the section on theoretical results.
+</p>
+
+<ul class="org-ul">
+<li class="on"><code>[X]</code> <p>
+Answer: This is an important point, which we agree should be
+made clear in the paper. We have added the following paragraph
+discussing this point at the end of Section 5.
+</p>
+
+<p>
+We have also added the following reflection to the discussion:
+</p></li>
+</ul>
+
+
+<p>
+Similarly, this makes me question the relevance of the IPA metric
+considered in the numerical study. How do the different algorithms
+compare in terms of pointwise or integrated error for the conditional
+survival or cumulative hazard functions?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer: In the numerical studies, we in fact do use the IPA for
+the survival function of interest. We have now made this clear by
+adding the following:
+</p>
+
+<p>
+[As we simulate the data, we have access to &#x2026;]
+</p></li>
+</ul>
+
+<p>
+Second, and more minor, I wonder if the authors could expand on why it
+is difficult to extend the method to an ensemble estimator in this
+setting.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer: Thank you for this comment. We do not believe that it
+needs to be particularly difficult, but there are at least two
+strategies that could be pursued, and we think that some additional
+thought on this is needed. We have expanded on this in the
+discussion with the following:
+</p>
+
+<p>
+[Generalizing our proposal to ensemble learning is &#x2026; At least two
+strategies could be pursued. First, ensemble for F. More
+interestingly, jointly build ensembles for all element of the tuple.]
+</p></li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-org1c55296" class="outline-2">
+<h2 id="org1c55296"><span class="section-number-2">2.</span> Reviewer: 2</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Section 3:
+</p>
+
+<p>
+P5. The point that the partial log-likelihood does not work well as an
+evaluation criterion is interesting and warrants further
+elaboration. An additional sentence explaining this point would be
+helpful. Additionally, I wonder if this problem can be circumvented in
+other ways: perhaps models that normally yield piecewise constant
+hazards could be included in a slightly modified form with smoothed
+hazards. What would be the consequences of this approach?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Answer: We agree that this is an important point, and we have
+elaborated further with the following:</li>
+</ul>
+
+<p>
+Section 4:
+</p>
+
+<p>
+P5. I find the notation using "1" for the indicator function difficult
+to read, especially when preceded by other numerals. Why not use I, δ,
+or a bold or blackboard/double-struck 1?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Answer: This is a good point, we have changed the notation to&#x2026;</li>
+</ul>
+
+<p>
+P6. The manuscript explains that it is in principle fairly easy to use
+the survival package to estimate libraries of models for A₁, A₂, and
+B. The practical value of the article would improve with a web
+appendix showing code implementing this for the prostate cancer study
+data.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: Emphasize that we do provide code. Perhaps make an example
+where we "manually" implement and article using tools from the
+survival package.
+</p></li>
+</ul>
+
+<p>
+Section 5:
+</p>
+
+<p>
+P8. You state that a sensible objective function must be proper. While
+I don't disagree, this point often generates discussion. One might
+argue that in certain problems, our objective need not be the correct
+recovery of the probability distribution. Rather, we may want to
+predict outcomes at specific time points while incorporating relative
+costs of incorrect predictions. It's not clear that using
+probabilities as an intermediate step is always optimal, especially
+when these are estimated with error. Furthermore, while a proper loss
+function might be optimal with large sample sizes, this may not hold
+for finite samples. More discussion of this point would be valuable.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer: &#x2026;
+</p>
+
+<p>
+Notes: We now discuss utility / cost benefit. unclear what is meant
+by finite sample problem of proper loss but penalized likelihood is
+a good example.
+</p></li>
+</ul>
+
+<p>
+P8. The authors quickly move from using proper scoring rules to the
+Brier score, which feels less general. Are the results expected to
+hold for other proper scoring rules?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: yes, what other proper scoring rules are there? is there an
+integrated deviance (log - score) maybe in Putter's book?
+</p></li>
+</ul>
+
+<p>
+P9. At the top of the page, it's argued that the oracle inequality
+provides insights into how the number of folds, time horizon, and
+number of learners influence performance. Could the practical utility
+of this be illustrated in the context of the prostate cancer example?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer: &#x2026;
+</p>
+
+<p>
+Notes: no, but we have now added a comment about this.. Unclear how
+to address this, because I do not believe there is any actual
+practical utility to be gained from the types of inequalities. Hmm,
+maybe we could say something about that in this case, our analyses
+indicates that fairly complex models are used. If this is true, our
+finite sample inequality shows that, for large enough samples, the
+error rate will be dominated by that flexible models and not by the
+cross-validation estimation step &#x2013; refer to that we seem to be in
+case (b) of Corollary 3.
+</p></li>
+</ul>
+
+<p>
+P10. The performance will be specified using the IPA, which needs more
+discussion. Please briefly state how it is defined and why it was
+chosen. (Is the IPA itself proper? If not, does this still make sense
+here? Do we need other metrics as well?)
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: IPA is simply R2 (refer to text) it is easy to see that it is proper:
+</p></li>
+</ul>
+
+
+<p>
+P10. The SurvSL model should be described in more detail.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: Do this in the simulation setup?
+</p></li>
+</ul>
+
+<p>
+P10. For the 'second aim,' it's suggested that an advantage of the
+joint survival learner may be that it is a discrete super
+learner. This warrants more explanation—why is this an advantage? Is
+there more risk of overfitting in small samples?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer: This is an interesting point. To our knowledge, the
+finite sample performance of a discrete versus continuous (ensemble)
+super learner is not well understood. In the special case where the
+data-generating model is included as a learner in the library, we
+think that a discrete super learner could have an advantage, because
+it is forced to pick one model from the library, and will with good
+change pick the correct one, while an ensemble learner will always
+be a mixture of the correct model and a mis-specified one. We have
+expanded on this and tried to clarify that this only a possible
+explanation and not a strict fact.
+</p>
+
+<p>
+Notes: because we have the dgm as one of the learners.
+</p></li>
+</ul>
+
+<p>
+Section 7:
+</p>
+
+<p>
+P11. The prostate cancer study seems like an afterthought. It would be
+beneficial to reference it more when introducing the problem to
+demonstrate practical relevance.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: THOMAS todo.
+</p></li>
+</ul>
+
+<p>
+P11. The splitting into training and test data seems wasteful. Could
+nested cross-validation be used instead?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: we try it out and then decide
+</p></li>
+</ul>
+
+<p>
+P11. More discussion of the results is needed. What exactly do we
+learn from this practical use case?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: ask chatgpt: prompt could you help us answer the reviewers
+request: here is the paragraph of our paper copy-paste
+</p></li>
+</ul>
+
+<p>
+P11. The usefulness of this manuscript for practical researchers would
+be greatly enhanced with a link to a code supplement.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: Yes, we already have this&#x2026;
+</p></li>
+</ul>
+
+<p>
+Section 8:
+</p>
+
+<p>
+P12. The stated drawback—that the authors evaluate the loss of
+learners at the level of the observed data distribution while the
+target is either the event-time distribution, censoring distribution,
+or both—needs more detailed explanation. Are there alternatives to
+this approach, and what would be their drawbacks?
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: find more about drawbacks of other methods from the earlier
+versions of the manuscript. So this is about reiterating some of the
+points made in the introduction. 
+</p></li>
+</ul>
+
+<p>
+P12. The authors claim that targeted learning is also known as
+debiased machine learning.  However, these are often presented as
+distinct approaches. This should be clarified.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Answer: Yes, this is a fair point. We have adjusted accordingly:</li>
+</ul>
+
+<p>
+P12. The discussion lacks reflection on the results from sections 6
+and 7.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> <p>
+Answer:
+</p>
+
+<p>
+Notes: just to this.
+</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Anders Munch</p>
+<p class="date">Created: 2025-10-24 fre 15:36</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
