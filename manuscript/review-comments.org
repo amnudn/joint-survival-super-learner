@@ -3,11 +3,9 @@
 #+Date: \today
 #+OPTIONS:   num:nil toc:nil ':t ^:t
 
-
-
-We thank the the reviewers for their useful comments. We have
-incorporated their suggestions into the manuscript, and we find it
-much improved. Please see our point-to-point responses below.
+We thank the reviewers for their useful comments. We have incorporated
+their suggestions into the manuscript, and we find it much
+improved. Please see our point-to-point responses below.
 
 Quotes from the old version of the manuscript is inserted in
 @@latex:{\color{red} red}@@ boxes, quotes from the updated manuscript
@@ -44,9 +42,9 @@ particular, an outline of the proposed algorithm in its totality
 would be useful for readers.
 
 #+begin_export latex
- \answer{Thank you for this comment, we agree that it is a good
-idea with an outline of the proposed algorithm. We have added a
-pseudo-algorithm to the paper.}
+ \answer{Thank you for the encouraging words. We agree that it is a good
+idea with an outline of the proposed algorithm and we have added a
+pseudo-algorithm at the end of section 4.}
 #+end_export
 
 1. I have two main comments. My first comment regards a sentence in
@@ -71,88 +69,80 @@ pseudo-algorithm to the paper.}
    pointwise or integrated error for the conditional survival or
    cumulative hazard functions?
 
-   #+begin_export latex
-      \answer{This is an important point, which we agree should be made
-	clear in the paper. We have added the following paragraph discussing
-	this point at the end of Section 5.}
+#+begin_export latex
+\answer{
 
-	\qrev{The norm defined in equation~(\ref{eq:norm}) operates on functions
-	\( F \) which are features of the observed data distribution. This
-	means that Proposition~\ref{prop:oracle-prop} and
-	Corollary~\ref{cor:asymp-cons} provide guarantees in terms of a how
-	well the function $\hat{\phi}_n$ predicts the observed data. Ideally,
-	we would like performance guarantees for, e.g., the selected learners
-	$\hat{\Lambda}_{jn}$ or the derived risk-prediction learner
-	$\hat{Q}_{n}$ defined in equation~(\ref{eq:cs-risk-def}). There is a
-	one-to-one correspondence between the learner $\hat{\phi}_n$ and the
-	tuple of learners
-	\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) through
-	equations~(\ref{eq:lambdaj})-(\ref{eq:gamma}) and
-	(\ref{eq:transition}), and we expect that the performance guarantees
-	provided for $\hat{\phi}_n$ will in many cases translate into similar
-	performance guarantees for each element of the tuple
-	\((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\). We do not
-	investigate this further theoretically, but investigate is empirically
-	in our numerical experiments in Section~\ref{sec:numer-exper}.}
+This is an important point, which we agree should be made clear
+earlier in the paper. We have now added a paragraph at the end of
+Section 5 (see below). We have also added a sentence to the discussion
+in Section 8 (text in blue below) Finally, we note that the IPA in the
+numerical studies was readily calculated for the conditional survival
+function as you suggested. We have now made this clearer by updating
+the corresponding paragraph in Section 6.
+}
 
-	\answer{We have also added the following reflection to the discussion in Section 8 (new
-	  text in \color{blue}{blue}.)}.
-
-	\qrev{A potential drawback of our approach
-	is that we are evaluating the loss of the learners on the level of the
-	observed data distribution, while the target of the analysis is either
-	the event-time distribution, or the censoring distribution, or
-	both. \color{blue}{Our numerical experiments suggest that our approach does provide
-	estimates of the conditional survival functions which perform well,
-	also when the predictive performance is measured against the true
-	survival function with no censoring present.}}
+\qrev{, Changes in Section 5}{
+The norm defined in equation~(\ref{eq:norm}) operates on functions \(
+F \) which are features of the observed data distribution. This means
+that Proposition~\ref{prop:oracle-prop} and
+Corollary~\ref{cor:asymp-cons} provide guarantees in terms of a how
+well the function $\hat{\phi}_n$ predicts the observed data. Ideally,
+we would like performance guarantees for the estimated cumulative
+hazard functions $\hat{\Lambda}_{jn}$ or for the risk predictions of
+the event of interest $\hat{Q}_{n}$ defined in
+equation~(\ref{eq:cs-risk-def}). For this we note the one-to-one
+correspondence between the learner $\hat{\phi}_n$ and the tuple of
+learners \((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\)
+established in equations~(\ref{eq:lambdaj})-(\ref{eq:gamma}) and
+(\ref{eq:transition}). Based on this correspondence we postulate that the performance guarantees
+provided for $\hat{\phi}_n$ will in many cases translate into
+corresponding performance guarantees for elements of the tuple \((\hat
+\Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) and also to derived
+measures such as the risk of the event of interest.
+We do not analyse this hypothesis further
+theoretically, but investigate the performance of the joint survival
+super learner for predicting the risk of the event of interest in our
+numerical experiments in Section~\ref{sec:numer-exper}.
+}
+\qrev{, Changes in Discussion}{
+A potential drawback of our approach is that we are evaluating the
+loss of the learners on the level of the observed data distribution,
+while the target of the analysis is either the event-time
+distribution, or the censoring distribution, or
+both. \color{blue}{However, our numerical experiments show that our
+approach can perform well for estimating the target of the analysis.
+}}
      
-     \answer{In the numerical studies, we in fact do use the IPA for the
-       risk prediction model (1 $-$ the conditional survival function) of
-       interest. We have now attempted to make this clearer by updating the
-       following paragraph in Section 6:}
-
-     \qold{Each super learner provides a learner for the cumulative hazard
-       function for the outcome of interest. From the cumulative hazard
-       function, we obtain a risk prediction model as described in
-       Section~4, with the special
-       case of $\Lambda_2 = 0$. We measure the performance of each super
-       learner by calculating the index of prediction accuracy (IPA)
-       \citep{kattan2018index} at a fixed time horizon (36 months) for the
-       risk prediction model provided by the super learner. The IPA is 1
-       minus the ratio between the model's Brier score and the null model's
-       Brier score, where the null model is the model that does not use any
-       covariate information. The value of IPA is approximated using a
-       large (\( n = 20,000 \)) independent data set of uncensored data. }
-
-     \qrev{Each super learner provides a learner for the cumulative hazard
-     function for the outcome of interest. From the cumulative hazard
-     function, we obtain a risk prediction model as described in
-     Section~\ref{sec:joint-survival-super-learner}, see in particular
-     equation~(\ref{eq:cs-risk-def}) with the special case of
-     $\Lambda_2 = 0$. We
-     measure the performance of the risk prediction model provided by each
-     super learner by calculating the index of prediction accuracy (IPA)
-     (Kattan and Gerds, 2018) at a fixed time horizon (36 months) for the
-     risk prediction model provided by the super learner. For a risk
-     prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
-     time \( \tau \) is
-     \begin{equation*}
-       1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
-       {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
-     \end{equation*}
-     We chose IPA as a performance measure because it is proper,
-     incorporates both discrimination and calibration, and is easy to
-     interpret as it measures the relative performance gain compared to
-     the null model which does not use any baseline information. The
-     definition of IPA involves the uncensored survival time \( T \),
-     which is not available in practice. However, in the numerical
-     studies, this quantity is available because we know the
-     data-generating mechanism used to generate \( T \). In practice, we
-     Monte Carlo approximate the IPA by generating a large
-     (\( n = 20,000 \)) independent data set of uncensored survival
-     times, and calculate the empirical version of the IPA in there.}
-  #+end_export
+\qrev{, Changes in Section 6}{
+Each super learner provides a learner for the cumulative hazard
+function for the outcome of interest. From the cumulative hazard
+functions, we obtain a predicted risk of the combined outcome event, c.f., equation
+\eqref{eq:cs-risk-def}, where in the current scenario without
+competing risks, $\Lambda_2 = 0$, and \(\hat Q_n(T \leq t, D = 1 \mid
+X=x)=1-\exp\{-\hat\Lambda_{1n}(t \mid x)\). We measure the performance
+of the risk prediction models by
+calculating the index of prediction accuracy (IPA)
+\citep{kattan2018index} at a fixed time horizon (36 months).
+For a risk
+prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
+time \( \tau \) is defined as 
+\begin{equation*}
+  1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
+  {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
+  % {\E_Q{[( \E_Q{[\1{\{T \leq \tau\}}]} - \1{\{T \leq \tau\}})^2]}}
+\end{equation*}
+We chose IPA as a performance measure because it is proper,
+incorporates both discrimination and calibration, and is easy to
+interpret as it measures the relative performance gain compared to the
+null model which does not use any covariate information. The definition
+of IPA involves the uncensored survival time \( T \), which is not
+available in practice. However, in the numerical studies, this
+quantity is available because we know the data-generating mechanism.
+For the presentation of results we estimate the
+IPA in a large independent data set of
+uncensored survival times (\( n = 20,000 \)).
+}
+#+end_export
 
 2. Second, and more minor, I wonder if the authors could expand on why
    it is difficult to extend the method to an ensemble estimator in
@@ -160,25 +150,16 @@ pseudo-algorithm to the paper.}
 
    #+begin_export latex
    \answer{Thank you for this comment. We do not believe that it needs to
-     be particularly difficult, but there are at least two strategies
-     that could be pursued, and we think that some additional thought on
-     this is needed. We have expanded on this in the discussion by
-     updating the following paragraph:}
-
-   \qold{
+     be particularly difficult, but it is beyond the scope of our manuscript.
+     We have now rephrased and expanded this paragraph
+     in the discussion.
+     }
+   \qrev{}{
    We have focused on a discrete version of the joint survival super
-   learner, but it is of interest to extend the method to a proper
-   ensemble learner, where learners are combined, e.g., through
-   stacking. How an ensemble should be build for tuples of learners is an
-   interesting topic for future research.
-   }
-
-   \qrev{
-   We have focused on a discrete version of the joint survival super
-   learner, but it is of interest to extend the method to a proper
-   ensemble learner, where learners are combined, e.g., through
-   stacking. There are at least two possible directions for constructing
-   an ensemble version of the joints survival super leaner. One option is
+   learner, but it is straightforward to extend the method to more complex
+   ensemble learning, e.g., through
+   stacking\ref{breiman1996stacked}. However, there are multiple possible ways 
+   to apply stacking to the the joint survival super leaner. One option is
    to construct a single convex combination of the F-learners
    \( \phi \in \Phi(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
    \). Another, perhaps more interesting option, is to construct
@@ -208,12 +189,12 @@ Section 3:
   #+begin_export latex
   \answer{We agree that this is an important point, and we have
     elaborated further. It is an interesting idea to attempt to smooth
-    the problematic piecewise constant cumulative hazard functions. We
+    the piecewise constant cumulative hazard functions. However, we
     believe that this introduces other issues that would have to be
     addressed, and we briefly reflect on that now. Please see the
     updated paragraph below with new text in \color{blue}{blue}.}
 
-  \qrev{However, the partial
+  \qrev{}{However, the partial
     log-likelihood loss does not work well as a general purpose measure
     of performance in hold-out samples when data are observed in
     continuous time. The reason is that the partial log-likelihood
@@ -222,7 +203,7 @@ Section 3:
     times that are not observed in the training set. \color{blue}For
       instance, if no competing risks are present, a piecewise constant
       cumulative hazard function postulates a model for the distribution
-      of the survival times where all probability is assigned to the
+      of the survival times where all probability mass is assigned to the
       finite number of time points at which the cumulative hazard
       function jumps. The likelihood according to such a model is zero
       at almost all time points, and thus the likelihood of any hold-out
@@ -231,16 +212,11 @@ Section 3:
     learners including the Kaplan-Meier estimator, random survival
     forests, and semi-parametric Cox regression models, and these
     learners cannot be included in the library of the super learner
-    proposed by Polley and van der Laan (2011). \color{blue}{One might
-    attempt to resolve this issue by smoothing an estimated
-      cumulative hazard functions to obtain an estimate of the hazard
-      function itself. This is a theoretically unattractive approach, as
-      estimation of a hazard function is much harder than estimation of
-      a cumulative hazard function. In practice, this approach would
-      also introduces the additional problem of tuning a smoothing
-      parameter, which may be infeasible for more complicated estimators
-      like random survival forest, where the smoothing would have to be
-      done conditional on baseline covariates.}  }
+    proposed by Polley and van der Laan (2011). \color{blue}{A reviewer suggested that one might
+    approach this issue by post-hoc smoothing of the piecewise constant 
+      hazard functions. This is an interesting idea
+which we however do not pursue further in this work.}
+}
   #+end_export
 
 
@@ -248,33 +224,33 @@ Section 4:
 
 - P5. I find the notation using "1" for the indicator function
   difficult to read, especially when preceded by other numerals. Why
-  not use I, δ, or a bold or blackboard/double-struck 1?
+  not use I, \(\delta\), or a bold or blackboard/double-struck 1?
 
   #+begin_export latex
-  \answer{Thank you for this comment. The blackboard/double-struck was
-    lost when converting to the journal's template, and we have now
-    corrected that.}
+  \answer{Thank you for this suggestion. We now use the blackboard/double-struck 1.}
   #+end_export
 
-
 - P6. The manuscript explains that it is in principle fairly easy to
-  use the survival package to estimate libraries of models for A₁, A₂,
+  use the survival package to estimate libraries of models for \(A_1, A_2\),
   and B. The practical value of the article would improve with a web
   appendix showing code implementing this for the prostate cancer
   study data.
 
   #+begin_export latex
-  \answer{A code supplement is provided at the Github repository that is
-    referenced at the end of the Introduction. We have now added an
-    example that demonstrates how tools from the survival package can be
+  \answer{Thank you for this suggestion. We refer to our accompanying github repo:
+  \\
+\url{https://github.com/amnudn/joint-survival-super-learner}
+\\
+where 
+    we have now added an
+    example that demonstrates how the survival package can be
     used to construct learners. We cannot share the original data, but we
-    share an emulated data set and demonstrate how the joint survival
-    super learner can be fitted to the data at the referenced Github
-    repository.}
+    use an emulated data set to demonstrate the application of the joint survival
+    super learner.}
   #+end_export
 
 
-Section 5:
+Section 5: 
 
 - P8. You state that a sensible objective function must be
   proper. While I don't disagree, this point often generates
@@ -288,16 +264,54 @@ Section 5:
   might be optimal with large sample sizes, this may not hold for
   finite samples. More discussion of this point would be valuable.
 
-  Answer notes: We now discuss utility / cost benefit. unclear what is
-  meant by finite sample problem of proper loss but penalized
-  likelihood is a good example.
+#+begin_export latex
+\qrev{}{
+
+We thank the reviewer for this thoughtful comment. We
+agree that in some applications, the goal is not to estimate
+the true underlying risk or probability distribution, but rather
+to develop a decision model that directly minimizes expected loss
+under specified costs of incorrect predictions.
+
+However, in our experience it is rare in medical settings that subject matter
+experts are able to explicitly quantify the costs and benefits
+of decisions that are based on predicted risks of future events,
+in particular, in competing risk settings where decisions likely have to
+consider all risks simultaneously.   
+
+Our work, by contrast, focuses on super learning of risks -- that is,
+prediction of outcome probabilities -- and particularly on 
+simultaneous estimation of the censoring distribution, rather than relying on a
+prespecified but potentially misspecified regression model for the censoring distribution.
+A detailed discussion of decision-analytic trade-offs or the distinction between correct and
+incorrect categorical predictions would thus be outside the scope of our paper.
+
+Finally, we maintain that the objective (or loss) function
+should be proper even in small samples. Improper loss functions
+can lead to misleading conclusions about model performance,
+as illustrated for example by the integrated discrimination improvement (IDI)
+and net reclassification improvement (NRI) metrics (see Hilden \& Gerds, 2014),
+and this happens in small samples as well as in large samples.
+
+}
+#+end_export  
 
 - P8. The authors quickly move from using proper scoring rules to the
   Brier score, which feels less general. Are the results expected to
   hold for other proper scoring rules?
-
-  Answer notes: yes, what other proper scoring rules are there? is
-  there an integrated deviance (log - score) maybe in Putter's book?
+#+begin_export latex
+\answer{
+  Yes, they probably would. But there few alternative strictly proper
+  scoring rules for our use case: Savage proved in 1971 
+  (JASA, 66(336):783--801) that in case of predicted probabilities
+  there are only two strictly proper scoring rules: the Brier score
+  and the logarithmic score. We work with the Brier score because it readily 
+  works for tupels of predicted probabilites and does not have issues when
+  predicted probabilites are exactly zero or one. It may be possible 
+  however to define integrated versions of the logarithmic score and
+  we would expect similar results.
+}
+#+end_export
 
 - P9. At the top of the page, it's argued that the oracle inequality
   provides insights into how the number of folds, time horizon, and
@@ -305,75 +319,110 @@ Section 5:
   utility of this be illustrated in the context of the prostate cancer
   example?
 
-  Answer notes: no, but we have now added a comment about
-  this.. Unclear how to address this, because I do not believe there
-  is any actual practical utility to be gained from the types of
-  inequalities. Hmm, maybe we could say something about that in this
-  case, our analyses indicates that fairly complex models are used. If
-  this is true, our finite sample inequality shows that, for large
-  enough samples, the error rate will be dominated by that flexible
-  models and not by the cross-validation estimation step -- refer to
-  that we seem to be in case (b) of Corollary 3.
+#+begin_export latex
+\answer{
+
+Indeed, our statement was misleading. We do not think that that 
+actual practical guidance can be derived easily from the inequality.
+We have now deleted this statement:
+
+}
+\qrev{}{
+As with many finite-sample oracle inequalities, this result is of
+little direct practical utility because the right-hand side depends on
+data-dependent, unknown quantities. 
+\sout{However, it does quantify how the
+number of folds, the time horizon, and the number of learners in the
+library can be expected to influence the performance. }
+}
+#+end_export  
 
 - P10. The performance will be specified using the IPA, which needs
   more discussion. Please briefly state how it is defined and why it
   was chosen. (Is the IPA itself proper? If not, does this still make
   sense here? Do we need other metrics as well?)
 
-  #+begin_export latex
+#+begin_export latex
 
-  \answer{We have now defined the IPA explicitly, please see our
-    response to Reviewer 1's first. The IPA is just a scaled version of the Brier score so it
-    is indeed proper.}
-
-  % \qold{The IPA is 1
-  % minus the ratio between the model's Brier score and the null model's
-  % Brier score, where the null model is the model that does not use any
-  % covariate information. The value of IPA is approximated using a large
-  % (\( n = 20,000 \)) independent data set of uncensored data.}
-
-  % \qrev{For a risk
-  % prediction model \( r \colon \mathcal{X} \rightarrow [0,1] \), IPA at
-  % time \( \tau \) is
-  % \begin{equation*}
-  %   1 - \frac{\E_Q{[(r(X) - \1{\{T \leq \tau\}})^2]}}
-  %   {\E_Q{[( Q{({T \leq \tau})} - \1{\{T \leq \tau\}})^2]}}.
-  % \end{equation*}
-  % We chose IPA as a performance measure because it is proper,
-  % incorporates both discrimination and calibration, and is easy to
-  % interpret as it measures the relative performance gain compared to
-  % the null model which does not use any baseline information. The
-  % definition of IPA involves the uncensored survival time \( T \),
-  % which is not available in practice. However, in the numerical
-  % studies, this quantity is available because we know the
-  % data-generating mechanism used to generate \( T \). In practice, we
-  % Monte Carlo approximate the IPA by generating a large
-  % (\( n = 20,000 \)) independent data set of uncensored survival
-  % times, and calculate the empirical version of the IPA in there.}
-  #+end_export
-
+\answer{
+  Thank you for pointing this lack of clarity out.
+  We have now defined the IPA explicitly, please see our
+  response to Reviewer 1's first query.
+  The IPA is a scaled version of the Brier score,
+  where the scaling does not depend on the model, and hence it
+  is indeed proper.   
+}
+#+end_export
 
 - P10. The SurvSL model should be described in more detail.
+#+begin_export latex
 
-  Answer notes: Do this in the simulation setup?
+\answer{  
+Agreed. We have expanded this section as follows:
+}
+
+\qrev{}{
+For the second aim, we consider the super learner {\it survSL}
+proposed by \citep{westling2021inference} which like the joint
+survival super learner does not require a pre-specified censoring
+model. Like the joint survival super learner, {\it survSL} implements
+an ensemble learning approach, combining multiple learners
+(algorithms) to improve predictive performance.  The major difference
+is that {\it survSL} iterates between prediction of the outcome
+probabilities and prediction of the censoring probabilities where the
+joint survival super learner evaluates all learners simultaneously on
+the level of the observed data distribution. Another difference is
+that {\it survSL} creates a meta-learner that combines the predictions
+of the individual learners whereas the joint survival super learner
+applied in the simulation study is a discrete super learner. Since
+both approaches provide estimates of the event-time and the censoring
+distributions, we compare their performance with respect to
+both. Again we use the IPA to quantify the predictive performance.
+
+}
+
+#+end_export
 
 - P10. For the 'second aim,' it's suggested that an advantage of the
   joint survival learner may be that it is a discrete super
-  learner. This warrants more explanation—why is this an advantage? Is
+  learner. This warrants more explanation -- why is this an advantage? Is
   there more risk of overfitting in small samples?
 
-  Draft answer: This is an interesting point. To our knowledge, the
-  finite sample performance of a discrete versus continuous (ensemble)
-  super learner is not well understood. In the special case where the
-  data-generating model is included as a learner in the library, we
-  think that a discrete super learner could have an advantage, because
-  it is forced to pick one model from the library, and will with good
-  change pick the correct one, while an ensemble learner will always
-  be a mixture of the correct model and a mis-specified one. We have
-  expanded on this and tried to clarify that this only a possible
-  explanation and not a strict fact.
+#+begin_export latex
+  
+\answer{
 
-  Todo: add something to the manuscript. 
+This is an interesting point. To our knowledge, the finite sample
+performance of a discrete versus continuous (ensemble) super learner
+is not well understood. We conjecture that the discrete super learner
+may be advantageous in the case where at least one of the learners in
+the library is consistent and the data set is large enough, whereas
+the ensemble super learner could have an advantage when all learners
+are misspecified to some extent. We have expanded on this and tried to
+clarify that this only a possible explanation and not a strict fact.
+}
+
+\qrev{}{
+We see
+that for most sample sizes, the joint survival super learner has
+similar or higher IPA compared to survSL with respect to both the
+prediction of the censoring and the outcome risks. We note that the
+advantage of the joint survival super learner in this particular
+simulation setting might be due that it is a discrete super learner,
+whereas {\it survSL} combines the learners. \textcolor{blue}{We conjecture that a
+discrete super learner may be advantageous in the case where at least
+one of the learners in the library is consistent and has converged
+given the available data set, whereas the ensemble super learner could
+have an advantage when all learners are misspecified to some extent,
+or have not converged sufficiently (in different regions of the
+covariate space). In this simulation study the data generation model
+is a low-dimensional parametric model which was included in the
+library of learners and hence this could be an explanation of why the
+discrete joint survival super learner outperforms {\it survSL} in this
+scenario.
+}
+}
+#+end_export
 
 Section 7:
 
@@ -381,15 +430,68 @@ Section 7:
   be beneficial to reference it more when introducing the problem to
   demonstrate practical relevance.
 
-  Todo TAG.
+#+begin_export latex
+\answer{
+ Great point. We have now added the following sentence to the introduction:
+}
+
+\qrev{}{
+We demonstrate how to construct
+a library of learners using common methods for survival analysis and
+illustrate the use of the joint survival super learner using \textcolor{blue}{
+data from a prostate cancer study \cite{kattan2000pretreatment} and also
+synthesize the prostate cancer data to generate a realistic scenario for our simulation experiments.
+}
+}
+#+end_export
 
 - P11. The splitting into training and test data seems wasteful. Could
   nested cross-validation be used instead?
 
-  Todo: Try it out and then decide.
+#+begin_export latex
+\answer{There is a trade-off here between the performance of an average
+model that can be build with a given sub-sample size of say 90\% of the data,
+corresponding to 10-fold cross-validation, and the performance of an actual 
+model that was built with a given training sample. Figure 4 of our manuscript
+shows the actual predictions of one model in the single-split test sample. If we would switch 
+to 10-fold cross-validation then the predicted probabilities would be coming 
+from 10 different models. This may as well be of interest but it shows something else
+and is in our opinion not generally preferable when the task is to illustrate a new method.
+
+}
+#+end_export
 
 - P11. More discussion of the results is needed. What exactly do we
   learn from this practical use case?
+
+#+begin_export latex
+\answer{Good point. We have expanded as follows.}
+
+\qrev{}{
+Figure \ref{fig:zelefski-real}
+compares the 3-year risk predictions from the pre-specified Cox model
+and the discrete joint survival super learner in the test set.
+\textcolor{blue}{The figure shows that the differences between the conventional method
+and our new method are mainly due to differences in the estimated
+censoring probabilities, while the event probabilities remain similar.
+}
+
+\textcolor{blue}{These results illustrate that the proposed joint survival super
+learner can be feasibly applied to realistic clinical data with
+competing risks and moderate sample size. The method successfully
+identified different optimal learners for the cause-specific event and
+censoring processes, demonstrating its ability to adapt flexibly to
+complex data structures. In this application, the gain in
+predictive accuracy over pre-specified Cox models was modest,
+indicating that the main advantage of the joint survival super learner
+lies in its data-adaptive model selection rather than in dramatic
+performance improvement for this particular dataset. Importantly, the
+consistent selection of the random survival forest for the censoring
+distribution shows that accounting for informative censoring can be
+learned automatically rather than being fixed a priori. 
+}
+}
+#+end_export
 
   Answer notes: Todo: ask chatgpt: prompt could you help us answer the
   reviewers request: here is the paragraph of our paper copy-paste
@@ -397,11 +499,18 @@ Section 7:
 - P11. The usefulness of this manuscript for practical researchers
   would be greatly enhanced with a link to a code supplement.
 
-  #+begin_export latex
-  \answer{A code supplement is provided at the Github repository that is
-    referenced at the end of the Introduction, please also see our
-    answer to you comment to Section 4, page 6.}
-  #+end_export
+#+begin_export latex
+\answer{
+Yes, we share our codes via a github repository.
+Here is what we state at the end of the introduction
+}
+\qrev{}{
+
+Code and an implementation of the joint survival super
+learner in R \citep{R} are available at
+\url{https://github.com/amnudn/joint-survival-super-learner}.
+}
+#+end_export
 
 
 Section 8:
@@ -412,64 +521,71 @@ Section 8:
   distribution, or both—needs more detailed explanation. Are there
   alternatives to this approach, and what would be their drawbacks?
 
-  #+begin_export latex
-  \answer{We have addressed this partly in our answer to Reviewer 1's
-    first comment, please see above. We briefly mention alternative
-    approaches in Section 3, and we now reiterate and expand on these
-    points in the Discussion, please see the paragraph below which we
-    have added to the Discussion.}
+#+begin_export latex
+\answer{
+We have addressed the first part of your point in our answer to
+Reviewer 1's first point, please see above. Regarding alternative
+methods and their drawbacks, we do mention alternative approaches in
+Section 3, and we now reiterate and expand on these points in the
+Discussion, please see the paragraph below which we have added to the
+Discussion.
+}
 
-  \qrev{
-  Alternatives to using a performance measure defined with respect the
-  observed data are the use of IPCW loss functions, censoring unbiased
-  transformations, or pseudo-values. As mentioned in
-  Section~3, the drawback of these approaches is
-  that they all need a pre-specified estimator of the censoring
-  distribution, and hence these methods are not immediately applicable
-  if we do not in advance know how to model the censoring
-  distribution. We note that for the special case where the partial
-  log-likelihood loss can be used, this loss function, like our
-  suggested approach, also measures performance with respect to a
-  feature defined by the observed data distribution (e.g., Hjort, 1992;
-Whitney et al., 2019).
-  \citep[e.g.,][]{hjort1992inference,whitney2019comment}. We do not know
-  of any method that would allow us to evaluate performance of a
-  risk-prediction model in censored data without either modeling
-  additional nuisance parameters (such as the censoring distribution) or
-  measuring performance directly with respect to the observed data.
-  }
- #+end_export
+\qrev{}{
+A major advantage of the joint survival super learner is that the
+performance of each combination of learners can be estimated without
+additional nuisance parameters. A potential drawback of our approach
+is that we are evaluating the loss of the learners on the level of the
+observed data distribution, while the target of the analysis is either
+the event-time distribution, or the censoring distribution, or
+both. However, our numerical experiments show that our approach can
+perform well for estimating the target of the analysis.  Alternatives
+to our approach including IPCW loss, censoring unbiased
+transformations, and pseudo-values, where discussed in Section
+\ref{sec:super-learning}. As mentioned in
+Section~\ref{sec:super-learning}, the drawback of these approaches is
+that they all need a pre-specified estimator of the censoring
+distribution, and hence these methods are not immediately applicable
+if we do not in advance know how to model the censoring
+distribution. We note that the partial log-likelihood loss, like
+our suggested approach, also measures performance with respect to a
+feature defined by the observed data distribution
+\citep[e.g.,][]{hjort1992inference,whitney2019comment}.
+}
+#+end_export
 
 
 - P12. The authors claim that targeted learning is also known as
   debiased machine learning.  However, these are often presented as
   distinct approaches. This should be clarified.
 
-  #+begin_export latex
-  \answer{This is a fair point. We have updated the text accordingly:}
+#+begin_export latex
+\answer{This is a fair point. We have updated the text and replaced "known as" with "or" as follows:}
 
-  \qold{
-  A relevant application of the joint survival super learner is within
-  the framework of targeted learning \citep{van2011targeted}, also known
-  as debiased machine learning \citep{chernozhukov2018double}, -- a
-  general methodology that combines flexible, data-adaptive estimation
-  of nuisance parameters with asymptotically valid inference for
-  low-dimensional target parameters.
-  }
-
-  \qrev{ A relevant application of the joint survival super learner is
+\qrev{}{ A relevant application of the joint survival super learner is
     within the framework of targeted learning \citep{van2011targeted} or
     debiased machine learning \citep{chernozhukov2018double}, which are
     general methodologies for combining flexible, data-adaptive
     estimation of nuisance parameters with asymptotically valid
     inference for low-dimensional target parameters.  }
-  #+end_export
+#+end_export
 
 
-- P12. The discussion lacks reflection on the results from sections 6
+- P12. TAG The discussion lacks reflection on the results from sections 6
   and 7.
 
-  TODO.
+#+begin_export latex
+\answer{We have added the following paragraph at the very end of the discussion.}
+\qrev{}{
+The findings from our simulation study and the analysis of the prostate cancer data
+confirm the practical feasibility and interpretability
+of the approach, and highlight how the joint super learner framework
+can support model selection and validation in more complex
+event-history prediction problems.
+}
+
+\qrev{}{}
+#+end_export
 
 
 
@@ -552,11 +668,11 @@ Whitney et al., 2019).
 #+LaTeX_HEADER: \newcommand{\empmeas}{\ensuremath{\mathbb{P}_n}} % empirical measure
 
 #+LaTeX_HEADER:\usepackage{tcolorbox}
-#+LaTeX_HEADER:\newcommand{\qrev}[1]{
+#+LaTeX_HEADER:\newcommand{\qrev}[2]{
 #+LaTeX_HEADER:  \vspace{.5em}
 #+LaTeX_HEADER:  \begin{tcolorbox}[boxrule=0pt]
-#+LaTeX_HEADER:    \hfill{\it\footnotesize Quote from revised manuscript}\\[.5em]
-#+LaTeX_HEADER:    #1
+#+LaTeX_HEADER:    \hfill{\it\footnotesize Quote from revised manuscript #1}\\[.5em]
+#+LaTeX_HEADER:    #2
 #+LaTeX_HEADER:  \end{tcolorbox}
 #+LaTeX_HEADER:}
 #+LaTeX_HEADER:\newcommand{\qold}[1]{
