@@ -1,4 +1,4 @@
-% Created 2025-11-13 tor 14:42
+% Created 2025-11-14 fre 14:42
 % Intended LaTeX compiler: pdflatex
 \documentclass[a4paper,danish]{article}
 \usepackage[utf8]{inputenc}
@@ -12,12 +12,6 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\usepackage{listings}
-\usepackage{color}
-\usepackage{amsmath}
-\usepackage{array}
-\usepackage[T1]{fontenc}
-\usepackage{natbib}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{natbib, dsfont, enumitem, amssymb,
@@ -75,7 +69,7 @@ soul,xcolor,amsmath,graphicx,subcaption,verbatim,pgfplots,tikz,prodint,pgfpages,
 \newcommand{\qrev}[2]{
 \vspace{.5em}
 \begin{tcolorbox}[boxrule=0pt]
-\hfill{\it\footnotesize Quote from revised manuscript #1}\\[.5em]
+\hfill{\it\footnotesize Quote from revised manuscript#1}\\[.5em]
 #2
 \end{tcolorbox}
 }
@@ -97,12 +91,13 @@ We thank the reviewers for their useful comments. We have incorporated
 their suggestions into the manuscript, and we find it much
 improved. Please see our point-to-point responses below.
 
-Quotes from the old version of the manuscript is inserted in
-{\color{red} red} boxes, quotes from the updated manuscript
-is inserted in {\color{gray} gray} boxes, and when relevant
-newly added text is show in {\color{blue} blue}.
+Quotes from the updated manuscript is inserted in
+{\color{gray} gray} boxes and when relevant newly added text
+is show in {\color{blue} blue}.
+
+
 \section*{Reviewer 1}
-\label{sec:org066f1d2}
+\label{sec:org3f3f2a8}
 
 Comments to the Author
 
@@ -170,27 +165,27 @@ the corresponding paragraph in Section 6.
 }
 
 \qrev{, Changes in Section 5}{
-The norm defined in equation~(\ref{eq:norm}) operates on functions \(
+The norm defined in equation~(13) operates on functions \(
 F \) which are features of the observed data distribution. This means
-that Proposition~\ref{prop:oracle-prop} and
-Corollary~\ref{cor:asymp-cons} provide guarantees in terms of a how
+that Proposition~2 and
+Corollary~3 provide guarantees in terms of a how
 well the function $\hat{\phi}_n$ predicts the observed data. Ideally,
 we would like performance guarantees for the estimated cumulative
 hazard functions $\hat{\Lambda}_{jn}$ or for the risk predictions of
 the event of interest $\hat{Q}_{n}$ defined in
-equation~(\ref{eq:cs-risk-def}). For this we note the one-to-one
+equation~(11). For this we note the one-to-one
 correspondence between the learner $\hat{\phi}_n$ and the tuple of
 learners \((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\)
-established in equations~(\ref{eq:lambdaj})-(\ref{eq:gamma}) and
-(\ref{eq:transition}). Based on this correspondence we postulate that the performance guarantees
-provided for $\hat{\phi}_n$ will in many cases translate into
-corresponding performance guarantees for elements of the tuple \((\hat
-\Lambda_{1n},\hat \Lambda_{2n}, \hat \Gamma_{n})\) and also to derived
-measures such as the risk of the event of interest.
-We do not analyse this hypothesis further
+established in equations~(3)-(4) and
+(7). Based on this correspondence we postulate that
+the performance guarantees provided for $\hat{\phi}_n$ will in many
+cases translate into corresponding performance guarantees for elements
+of the tuple \((\hat \Lambda_{1n},\hat \Lambda_{2n}, \hat
+\Gamma_{n})\) and also to derived measures such as the risk of the
+event of interest. We do not analyse this hypothesis further
 theoretically, but investigate the performance of the joint survival
 super learner for predicting the risk of the event of interest in our
-numerical experiments in Section~\ref{sec:numer-exper}.
+numerical experiments in Section~6.
 }
 \qrev{, Changes in Discussion}{
 A potential drawback of our approach is that we are evaluating the
@@ -204,8 +199,7 @@ approach can perform well for estimating the target of the analysis.
 \qrev{, Changes in Section 6}{
 Each super learner provides a learner for the cumulative hazard
 function for the outcome of interest. From the cumulative hazard
-functions, we obtain a predicted risk of the combined outcome event, c.f., equation
-\eqref{eq:cs-risk-def}, where in the current scenario without
+functions, we obtain a predicted risk of the combined outcome event, c.f., equation~(11), where in the current scenario without
 competing risks, $\Lambda_2 = 0$, and \(\hat Q_n(T \leq t, D = 1 \mid
 X=x)=1-\exp\{-\hat\Lambda_{1n}(t \mid x)\). We measure the performance
 of the risk prediction models by
@@ -245,7 +239,7 @@ this setting.
 We have focused on a discrete version of the joint survival super
 learner, but it is straightforward to extend the method to more complex
 ensemble learning, e.g., through
-stacking\ref{breiman1996stacked}. However, there are multiple possible ways 
+stacking \citep{breiman1996stacked}. However, there are multiple possible ways 
 to apply stacking to the the joint survival super leaner. One option is
 to construct a single convex combination of the F-learners
 \( \phi \in \Phi(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
@@ -256,8 +250,13 @@ such an ensemble should be build and implemented is an interesting
 topic for future research.
 }
 \end{enumerate}
+
+
+
+
+
 \section*{Reviewer 2}
-\label{sec:org521c413}
+\label{sec:org13b05ae}
 
 Section 3:
 
@@ -297,7 +296,7 @@ hazards. What would be the consequences of this approach?
     learners cannot be included in the library of the super learner
     proposed by Polley and van der Laan (2011). \color{blue}{A reviewer suggested that one might
     approach this issue by post-hoc smoothing of the piecewise constant 
-      hazard functions. This is an interesting idea
+      cumulative hazard functions. This is an interesting idea
 which we however do not pursue further in this work.}
 }
 \end{itemize}
@@ -345,9 +344,8 @@ intermediate step is always optimal, especially when these are
 estimated with error. Furthermore, while a proper loss function
 might be optimal with large sample sizes, this may not hold for
 finite samples. More discussion of this point would be valuable.
-\end{itemize}
 
-\qrev{}{
+\answer{
 
 We thank the reviewer for this thoughtful comment. We
 agree that in some applications, the goal is not to estimate
@@ -372,20 +370,22 @@ Finally, we maintain that the objective (or loss) function
 should be proper even in small samples. Improper loss functions
 can lead to misleading conclusions about model performance,
 as illustrated for example by the integrated discrimination improvement (IDI)
-and net reclassification improvement (NRI) metrics (see Hilden \& Gerds, 2014),
+and net reclassification improvement (NRI) metrics (see \cite{hilden2014note}),
 and this happens in small samples as well as in large samples.
 
 }
+\end{itemize}
+
 
 \begin{itemize}
 \item P8. The authors quickly move from using proper scoring rules to the
 Brier score, which feels less general. Are the results expected to
-hold for other proper scoring rules?
-\end{itemize}
+hold for other proper scoring rules?  
+
 \answer{
-  Yes, they probably would. But there few alternative strictly proper
+  Yes, they probably would. But there are few alternative strictly proper
   scoring rules for our use case: Savage proved in 1971 
-  (JASA, 66(336):783--801) that in case of predicted probabilities
+  \citep{savage1971elicitation} that in case of predicted probabilities
   there are only two strictly proper scoring rules: the Brier score
   and the logarithmic score. We work with the Brier score because it readily 
   works for tupels of predicted probabilites and does not have issues when
@@ -394,16 +394,13 @@ hold for other proper scoring rules?
   we would expect similar results.
 }
 
-\begin{itemize}
 \item P9. At the top of the page, it's argued that the oracle inequality
 provides insights into how the number of folds, time horizon, and
 number of learners influence performance. Could the practical
 utility of this be illustrated in the context of the prostate cancer
 example?
-\end{itemize}
 
 \answer{
-
 Indeed, our statement was misleading. We do not think that that 
 actual practical guidance can be derived easily from the inequality.
 We have now deleted this statement:
@@ -418,13 +415,10 @@ number of folds, the time horizon, and the number of learners in the
 library can be expected to influence the performance. }
 }
 
-\begin{itemize}
 \item P10. The performance will be specified using the IPA, which needs
 more discussion. Please briefly state how it is defined and why it
 was chosen. (Is the IPA itself proper? If not, does this still make
 sense here? Do we need other metrics as well?)
-\end{itemize}
-
 
 \answer{
   Thank you for pointing this lack of clarity out.
@@ -435,60 +429,55 @@ sense here? Do we need other metrics as well?)
   is indeed proper.   
 }
 
-\begin{itemize}
 \item P10. The SurvSL model should be described in more detail.
-\end{itemize}
 
-\answer{  
-Agreed. We have expanded this section as follows:
-}
+  \answer{  
+  Agreed. We have expanded this section as follows:
+  }
 
-\qrev{}{
-For the second aim, we consider the super learner {\it survSL}
+  \qrev{}{
+  For the second aim, we consider the super learner {\it survSL}
 proposed by \citep{westling2021inference} which like the joint
 survival super learner does not require a pre-specified censoring
-model. Like the joint survival super learner, {\it survSL} implements
-an ensemble learning approach, combining multiple learners
-(algorithms) to improve predictive performance.  The major difference
-is that {\it survSL} iterates between prediction of the outcome
-probabilities and prediction of the censoring probabilities where the
-joint survival super learner evaluates all learners simultaneously on
-the level of the observed data distribution. Another difference is
-that {\it survSL} creates a meta-learner that combines the predictions
-of the individual learners whereas the joint survival super learner
-applied in the simulation study is a discrete super learner. Since
-both approaches provide estimates of the event-time and the censoring
+model. The super learner {\it survSL} also implements an ensemble
+learning approach, combining multiple learners (algorithms) to improve
+predictive performance.  The major difference is that {\it survSL}
+iterates between prediction of the outcome probabilities and
+prediction of the censoring probabilities where the joint survival
+super learner evaluates all learners simultaneously on the level of
+the observed data distribution. Another difference is that {\it
+  survSL} creates a meta-learner that combines the predictions of the
+individual learners whereas the joint survival super learner applied
+in the simulation study is a discrete super learner. Since both
+approaches provide estimates of the event-time and the censoring
 distributions, we compare their performance with respect to
 both. Again we use the IPA to quantify the predictive performance.
+  }
 
-}
-
-\begin{itemize}
-\item P10. For the 'second aim,' it's suggested that an advantage of the
+\item P10. For the ``second aim,'' it's suggested that an advantage of the
 joint survival learner may be that it is a discrete super
-learner. This warrants more explanation -- why is this an advantage? Is
-there more risk of overfitting in small samples?
-\end{itemize}
+learner. This warrants more explanation -- why is this an advantage?
+Is there more risk of overfitting in small samples?
 
   
-\answer{
+  \answer{
 
-This is an interesting point. To our knowledge, the finite sample
-performance of a discrete versus continuous (ensemble) super learner
-is not well understood. We conjecture that the discrete super learner
-may be advantageous in the case where at least one of the learners in
-the library is consistent and the data set is large enough, whereas
-the ensemble super learner could have an advantage when all learners
-are misspecified to some extent. We have expanded on this and tried to
-clarify that this only a possible explanation and not a strict fact.
-}
+  This is an interesting point. To our knowledge, the finite sample
+  performance of a discrete versus continuous (ensemble) super learner
+  is not well understood. We conjecture that the discrete super learner
+  may be advantageous in the case where at least one of the learners in
+  the library is consistent and the data set is large enough, whereas
+  the ensemble super learner could have an advantage when all learners
+  are misspecified to some extent. We have expanded on this and tried to
+  clarify that this only a possible explanation and not a strict fact.
+  }
 
-\qrev{}{
-We see
+  \qrev{}{
+  We see
 that for most sample sizes, the joint survival super learner has
-similar or higher IPA compared to survSL with respect to both the
-prediction of the censoring and the outcome risks. We note that the
-advantage of the joint survival super learner in this particular
+similar or higher IPA compared to {\it survSL} with respect to both
+the prediction of the censoring and the outcome risks. We note that
+the advantage of the joint survival super learner in this particular
 simulation setting might be due that it is a discrete super learner,
 whereas {\it survSL} combines the learners. \textcolor{blue}{We conjecture that a
 discrete super learner may be advantageous in the case where at least
@@ -496,13 +485,14 @@ one of the learners in the library is consistent and has converged
 given the available data set, whereas the ensemble super learner could
 have an advantage when all learners are misspecified to some extent,
 or have not converged sufficiently (in different regions of the
-covariate space). In this simulation study the data generation model
+covariate space). In this simulation study, the data generation model
 is a low-dimensional parametric model which was included in the
 library of learners and hence this could be an explanation of why the
 discrete joint survival super learner outperforms {\it survSL} in this
 scenario.
-}
-}
+  }
+  }
+\end{itemize}
 
 Section 7:
 
@@ -510,9 +500,8 @@ Section 7:
 \item P11. The prostate cancer study seems like an afterthought. It would
 be beneficial to reference it more when introducing the problem to
 demonstrate practical relevance.
-\end{itemize}
 
-\answer{
+  \answer{
  Great point. We have now added the following sentence to the introduction:
 }
 
@@ -525,10 +514,8 @@ synthesize the prostate cancer data to generate a realistic scenario for our sim
 }
 }
 
-\begin{itemize}
 \item P11. The splitting into training and test data seems wasteful. Could
 nested cross-validation be used instead?
-\end{itemize}
 
 \answer{There is a trade-off here between the performance of an average
 model that can be build with a given sub-sample size of say 90\% of the data,
@@ -541,45 +528,37 @@ and is in our opinion not generally preferable when the task is to illustrate a 
 
 }
 
-\begin{itemize}
 \item P11. More discussion of the results is needed. What exactly do we
 learn from this practical use case?
-\end{itemize}
 
-\answer{Good point. We have expanded as follows.}
+  \answer{Good point. We have expanded as follows.}
 
-\qrev{}{
-Figure \ref{fig:zelefski-real}
-compares the 3-year risk predictions from the pre-specified Cox model
-and the discrete joint survival super learner in the test set.
-\textcolor{blue}{The figure shows that the differences between the conventional method
-and our new method are mainly due to differences in the estimated
-censoring probabilities, while the event probabilities remain similar.
-}
+  \qrev{}{
+  Figure~4
+  compares the 3-year risk predictions from the pre-specified Cox model
+  and the discrete joint survival super learner in the test set.
+  \textcolor{blue}{The figure shows that the differences between the conventional method
+  and our new method are mainly due to differences in the estimated
+  censoring probabilities, while the event probabilities remain similar.
+  }
 
-\textcolor{blue}{These results illustrate that the proposed joint survival super
-learner can be feasibly applied to realistic clinical data with
-competing risks and moderate sample size. The method successfully
-identified different optimal learners for the cause-specific event and
+  \textcolor{blue}{
+These results illustrate that the joint survival super learner
+identified different learners for the cause-specific event and
 censoring processes, demonstrating its ability to adapt flexibly to
-complex data structures. In this application, the gain in
-predictive accuracy over pre-specified Cox models was modest,
-indicating that the main advantage of the joint survival super learner
-lies in its data-adaptive model selection rather than in dramatic
-performance improvement for this particular dataset. Importantly, the
+complex data structures. In this application, the difference in
+predictive accuracy over pre-specified Cox models seems to be modest,
+indicating that for this particular dataset the main advantage of the
+joint survival super learner lies in its data-adaptive model selection
+rather than in dramatic performance improvement. Importantly, the
 consistent selection of the random survival forest for the censoring
 distribution shows that accounting for informative censoring can be
 learned automatically rather than being fixed a priori. 
-}
-}
+  }
+  }
 
-Answer notes: Todo: ask chatgpt: prompt could you help us answer the
-reviewers request: here is the paragraph of our paper copy-paste
-
-\begin{itemize}
 \item P11. The usefulness of this manuscript for practical researchers
 would be greatly enhanced with a link to a code supplement.
-\end{itemize}
 
 \answer{
 Yes, we share our codes via a github repository.
@@ -591,6 +570,7 @@ Code and an implementation of the joint survival super
 learner in R \citep{R} are available at
 \url{https://github.com/amnudn/joint-survival-super-learner}.
 }
+\end{itemize}
 
 
 Section 8:
@@ -601,19 +581,18 @@ learners at the level of the observed data distribution while the
 target is either the event-time distribution, censoring
 distribution, or both—needs more detailed explanation. Are there
 alternatives to this approach, and what would be their drawbacks?
-\end{itemize}
 
-\answer{
-We have addressed the first part of your point in our answer to
-Reviewer 1's first point, please see above. Regarding alternative
-methods and their drawbacks, we do mention alternative approaches in
-Section 3, and we now reiterate and expand on these points in the
-Discussion, please see the paragraph below which we have added to the
-Discussion.
-}
+  \answer{
+  We have addressed the first part of your point in our answer to
+  Reviewer 1's first point, please see above. Regarding alternative
+  methods and their drawbacks, we do mention alternative approaches in
+  Section 3, and we now reiterate and expand on these points in the
+  Discussion, please see the paragraph below which we have added to the
+  Discussion.
+  }
 
-\qrev{}{
-A major advantage of the joint survival super learner is that the
+  \qrev{}{
+  A major advantage of the joint survival super learner is that the
 performance of each combination of learners can be estimated without
 additional nuisance parameters. A potential drawback of our approach
 is that we are evaluating the loss of the learners on the level of the
@@ -622,24 +601,27 @@ the event-time distribution, or the censoring distribution, or
 both. However, our numerical experiments show that our approach can
 perform well for estimating the target of the analysis.  Alternatives
 to our approach including IPCW loss, censoring unbiased
-transformations, and pseudo-values, where discussed in Section
-\ref{sec:super-learning}. As mentioned in
-Section~\ref{sec:super-learning}, the drawback of these approaches is
-that they all need a pre-specified estimator of the censoring
-distribution, and hence these methods are not immediately applicable
-if we do not in advance know how to model the censoring
-distribution. We note that the partial log-likelihood loss, like
-our suggested approach, also measures performance with respect to a
+transformations, and pseudo-values, were discussed in Section~3. As mentioned, the drawback of these
+approaches is that they all need a pre-specified estimator of the
+censoring distribution, and hence these methods are not immediately
+applicable if we do not in advance know how to model the censoring
+distribution. Another alternative approach to ours is the strategy
+underlying the super learner {\it survSL}
+\citep{westling2021inference}. Though we found this approach to
+perform reasonably well in our simulation study, the approach lacks
+formal theoretical guarantees and has not been extended to competing
+risks settings. We note that the partial log-likelihood loss, like our
+suggested approach, also measures performance with respect to a
 feature defined by the observed data distribution
 \citep[e.g.,][]{hjort1992inference,whitney2019comment}.
 }
+\end{itemize}
 
 
 \begin{itemize}
 \item P12. The authors claim that targeted learning is also known as
 debiased machine learning.  However, these are often presented as
 distinct approaches. This should be clarified.
-\end{itemize}
 
 \answer{This is a fair point. We have updated the text and replaced "known as" with "or" as follows:}
 
@@ -649,25 +631,32 @@ distinct approaches. This should be clarified.
     general methodologies for combining flexible, data-adaptive
     estimation of nuisance parameters with asymptotically valid
     inference for low-dimensional target parameters.  }
+\end{itemize}
 
 
 \begin{itemize}
-\item P12. TAG The discussion lacks reflection on the results from sections 6
+\item P12. The discussion lacks reflection on the results from sections 6
 and 7.
+
+  \answer{We have added the following paragraph at the very end of the discussion.}
+  \qrev{}{
+The findings from our simulation study suggest that the joint super
+learning framework can be used to construct a well-performing
+risk prediction model without a pre-specified estimator of the
+censoring distribution. Our analysis of the prostate cancer data
+demonstrate the practical feasibility of the joint survival super
+learner. In particular, it shows that our super learner was able to
+automatically identify a complex model for the censoring distribution
+in a setting where the censoring distribution was expected to be
+highly dependent on baseline covariates. 
+  }
 \end{itemize}
 
-\answer{We have added the following paragraph at the very end of the discussion.}
-\qrev{}{
-The findings from our simulation study and the analysis of the prostate cancer data
-confirm the practical feasibility and interpretability
-of the approach, and highlight how the joint super learner framework
-can support model selection and validation in more complex
-event-history prediction problems.
-}
 
-\qrev{}{}
+
+
 \section*{References}
-\label{sec:orgfab0724}
+\label{sec:org19105b0}
 \renewcommand{\section}[2]{} 
 \bibliography{bib.bib}
 \end{document}

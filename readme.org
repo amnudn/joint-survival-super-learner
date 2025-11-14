@@ -150,7 +150,7 @@ package.
 
 #+RESULTS:
 
-We can know specify a library as follows using the learner
+We can now specify a library as follows using the learner
 =my_surv_cox= defined above. 
 
 #+BEGIN_SRC R

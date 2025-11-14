@@ -163,7 +163,7 @@ a strategy has recently produced \textit{KDpredict}
 risks of kidney failure and all-cause mortality at multiple time
 horizons based on different sets of covariates
 \citep{liu2024predicting}. To evaluate the prediction performance of
-the learners, the super learner behind KDpredict uses inverse
+the learners, the super learner behind \textit{KDpredict} uses inverse
 probability of censoring weighting (IPCW), where the censoring
 distribution is estimated under the restrictive assumption that it
 does not depend on the covariates. This is a potential source of bias
@@ -384,7 +384,7 @@ random survival forests, and semi-parametric Cox regression models,
 and these learners cannot be included in the library of the super
 learner proposed by \cite{polley2011-sl-cens}. A reviewer suggested
 that one might approach this issue by post-hoc smoothing the piecewise
-constant hazard functions. This is an interesting idea which we
+constant cumulative hazard functions. This is an interesting idea which we
 however do not pursue further in this work.
 
 When a proportional hazards model is assumed, the baseline hazard
@@ -422,7 +422,7 @@ libraries of learners for the hazard functions \( \Lambda_1 \), \(
 equation~(\ref{eq:parametrizeP}) to define a joint loss function. The
 joint survival super learner thus evaluates a tuple of learners for \(
 (\Lambda_1, \Lambda_2, \Gamma) \) based on how well they jointly
-predict the observed data and the discrete joint survival super
+predict the observed data, and the discrete joint survival super
 learner chooses the best performing tuple. To formally introduce the
 joint survival super learner, we define the process
 \begin{equation*}
@@ -780,18 +780,16 @@ of the oracle learner.
   \end{align*}
 \end{proposition}
 
-The expectation in Proposition~\ref{prop:oracle-prop} is
-taken with respect to the product measure \( P^{n} \) for the data set
+The expectation in Proposition~\ref{prop:oracle-prop} is taken with
+respect to the product measure \( P^{n} \) for the data set
 \( \data_n \). This means that we are quantifying the average
 performance of the joint survival super learner across all training
 data of size \(n\). A corresponding quantity was called the expected
 true error rate in \cite{efron_and_tibshirani97}. As with many
 finite-sample oracle inequalities, this result is of little direct
 practical utility because the right-hand side depends on
-data-dependent, unknown quantities. However, it does quantify how the
-number of folds, the time horizon, and the number of learners in the
-library can be expected to influence the performance. The result has
-the following asymptotic consequences. 
+data-dependent, unknown quantities. The result has the following
+asymptotic consequences.
 
 \begin{corollary}
   \label{cor:asymp-cons}
@@ -999,36 +997,38 @@ the performance of the oracle, except for small sample sizes.
 For the second aim, we consider the super learner {\it survSL}
 proposed by \citep{westling2021inference} which like the joint
 survival super learner does not require a pre-specified censoring
-model. Like the joint survival super learner, {\it survSL} implements
-an ensemble learning approach, combining multiple learners
-(algorithms) to improve predictive performance.  The major difference
-is that {\it survSL} iterates between prediction of the outcome
-probabilities and prediction of the censoring probabilities where the
-joint survival super learner evaluates all learners simultaneously on
-the level of the observed data distribution. Another difference is
-that {\it survSL} creates a meta-learner that combines the predictions
-of the individual learners whereas the joint survival super learner
-applied in the simulation study is a discrete super learner. Since
-both approaches provide estimates of the event-time and the censoring
+model. The super learner {\it survSL} also implements an ensemble
+learning approach, combining multiple learners (algorithms) to improve
+predictive performance.  The major difference is that {\it survSL}
+iterates between prediction of the outcome probabilities and
+prediction of the censoring probabilities where the joint survival
+super learner evaluates all learners simultaneously on the level of
+the observed data distribution. Another difference is that {\it
+  survSL} creates a meta-learner that combines the predictions of the
+individual learners whereas the joint survival super learner applied
+in the simulation study is a discrete super learner. Since both
+approaches provide estimates of the event-time and the censoring
 distributions, we compare their performance with respect to
 both. Again we use the IPA to quantify the predictive performance.
 
 The results for the second aim are shown in
 Figures~\ref{fig:zelefski-out} and~\ref{fig:zelefski-cens}. We see
 that for most sample sizes, the joint survival super learner has
-similar or higher IPA compared to survSL with respect to both the
-prediction of the censoring and the outcome risks. We note that the
-advantage of the joint survival super learner in this particular
+similar or higher IPA compared to {\it survSL} with respect to both
+the prediction of the censoring and the outcome risks. We note that
+the advantage of the joint survival super learner in this particular
 simulation setting might be due that it is a discrete super learner,
-whereas {\sl survSL} combines the learners. We conjecture that a
+whereas {\it survSL} combines the learners. We conjecture that a
 discrete super learner may be advantageous in the case where at least
 one of the learners in the library is consistent and has converged
 given the available data set, whereas the ensemble super learner could
 have an advantage when all learners are misspecified to some extent,
 or have not converged sufficiently (in different regions of the
-covariate space). In this simulation study the data generation model
+covariate space). In this simulation study, the data generation model
 is a low-dimensional parametric model which was included in the
-library of learners and hence this could be an explanation of why the discrete joint survival super learner outperforms {\it survSL} in this scenario.
+library of learners and hence this could be an explanation of why the
+discrete joint survival super learner outperforms {\it survSL} in this
+scenario.
 
 
 \begin{figure}[ht]
@@ -1106,16 +1106,14 @@ The figure shows that the differences between the conventional method
 and our new method are mainly due to differences in the estimated
 censoring probabilities, while the event probabilities remain similar.
 
-These results illustrate that the proposed joint survival super
-learner can be feasibly applied to realistic clinical data with
-competing risks and moderate sample size. The method successfully
-identified different optimal learners for the cause-specific event and
+These results illustrate that the joint survival super learner
+identified different learners for the cause-specific event and
 censoring processes, demonstrating its ability to adapt flexibly to
-complex data structures. In this application, the gain in
-predictive accuracy over pre-specified Cox models was modest,
-indicating that the main advantage of the joint survival super learner
-lies in its data-adaptive model selection rather than in dramatic
-performance improvement for this particular dataset. Importantly, the
+complex data structures. In this application, the difference in
+predictive accuracy over pre-specified Cox models seems to be modest,
+indicating that for this particular dataset the main advantage of the
+joint survival super learner lies in its data-adaptive model selection
+rather than in dramatic performance improvement. Importantly, the
 consistent selection of the random survival forest for the censoring
 distribution shows that accounting for informative censoring can be
 learned automatically rather than being fixed a priori. 
@@ -1168,14 +1166,18 @@ the event-time distribution, or the censoring distribution, or
 both. However, our numerical experiments show that our approach can
 perform well for estimating the target of the analysis.  Alternatives
 to our approach including IPCW loss, censoring unbiased
-transformations, and pseudo-values, where discussed in Section
-\ref{sec:super-learning}. As mentioned in
-Section~\ref{sec:super-learning}, the drawback of these approaches is
-that they all need a pre-specified estimator of the censoring
-distribution, and hence these methods are not immediately applicable
-if we do not in advance know how to model the censoring
-distribution. We note that the partial log-likelihood loss, like
-our suggested approach, also measures performance with respect to a
+transformations, and pseudo-values, were discussed in Section
+\ref{sec:super-learning}. As mentioned, the drawback of these
+approaches is that they all need a pre-specified estimator of the
+censoring distribution, and hence these methods are not immediately
+applicable if we do not in advance know how to model the censoring
+distribution. Another alternative approach to ours is the strategy
+underlying the super learner {\it survSL}
+\citep{westling2021inference}. Though we found this approach to
+perform reasonably well in our simulation study, the approach lacks
+formal theoretical guarantees and has not been extended to competing
+risks settings. We note that the partial log-likelihood loss, like our
+suggested approach, also measures performance with respect to a
 feature defined by the observed data distribution
 \citep[e.g.,][]{hjort1992inference,whitney2019comment}.
 
@@ -1207,11 +1209,15 @@ separate convex combinations of the learners in \( \mathcal{A}_1 \),
 should be build and implemented is an interesting topic for future
 research.
 
-In summary, the findings from our simulation study and the analysis of
-the prostate cancer data confirm the practical feasibility and
-interpretability of the approach, and highlight how the joint super
-learner framework can support model selection and validation in
-complex event-history prediction problems.
+The findings from our simulation study suggest that the joint super
+learning framework can be used to construct a well-performing
+risk prediction model without a pre-specified estimator of the
+censoring distribution. Our analysis of the prostate cancer data
+demonstrate the practical feasibility of the joint survival super
+learner. In particular, it shows that our super learner was able to
+automatically identify a complex model for the censoring distribution
+in a setting where the censoring distribution was expected to be
+highly dependent on baseline covariates. 
 
 
 \appendix
