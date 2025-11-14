@@ -580,7 +580,8 @@ estimator of the censoring survival function:
 
   \KwOut{Selected tuple of learner \( (\hat{\Lambda}_{1n},
     \hat{\Lambda}_{2n}, \hat{\Gamma}_n) \in  \mathcal{A}_1 \times
-    \mathcal{A}_2 \times \mathcal{B} \).
+    \mathcal{A}_2 \times \mathcal{B} \), estimated risk prediction
+    model \(\hat Q_n\), and estimated censoring distribution \( \hat G_n \).
   }
 
   Partition the data set \( \data_n \) randomly into \( K \) subsets
@@ -637,7 +638,7 @@ estimator of the censoring survival function:
     \Return{\( (\hat{\Lambda}_{1n},
       \hat{\Lambda}_{2n}, \hat{\Gamma}_n)
       = \argmin_{(a_1,a_2,b)\in \mathcal{A}_1\times\mathcal{A}_2\times\mathcal{B}}
-    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) \) and \(\hat Q_n, \hat G_n\) based on equations \eqref{eq:cs-risk-def}, \eqref{eq:estimate-G}.}
+    \hat{R}_{n}(\phi_{a_1,a_2,b} ; \bar{B}_{\tau}) \) and \(\hat Q_n, \hat G_n\) using on equations \eqref{eq:cs-risk-def}, \eqref{eq:estimate-G}.}
 \end{algorithm}
 
 
@@ -770,8 +771,9 @@ of the oracle learner.
     & \leq (1 + 2\delta)
       % \frac{1}{K}\sum_{k=1}^{K}
       \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2 \right]}
-    \\
-    & \quad
+    % \\
+    % &
+      % \quad
       + (1+ \delta) 16   K \tau
       \left(
       13 + \frac{12}{\delta}
@@ -785,7 +787,7 @@ respect to the product measure \( P^{n} \) for the data set
 \( \data_n \). This means that we are quantifying the average
 performance of the joint survival super learner across all training
 data of size \(n\). A corresponding quantity was called the expected
-true error rate in \cite{efron_and_tibshirani97}. As with many
+true error rate by \cite{efron_and_tibshirani97}. As with many
 finite-sample oracle inequalities, this result is of little direct
 practical utility because the right-hand side depends on
 data-dependent, unknown quantities. The result has the following
@@ -831,7 +833,7 @@ To illustrate the content of Corollary~\ref{cor:asymp-cons}, consider
 first a situation where we use a library with an increasing number of
 Cox regression models. Each of these models will achieve a parametric
 rate of convergence, to possibly different least-false cumulative
-hazard functions \cite{hjort1992inference}, and hence
+hazard functions \citep{hjort1992inference}, and hence
 item~\ref{item:1} of Corollary~\ref{cor:asymp-cons} states that the
 joint survival super learner based on this library will achieve a
 near-parametric rate of convergence.  \( C_P \) can be set to be the
@@ -987,10 +989,11 @@ the performance of the oracle, except for small sample sizes.
 \begin{figure}[ht]
   \includegraphics[width=13cm]{experiment-fig-sl-ipcw}
   \caption{For the risk prediction models provided by each of the
-    super learners, the IPA is plotted against sample size. The
-    results are averages across 1000 simulated data sets and the error
-    bars are used to quantify the Monte Carlo uncertainty. JSSL
-    denotes the joint survival super learner. }
+    super learners, the IPA is plotted against sample size (on
+    \( \log_2 \) scale). The results are averages across 1000
+    simulated data sets and the error bars are used to quantify the
+    Monte Carlo uncertainty. JSSL denotes the joint survival super
+    learner. }
 \label{fig:ipcw-fail}
 \end{figure}
  
@@ -998,18 +1001,18 @@ For the second aim, we consider the super learner {\it survSL}
 proposed by \citep{westling2021inference} which like the joint
 survival super learner does not require a pre-specified censoring
 model. The super learner {\it survSL} also implements an ensemble
-learning approach, combining multiple learners (algorithms) to improve
-predictive performance.  The major difference is that {\it survSL}
-iterates between prediction of the outcome probabilities and
-prediction of the censoring probabilities where the joint survival
-super learner evaluates all learners simultaneously on the level of
-the observed data distribution. Another difference is that {\it
-  survSL} creates a meta-learner that combines the predictions of the
-individual learners whereas the joint survival super learner applied
-in the simulation study is a discrete super learner. Since both
-approaches provide estimates of the event-time and the censoring
-distributions, we compare their performance with respect to
-both. Again we use the IPA to quantify the predictive performance.
+learning approach, combining multiple learners to improve predictive
+performance.  The major difference is that {\it survSL} iterates
+between prediction of the outcome probabilities and prediction of the
+censoring probabilities, where the joint survival super learner
+evaluates all learners simultaneously on the level of the observed
+data distribution. Another difference is that {\it survSL} creates a
+meta-learner that combines the predictions of the individual learners,
+whereas the joint survival super learner applied in the simulation
+study is a discrete super learner. Since both approaches provide
+estimates of the event-time and the censoring distributions, we
+compare their performance with respect to both. Again we use the IPA
+to quantify the predictive performance.
 
 The results for the second aim are shown in
 Figures~\ref{fig:zelefski-out} and~\ref{fig:zelefski-cens}. We see
@@ -1033,11 +1036,12 @@ scenario.
 
 \begin{figure}[ht]
   \includegraphics[width=13cm]{experiment-fig-sl-survSL-out}
-\caption{For the risk prediction models of the outcome provided by
-  each of the super learners, the IPA at the fixed time horizon is
-  plotted against sample size. The results are averages across 1000
-  repetitions and the error bars are used to quantify the Monte Carlo
-  uncertainty. JSSL denotes the joint survival super learner.}
+  \caption{For the risk prediction models of the outcome provided by
+    each of the super learners, the IPA at the fixed time horizon is
+    plotted against sample size (on \( \log_2 \) scale). The results
+    are averages across 1000 repetitions and the error bars are used
+    to quantify the Monte Carlo uncertainty. JSSL denotes the joint
+    survival super learner.}
 \label{fig:zelefski-out}
 \end{figure}
 
@@ -1046,12 +1050,12 @@ scenario.
   \begin{center}
       \includegraphics[width=10cm]{experiment-fig-sl-survSL-cens}
   \end{center}
-\caption{For the risk prediction models of the censoring model
+  \caption{For the risk prediction models of the censoring model
     provided by each of the super learners, the IPA at the fixed time
-    horizon is plotted against sample size. The results are averages
-    across 1000 repetitions and the error bars are used to quantify
-    the Monte Carlo uncertainty. JSSL denotes the joint survival super
-    learner.}
+    horizon is plotted against sample size (on \( \log_2 \)
+    scale). The results are averages across 1000 repetitions and the
+    error bars are used to quantify the Monte Carlo uncertainty. JSSL
+    denotes the joint survival super learner.}
 \label{fig:zelefski-cens}
 \end{figure}
 
@@ -1182,11 +1186,11 @@ feature defined by the observed data distribution
 \citep[e.g.,][]{hjort1992inference,whitney2019comment}.
 
 A relevant application of the joint survival super learner is within
-the framework of targeted learning \citep{van2011targeted}, also known
-as debiased machine learning \citep{chernozhukov2018double}, -- a
-general methodology that combines flexible, data-adaptive estimation
-of nuisance parameters with asymptotically valid inference for
-low-dimensional target parameters.  For example, the methods in
+the framework of targeted learning \citep{van2011targeted} or debiased
+machine learning \citep{chernozhukov2018double}, which are general
+methodologies for combining flexible, data-adaptive estimation of
+nuisance parameters with asymptotically valid inference for
+low-dimensional target parameters. For example, the methods in
 \cite{van2003unified} and \cite{rytgaard2022targeted} target the
 average treatment effect in a survival setting, which require
 estimates of the cause-specific cumulative hazard functions and the
@@ -1201,7 +1205,7 @@ learner, but it is straightforward to extend the method to more
 complex ensemble learning, e.g., through
 stacking \citep{breiman1996stacked}. However, there are multiple possible
 ways to apply stacking to the the joint survival super leaner. One
-option is to construct a single convex combination of the F-learners
+option is to construct a single convex combination of the \( F \)-learners
 \( \phi \in \Phi(\mathcal{A}_1, \mathcal{A}_2, \mathcal{B})
 \). Another, perhaps more interesting option, is to construct three
 separate convex combinations of the learners in \( \mathcal{A}_1 \),
@@ -1264,7 +1268,7 @@ equation~(\ref{eq:norm}).
   \end{equation*}
 \end{proof}
 
-\begin{proof}[of Proposition~\ref{prop:stric-prop}]
+\begin{proof}[Proof of Proposition~\ref{prop:stric-prop}]
   The result follows from Lemma~\ref{lemma:norm}.
 \end{proof}
 
@@ -1273,7 +1277,7 @@ function \( F \), and that \( \hat{\phi} \) and \( \tilde{\phi} \) denotes,
 respectively, the discrete super learner and the oracle learner for the library
 \( \Phi_n \), c.f., Section~\ref{sec:joint-survival-super-learner}.
 
-\begin{proof}[of Proposition~\ref{prop:oracle-prop}]
+\begin{proof}[Proof of Proposition~\ref{prop:oracle-prop}]
   Minimizing the loss \( \bar{B}_{\tau} \) is equivalent to
   minimizing the loss \( \bar{B}_{\tau,P} \), so the discrete super learner and
   oracle according to \( \bar{B}_{\tau} \) and \( \bar{B}_{\tau,P} \) are
@@ -1418,7 +1422,7 @@ on the right- and left-hand side above do not depend on \( k \). The
 final result then follows from Lemma~\ref{lemma:norm}.
 \end{proof}
 
-\begin{proof}[of Corollary~\ref{cor:asymp-cons}]
+\begin{proof}[Proof of Corollary~\ref{cor:asymp-cons}]
   By definition of the oracle and Lemma~\ref{lemma:norm},
   \begin{equation*}
     \frac{1}{K} \sum_{k=1}^{K} \E_{P}{\left[ \Vert \tilde{\phi}_n(\data_n^{-k}) - F_P \Vert_{P}^2

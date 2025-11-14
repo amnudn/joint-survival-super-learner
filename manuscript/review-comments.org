@@ -364,14 +364,14 @@ Section 5:
 proposed by \citep{westling2021inference} which like the joint
 survival super learner does not require a pre-specified censoring
 model. The super learner {\it survSL} also implements an ensemble
-learning approach, combining multiple learners (algorithms) to improve
+learning approach, combining multiple learners to improve
 predictive performance.  The major difference is that {\it survSL}
 iterates between prediction of the outcome probabilities and
-prediction of the censoring probabilities where the joint survival
+prediction of the censoring probabilities, where the joint survival
 super learner evaluates all learners simultaneously on the level of
 the observed data distribution. Another difference is that {\it
   survSL} creates a meta-learner that combines the predictions of the
-individual learners whereas the joint survival super learner applied
+individual learners, whereas the joint survival super learner applied
 in the simulation study is a discrete super learner. Since both
 approaches provide estimates of the event-time and the censoring
 distributions, we compare their performance with respect to
